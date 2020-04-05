@@ -1,6 +1,6 @@
 package com.jellyfishmix.wxinterchange.config;
 
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "wx.miniapp.config")
-@Getter
+@Data
 public class WxMaConfig {
     String appid;
     String secret;

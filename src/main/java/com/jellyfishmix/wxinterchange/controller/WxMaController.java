@@ -1,6 +1,8 @@
 package com.jellyfishmix.wxinterchange.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jellyfishmix.wxinterchange.config.WxMaConfig;
+import com.jellyfishmix.wxinterchange.entity.WxMaAuthResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author JellyfishMIX
@@ -25,7 +31,9 @@ public class WxMaController {
      * @param code
      */
     @PostMapping("/auth")
-    public void auth(@RequestParam("code") String code) {
+    public Map<String, String> auth(@RequestParam("code") String code) {
+        Map<String, String> resultMap = new HashMap<>();
+
         log.info("进入auth的方法");
         log.info("code = {}", code);
 
@@ -38,7 +46,29 @@ public class WxMaController {
 
         RestTemplate restTemplate = new RestTemplate();
         // access_token和openid在response中，response是一个JSON数据包
-        String response = restTemplate.getForObject(url, String.class);
-        log.info("response={}", response);
+        String responseJSON = restTemplate.getForObject(url, String.class);
+        log.info("response={}", responseJSON);
+
+        WxMaAuthResponse wxMaAuthResponse = null;
+        ObjectMapper mapper = new ObjectMapper();
+        if (responseJSON == null) {
+            resultMap.put("error", "微信服务器返回JSON错误");
+            return resultMap;
+        }
+
+        try {
+             wxMaAuthResponse = mapper.readValue(responseJSON, WxMaAuthResponse.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (wxMaAuthResponse == null) {
+            resultMap.put("error", "无效的code");
+            return resultMap;
+        }
+        resultMap.put("session_key", wxMaAuthResponse.getSession_key());
+        resultMap.put("openid", wxMaAuthResponse.getOpenid());
+
+        return resultMap;
     }
 }
