@@ -1,6 +1,6 @@
 package com.jellyfishmix.wxinterchange.query;
 
-import com.jellyfishmix.wxinterchange.enums.WxMaAuthErrorResponseEnumState;
+import com.jellyfishmix.wxinterchange.enums.WxMaAuthErrorResponseEnum;
 import lombok.Data;
 
 /**
@@ -12,7 +12,7 @@ public class WxMaAuthErrorResponse {
     private Integer errcode;
     private String errmsg;
 
-    public WxMaAuthErrorResponse(WxMaAuthErrorResponseEnumState wxMaAuthErrorResponseEnum) {
+    public WxMaAuthErrorResponse(WxMaAuthErrorResponseEnum wxMaAuthErrorResponseEnum) {
         this.errcode = wxMaAuthErrorResponseEnum.getStateCode();
         this.errmsg = wxMaAuthErrorResponseEnum.getStateMsg();
     }

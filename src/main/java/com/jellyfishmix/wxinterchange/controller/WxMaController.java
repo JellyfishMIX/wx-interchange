@@ -2,12 +2,14 @@ package com.jellyfishmix.wxinterchange.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jellyfishmix.wxinterchange.config.WxMaConfig;
-import com.jellyfishmix.wxinterchange.enums.WxMaAuthErrorResponseEnumState;
+import com.jellyfishmix.wxinterchange.enums.WxMaAuthErrorResponseEnum;
 import com.jellyfishmix.wxinterchange.query.WxMaAuthErrorResponse;
 import com.jellyfishmix.wxinterchange.query.WxMaAuthSuccessResponse;
+import com.jellyfishmix.wxinterchange.utils.StateCodeEnumUtil;
 import com.jellyfishmix.wxinterchange.utils.WxMaAuthResponseUtil;
 import com.jellyfishmix.wxinterchange.vo.WxMaAuthVO;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,17 +56,20 @@ public class WxMaController {
         // responseJSON为失败的逻辑
 
         if (responseJSON == null) {
-            WxMaAuthErrorResponse wxMaAuthErrorResponse = new WxMaAuthErrorResponse(WxMaAuthErrorResponseEnumState.NULL);
+            WxMaAuthErrorResponse wxMaAuthErrorResponse = new WxMaAuthErrorResponse(WxMaAuthErrorResponseEnum.NULL);
             return WxMaAuthResponseUtil.fail(wxMaAuthErrorResponse);
         }
 
         String errorCode = "errcode";
-        if (!responseJSON.contains(errorCode)) {
+        if (responseJSON.contains(errorCode)) {
             WxMaAuthErrorResponse wxMaAuthErrorResponse = null;
-            try {
-                wxMaAuthErrorResponse = objectMapper.readValue(responseJSON, WxMaAuthErrorResponse.class);
-            } catch (IOException e) {
-                e.printStackTrace();
+            JSONObject jsonObject = new JSONObject(responseJSON);
+            Integer errcode = jsonObject.getInt("errcode");
+            WxMaAuthErrorResponseEnum wxMaAuthErrorResponseEnum = StateCodeEnumUtil.getByStateCode(errcode, WxMaAuthErrorResponseEnum.class);
+            if (wxMaAuthErrorResponseEnum == null) {
+                wxMaAuthErrorResponse = new WxMaAuthErrorResponse(WxMaAuthErrorResponseEnum.UNKNOWN);
+            } else {
+                wxMaAuthErrorResponse = new WxMaAuthErrorResponse(wxMaAuthErrorResponseEnum);
             }
             return WxMaAuthResponseUtil.fail(wxMaAuthErrorResponse);
         }
