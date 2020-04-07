@@ -25,7 +25,7 @@
 
     <!--通过uid查找用户信息-->
     <select id="selectUserInfo" resultType="com.jellyfishmix.wxinterchange.entity.UserInfo">
-        select uid, username, openid, session_key, created_team_counts, managed_team_counts, joined_team_counts
+        select uid, username, openid, session_key `sessionKey`, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where uid = #{uid}
     </select>

@@ -19,7 +19,7 @@ public class UserInfo {
     /**
      * 用户uid，随机生成，唯一键
      */
-    private Integer uid;
+    private String uid;
 
     /**
      * 用户名
