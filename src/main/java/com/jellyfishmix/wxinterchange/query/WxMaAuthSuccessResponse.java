@@ -8,6 +8,10 @@ import lombok.Data;
  */
 @Data
 public class WxMaAuthSuccessResponse {
-    private String session_key;
     private String openid;
+
+    /**
+     * 会话密钥，每次授权后动态刷新
+     */
+    private String session_key;
 }

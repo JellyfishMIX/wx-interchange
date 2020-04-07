@@ -14,6 +14,6 @@ public class WxMaAuthErrorResponse {
 
     public WxMaAuthErrorResponse(WxMaAuthErrorResponseEnum wxMaAuthErrorResponseEnum) {
         this.errcode = wxMaAuthErrorResponseEnum.getStateCode();
-        this.errmsg = wxMaAuthErrorResponseEnum.getStateMsg();
+        this.errmsg = wxMaAuthErrorResponseEnum.getStateInfo();
     }
 }

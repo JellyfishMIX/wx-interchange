@@ -17,10 +17,10 @@ public enum WxMaAuthErrorResponseEnum implements StateCodeEnum {
     FREQUENCY_LIMIT(45011, "频率限制，每个用户每分钟100次");
 
     private Integer stateCode;
-    private String stateMsg;
+    private String stateInfo;
 
-    WxMaAuthErrorResponseEnum(Integer stateCode, String stateMsg) {
+    WxMaAuthErrorResponseEnum(Integer stateCode, String stateInfo) {
         this.stateCode = stateCode;
-        this.stateMsg = stateMsg;
+        this.stateInfo = stateInfo;
     }
 }
