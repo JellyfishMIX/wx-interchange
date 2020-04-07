@@ -30,6 +30,11 @@ public class WxMaController {
     @Autowired
     private WxMaConfig wxMaConfig;
 
+    // TODO 登录接口
+    // public WxMaLoginVO login(@RequestParam("code") String code) {
+    //
+    // }
+
     /**
      * 微信code-openid换取
      * @param code

@@ -39,17 +39,17 @@ public class UserInfo {
     /**
      * 创建的项目组数量
      */
-    private Integer createdTeamCounts;
+    private Integer createdTeamCounts = 0;
 
     /**
      * 管理的项目组数量
      */
-    private Integer managedTeamCounts;
+    private Integer managedTeamCounts = 0;
 
     /**
      * 加入的项目组数量
      */
-    private Integer joinedTeamCounts;
+    private Integer joinedTeamCounts = 0;
 
     /**
      * 创建时间，自动写入

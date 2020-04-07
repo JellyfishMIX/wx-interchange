@@ -1,6 +1,6 @@
 create table `user_info` (
     `id` int not null auto_increment comment '无实体意义主键',
-    `uid` int not null comment '用户uid，随机生成，唯一键',
+    `uid` varchar(32) not null comment '用户uid，随机生成，唯一键',
     `username` varchar(64) not null comment '用户名',
     `openid` varchar(64) not null comment '微信openid',
     `session_key` varchar(64) not null comment '会话密钥，动态更新',

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jellyfishmix.wxinterchange.mapper.UserInfoMapper">
+    <!--新增用户信息-->
+    <insert id="insertUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="id">
+        insert into wx_interchange.user_info(uid, username, openid, session_key, created_team_counts, managed_team_counts, joined_team_counts)
+        values (#{uid}, #{username}, #{openid}, #{sessionKey}, #{createdTeamCounts}, #{managedTeamCounts}, #{joinedTeamCounts})
+    </insert>
+
+    <!--修改用户信息-->
+    <update id="updateUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="uid" keyProperty="uid">
+        update wx_interchange.user_info
+        <set>
+            # uid无特殊情况禁止更新
+            <!--<if test="uid != null">uid = #{uid}</if>-->
+            <if test="username != null">username = #{username}</if>
+            <if test="sessionKey != null">session_key = #{sessionKey}</if>
+            <if test="createdTeamCounts != null">created_team_counts = #{created_team_counts}</if>
+            <if test="managedTeamCounts != null">managed_team_counts = #{managed_team_counts}</if>
+            <if test="joinedTeamCounts != null">joined_team_counts = #{joinedTeamCounts}</if>
+        </set>
+    </update>
+
+    <!--通过uid查找用户信息-->
+    <select id="selectUserInfo" resultType="com.jellyfishmix.wxinterchange.entity.UserInfo">
+        select uid, username, openid, session_key, created_team_counts, managed_team_counts, joined_team_counts
+        from wx_interchange.user_info
+        where uid = #{uid}
+    </select>
+
+    <!--delete暂时不做-->
+</mapper>
