@@ -35,11 +35,9 @@ class UserInfoMapperTest {
     @Test
     void updateUserInfo() {
         UserInfo userInfo = new UserInfo();
-        userInfo.setUid(UniqueKeyUtil.getUniqueKey());
-        userInfo.setUsername("test_username");
-        userInfo.setOpenid("test_openid");
-        userInfo.setSessionKey("test_session_key");
-        int result = userInfoMapper.insertUserInfo(userInfo);
+        userInfo.setUid("158628518796132710");
+        userInfo.setUsername("test-4");
+        int result = userInfoMapper.updateUserInfo(userInfo);
         assertEquals(1, result);
     }
 

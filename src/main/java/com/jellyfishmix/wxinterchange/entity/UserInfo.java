@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -39,17 +40,17 @@ public class UserInfo {
     /**
      * 创建的项目组数量
      */
-    private Integer createdTeamCounts = 0;
+    private Integer createdTeamCounts;
 
     /**
      * 管理的项目组数量
      */
-    private Integer managedTeamCounts = 0;
+    private Integer managedTeamCounts;
 
     /**
      * 加入的项目组数量
      */
-    private Integer joinedTeamCounts = 0;
+    private Integer joinedTeamCounts;
 
     /**
      * 创建时间，自动写入
