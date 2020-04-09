@@ -11,17 +11,26 @@ import lombok.Data;
 @Data
 public class UserInfoDTO {
     private Integer stateCode;
-    private String stateInfo;
+    private String stateMsg;
     private UserInfo userInfo;
 
     public UserInfoDTO(UserEnum userEnum) {
         this.stateCode = userEnum.getStateCode();
-        this.stateInfo = userEnum.getStateInfo();
+        this.stateMsg = userEnum.getStateMsg();
     }
 
     public UserInfoDTO(UserEnum userEnum, UserInfo userInfo) {
         this.stateCode = userEnum.getStateCode();
-        this.stateInfo = userEnum.getStateInfo();
+        this.stateMsg = userEnum.getStateMsg();
         this.userInfo = userInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfoDTO{" +
+                "stateCode=" + stateCode +
+                ", stateMsg='" + stateMsg + '\'' +
+                ", userInfo=" + userInfo +
+                '}';
     }
 }

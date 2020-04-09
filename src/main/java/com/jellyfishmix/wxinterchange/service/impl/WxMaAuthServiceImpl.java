@@ -83,7 +83,7 @@ public class WxMaAuthServiceImpl implements WxMaAuthService {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        wxMaCodeToSessionDTO = new WxMaCodeToSessionDTO(WxMaAuthEnum.REQUEST_SUCCESS.getStateCode(), WxMaAuthEnum.REQUEST_SUCCESS.getStateInfo(), codeToSessionSuccessResponse);
+        wxMaCodeToSessionDTO = new WxMaCodeToSessionDTO(WxMaAuthEnum.REQUEST_SUCCESS.getStateCode(), WxMaAuthEnum.REQUEST_SUCCESS.getStateMsg(), codeToSessionSuccessResponse);
 
         return wxMaCodeToSessionDTO;
     }

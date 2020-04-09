@@ -14,7 +14,7 @@ public class ResultVO<T> {
      */
     private Boolean success;
     private Integer stateCode;
-    private String stateInfo;
+    private String stateMsg;
 
     /**
      * 具体内容
@@ -26,7 +26,7 @@ public class ResultVO<T> {
         return "ResultVO{" +
                 "success=" + success +
                 ", stateCode=" + stateCode +
-                ", stateInfo='" + stateInfo + '\'' +
+                ", stateMsg='" + stateMsg + '\'' +
                 ", data=" + data +
                 '}';
     }

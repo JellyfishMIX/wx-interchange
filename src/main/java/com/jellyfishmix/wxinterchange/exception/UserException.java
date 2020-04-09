@@ -12,11 +12,11 @@ public class UserException extends RuntimeException {
     private static final long serialVersionUID = -716814775732772532L;
 
     private Integer stateCode;
-    private String stateInfo;
+    private String stateMsg;
 
     public UserException(UserEnum userEnum) {
-        super(userEnum.getStateInfo());
+        super(userEnum.getStateMsg());
         this.stateCode = userEnum.getStateCode();
-        this.stateInfo = userEnum.getStateInfo();
+        this.stateMsg = userEnum.getStateMsg();
     }
 }

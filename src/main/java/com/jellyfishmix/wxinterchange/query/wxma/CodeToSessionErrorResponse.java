@@ -14,6 +14,6 @@ public class CodeToSessionErrorResponse {
 
     public CodeToSessionErrorResponse(WxMaAuthEnum wxMaAuthEnum) {
         this.errcode = wxMaAuthEnum.getStateCode();
-        this.errmsg = wxMaAuthEnum.getStateInfo();
+        this.errmsg = wxMaAuthEnum.getStateMsg();
     }
 }

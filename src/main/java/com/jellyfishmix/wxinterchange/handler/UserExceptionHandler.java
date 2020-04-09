@@ -16,6 +16,6 @@ public class UserExceptionHandler {
     @ExceptionHandler(value = UserException.class)
     @ResponseBody
     public ResultVO handleUserException(UserException userException) {
-        return ResultVOUtil.fail(userException.getStateCode(), userException.getStateInfo());
+        return ResultVOUtil.fail(userException.getStateCode(), userException.getStateMsg());
     }
 }

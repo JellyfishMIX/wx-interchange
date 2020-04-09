@@ -19,10 +19,10 @@ public enum WxMaAuthEnum implements StateCodeEnum {
     CODE_BEEN_USED(40163, "code已被使用过，请刷新code");
 
     private Integer stateCode;
-    private String stateInfo;
+    private String stateMsg;
 
-    WxMaAuthEnum(Integer stateCode, String stateInfo) {
+    WxMaAuthEnum(Integer stateCode, String stateMsg) {
         this.stateCode = stateCode;
-        this.stateInfo = stateInfo;
+        this.stateMsg = stateMsg;
     }
 }

@@ -14,10 +14,10 @@ public enum UserEnum implements StateCodeEnum {
     UPDATE_USER_INFO_ERROR(3, "修改用户信息错误");
 
     private Integer stateCode;
-    private String stateInfo;
+    private String stateMsg;
 
-    UserEnum(Integer stateCode, String stateInfo) {
+    UserEnum(Integer stateCode, String stateMsg) {
         this.stateCode = stateCode;
-        this.stateInfo = stateInfo;
+        this.stateMsg = stateMsg;
     }
 }

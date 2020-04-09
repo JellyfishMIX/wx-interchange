@@ -11,43 +11,44 @@ import lombok.Data;
  */
 @Data
 public class WxMaCodeToSessionDTO {
-    private boolean success;
+    private Boolean success;
     private Integer stateCode;
-    private String stateInfo;
+    private String stateMsg;
     private CodeToSessionSuccessResponse codeToSessionSuccessResponse;
     private CodeToSessionErrorResponse codeToSessionErrorResponse;
 
     /**
      * codeToSession成功时构造方法
      * @param stateCode
-     * @param stateInfo
+     * @param stateMsg
      * @param codeToSessionSuccessResponse
      */
-    public WxMaCodeToSessionDTO(Integer stateCode, String stateInfo, CodeToSessionSuccessResponse codeToSessionSuccessResponse) {
+    public WxMaCodeToSessionDTO(Integer stateCode, String stateMsg, CodeToSessionSuccessResponse codeToSessionSuccessResponse) {
         this.success = true;
         this.stateCode = stateCode;
-        this.stateInfo = stateInfo;
+        this.stateMsg = stateMsg;
         this.codeToSessionSuccessResponse = codeToSessionSuccessResponse;
     }
 
     /**
      * codeToSession失败时构造方法
      * @param stateCode
-     * @param stateInfo
+     * @param stateMsg
      * @param codeToSessionErrorResponse
      */
-    public WxMaCodeToSessionDTO(Integer stateCode, String stateInfo, CodeToSessionErrorResponse codeToSessionErrorResponse) {
+    public WxMaCodeToSessionDTO(Integer stateCode, String stateMsg, CodeToSessionErrorResponse codeToSessionErrorResponse) {
         this.success = false;
         this.stateCode = stateCode;
-        this.stateInfo = stateInfo;
+        this.stateMsg = stateMsg;
         this.codeToSessionErrorResponse = codeToSessionErrorResponse;
     }
 
     @Override
     public String toString() {
         return "WxMaCodeToSessionDTO{" +
-                "stateCode=" + stateCode +
-                ", stateInfo='" + stateInfo + '\'' +
+                "success=" + success +
+                ", stateCode=" + stateCode +
+                ", stateMsg='" + stateMsg + '\'' +
                 ", codeToSessionSuccessResponse=" + codeToSessionSuccessResponse +
                 ", codeToSessionErrorResponse=" + codeToSessionErrorResponse +
                 '}';

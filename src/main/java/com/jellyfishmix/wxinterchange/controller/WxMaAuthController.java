@@ -11,10 +11,7 @@ import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author JellyfishMIX
@@ -35,13 +32,13 @@ public class WxMaAuthController {
      * 微信code-openid换取
      * @param code
      */
-    @PostMapping("/code_to_session")
+    @GetMapping("/code_to_session")
     public ResultVO codeToSession(@RequestParam("code") String code) {
         WxMaCodeToSessionDTO wxMaCodeToSessionDTO = wxMaAuthService.codeToSession(code);
-        if (!wxMaCodeToSessionDTO.isSuccess()) {
-            return ResultVOUtil.fail(wxMaCodeToSessionDTO.getStateCode(), wxMaCodeToSessionDTO.getStateInfo());
+        if (!wxMaCodeToSessionDTO.getSuccess()) {
+            return ResultVOUtil.fail(wxMaCodeToSessionDTO.getStateCode(), wxMaCodeToSessionDTO.getStateMsg());
         }
-        return ResultVOUtil.success(wxMaCodeToSessionDTO.getStateCode(), wxMaCodeToSessionDTO.getStateInfo(), wxMaCodeToSessionDTO.getCodeToSessionSuccessResponse());
+        return ResultVOUtil.success(wxMaCodeToSessionDTO.getStateCode(), wxMaCodeToSessionDTO.getStateMsg(), wxMaCodeToSessionDTO.getCodeToSessionSuccessResponse());
     }
 
     /**
@@ -62,6 +59,6 @@ public class WxMaAuthController {
             userInfoDTO = accountService.register(userInfo);
         }
         UserInfo userInfo = userInfoDTO.getUserInfo();
-        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateInfo(), userInfo);
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), userInfo);
     }
 }
