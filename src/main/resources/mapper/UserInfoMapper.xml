@@ -23,15 +23,25 @@
         where uid = #{uid}
     </update>
 
+    <!--userInfoMap-->
+    <resultMap id="userInfoMap" type="com.jellyfishmix.wxinterchange.entity.UserInfo">
+        <id column="uid" property="uid" jdbcType="VARCHAR" />
+        <id column="username" property="username" jdbcType="VARCHAR" />
+        <id column="openid" property="openid" jdbcType="VARCHAR" />
+        <id column="created_team_counts" property="createdTeamCounts" jdbcType="INTEGER" />
+        <id column="managed_team_counts" property="managedTeamCounts" jdbcType="INTEGER" />
+        <id column="joined_team_counts" property="joinedTeamCounts" jdbcType="INTEGER" />
+    </resultMap>
+    
     <!--通过uid查找用户信息-->
-    <select id="selectUserInfoByUid" resultType="com.jellyfishmix.wxinterchange.entity.UserInfo">
+    <select id="selectUserInfoByUid" resultMap="userInfoMap">
         select uid, username, openid, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where uid = #{uid}
     </select>
 
     <!--通过openid查找用户信息-->
-    <select id="selectUserInfoByOpenid" resultType="com.jellyfishmix.wxinterchange.entity.UserInfo">
+    <select id="selectUserInfoByOpenid" resultMap="userInfoMap">
         select uid, username, openid, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where openid = #{openid}

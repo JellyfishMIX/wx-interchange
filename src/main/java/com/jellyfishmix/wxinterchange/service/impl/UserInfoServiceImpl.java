@@ -62,6 +62,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo userInfo = userInfoMapper.selectUserInfoByUid(uid);
         if (userInfo == null) {
             userInfoDTO = new UserInfoDTO(UserEnum.USER_INFO_NULL);
+            return userInfoDTO;
         }
         userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS, userInfo);
         return userInfoDTO;
@@ -79,6 +80,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo userInfo = userInfoMapper.selectUserInfoByOpenid(openid);
         if (userInfo == null) {
             userInfoDTO = new UserInfoDTO(UserEnum.USER_INFO_NULL);
+            return userInfoDTO;
         }
         userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS, userInfo);
         return userInfoDTO;

@@ -43,18 +43,18 @@ public class WxMaAuthController {
 
     /**
      * 登录/注册
-     * @param userName
+     * @param username
      * @param openid
      * @return
      */
     @PostMapping("/login")
-    public ResultVO login(@RequestParam("userName") String userName,
+    public ResultVO login(@RequestParam("username") String username,
                           @RequestParam("openid") String openid) {
         // 查询openid是否已存在，未存在则执行注册逻辑
         UserInfoDTO userInfoDTO = userInfoService.selectUserInfoByOpenid(openid);
-        if (!userInfoDTO.getStateCode().equals(UserEnum.SUCCESS.getStateCode())) {
+        if (userInfoDTO.getStateCode().equals(UserEnum.USER_INFO_NULL.getStateCode())) {
             UserInfo userInfo = new UserInfo();
-            userInfo.setUsername(userName);
+            userInfo.setUsername(username);
             userInfo.setOpenid(openid);
             userInfoDTO = accountService.register(userInfo);
         }
