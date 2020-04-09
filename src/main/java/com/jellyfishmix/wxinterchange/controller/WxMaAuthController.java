@@ -1,0 +1,67 @@
+package com.jellyfishmix.wxinterchange.controller;
+
+import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
+import com.jellyfishmix.wxinterchange.dto.WxMaCodeToSessionDTO;
+import com.jellyfishmix.wxinterchange.entity.UserInfo;
+import com.jellyfishmix.wxinterchange.enums.UserEnum;
+import com.jellyfishmix.wxinterchange.service.AccountService;
+import com.jellyfishmix.wxinterchange.service.UserInfoService;
+import com.jellyfishmix.wxinterchange.service.WxMaAuthService;
+import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
+import com.jellyfishmix.wxinterchange.vo.ResultVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author JellyfishMIX
+ * @date 2020/4/5 3:55 下午
+ */
+@RestController
+@RequestMapping("/wxma_auth")
+@Slf4j
+public class WxMaAuthController {
+    @Autowired
+    private UserInfoService userInfoService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private WxMaAuthService wxMaAuthService;
+
+    /**
+     * 微信code-openid换取
+     * @param code
+     */
+    @PostMapping("/code_to_session")
+    public ResultVO codeToSession(@RequestParam("code") String code) {
+        WxMaCodeToSessionDTO wxMaCodeToSessionDTO = wxMaAuthService.codeToSession(code);
+        if (!wxMaCodeToSessionDTO.isSuccess()) {
+            return ResultVOUtil.fail(wxMaCodeToSessionDTO.getStateCode(), wxMaCodeToSessionDTO.getStateInfo());
+        }
+        return ResultVOUtil.success(wxMaCodeToSessionDTO.getStateCode(), wxMaCodeToSessionDTO.getStateInfo(), wxMaCodeToSessionDTO.getCodeToSessionSuccessResponse());
+    }
+
+    /**
+     * 登录/注册
+     * @param userName
+     * @param openid
+     * @return
+     */
+    @PostMapping("/login")
+    public ResultVO login(@RequestParam("userName") String userName,
+                          @RequestParam("openid") String openid) {
+        // 查询openid是否已存在，未存在则执行注册逻辑
+        UserInfoDTO userInfoDTO = userInfoService.selectUserInfoByOpenid(openid);
+        if (!userInfoDTO.getStateCode().equals(UserEnum.SUCCESS.getStateCode())) {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUsername(userName);
+            userInfo.setOpenid(openid);
+            userInfoDTO = accountService.register(userInfo);
+        }
+        UserInfo userInfo = userInfoDTO.getUserInfo();
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateInfo(), userInfo);
+    }
+}

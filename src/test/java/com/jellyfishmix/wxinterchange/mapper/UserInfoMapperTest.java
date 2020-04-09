@@ -2,6 +2,7 @@ package com.jellyfishmix.wxinterchange.mapper;
 
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ class UserInfoMapperTest {
     private UserInfoMapper userInfoMapper;
 
     @Test
+    @Disabled
     void insertUserInfo() {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(UniqueKeyUtil.getUniqueKey());
@@ -32,6 +34,7 @@ class UserInfoMapperTest {
     }
 
     @Test
+    @Disabled
     void updateUserInfo() {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid("158628518796132710");
@@ -41,6 +44,7 @@ class UserInfoMapperTest {
     }
 
     @Test
+    @Disabled
     void selectUserInfoByUid() {
         String uid = "158628505011784344";
         UserInfo resultUserInfo = userInfoMapper.selectUserInfoByUid(uid);
@@ -48,6 +52,7 @@ class UserInfoMapperTest {
     }
 
     @Test
+    @Disabled
     void selectUserInfoByOpenid() {
         String openid = "test_openid-1";
         UserInfo resultUserInfo = userInfoMapper.selectUserInfoByOpenid(openid);

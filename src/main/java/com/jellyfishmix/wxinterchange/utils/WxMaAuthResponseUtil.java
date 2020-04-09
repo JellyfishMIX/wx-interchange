@@ -1,7 +1,7 @@
 package com.jellyfishmix.wxinterchange.utils;
 
-import com.jellyfishmix.wxinterchange.query.WxMaAuthErrorResponse;
-import com.jellyfishmix.wxinterchange.query.WxMaAuthSuccessResponse;
+import com.jellyfishmix.wxinterchange.query.wxma.CodeToSessionErrorResponse;
+import com.jellyfishmix.wxinterchange.query.wxma.CodeToSessionSuccessResponse;
 import com.jellyfishmix.wxinterchange.vo.WxMaAuthVO;
 
 /**
@@ -9,17 +9,17 @@ import com.jellyfishmix.wxinterchange.vo.WxMaAuthVO;
  * @date 2020/4/6 2:48 上午
  */
 public class WxMaAuthResponseUtil {
-    public static WxMaAuthVO success(WxMaAuthSuccessResponse wxMaAuthSuccessResponse) {
-        WxMaAuthVO<WxMaAuthSuccessResponse> wxMaAuthVO = new WxMaAuthVO<WxMaAuthSuccessResponse>();
+    public static WxMaAuthVO success(CodeToSessionSuccessResponse codeToSessionSuccessResponse) {
+        WxMaAuthVO<CodeToSessionSuccessResponse> wxMaAuthVO = new WxMaAuthVO<CodeToSessionSuccessResponse>();
         wxMaAuthVO.setSuccess(true);
-        wxMaAuthVO.setData(wxMaAuthSuccessResponse);
+        wxMaAuthVO.setData(codeToSessionSuccessResponse);
         return wxMaAuthVO;
     }
 
-    public static WxMaAuthVO fail(WxMaAuthErrorResponse wxMaAuthErrorResponse) {
-        WxMaAuthVO<WxMaAuthErrorResponse> wxMaAuthVO = new WxMaAuthVO<WxMaAuthErrorResponse>();
+    public static WxMaAuthVO fail(CodeToSessionErrorResponse codeToSessionErrorResponse) {
+        WxMaAuthVO<CodeToSessionErrorResponse> wxMaAuthVO = new WxMaAuthVO<CodeToSessionErrorResponse>();
         wxMaAuthVO.setSuccess(false);
-        wxMaAuthVO.setData(wxMaAuthErrorResponse);
+        wxMaAuthVO.setData(codeToSessionErrorResponse);
         return wxMaAuthVO;
     }
 }
