@@ -2,11 +2,18 @@ package com.jellyfishmix.wxinterchange.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jellyfishmix.wxinterchange.config.WxMaConfig;
+import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.UserInfo;
+import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.enums.WxMaAuthErrorResponseEnum;
 import com.jellyfishmix.wxinterchange.query.WxMaAuthErrorResponse;
 import com.jellyfishmix.wxinterchange.query.WxMaAuthSuccessResponse;
+import com.jellyfishmix.wxinterchange.service.AccountService;
+import com.jellyfishmix.wxinterchange.service.UserInfoService;
+import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.utils.StateCodeEnumUtil;
 import com.jellyfishmix.wxinterchange.utils.WxMaAuthResponseUtil;
+import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import com.jellyfishmix.wxinterchange.vo.WxMaAuthVO;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -29,11 +36,10 @@ import java.io.IOException;
 public class WxMaController {
     @Autowired
     private WxMaConfig wxMaConfig;
-
-    // TODO 登录接口
-    // public WxMaLoginVO login(@RequestParam("code") String code) {
-    //
-    // }
+    @Autowired
+    private UserInfoService userInfoService;
+    @Autowired
+    private AccountService accountService;
 
     /**
      * 微信code-openid换取
@@ -90,5 +96,25 @@ public class WxMaController {
         }
 
         return WxMaAuthResponseUtil.success(wxMaAuthSuccessResponse);
+    }
+
+    /**
+     * 登录/注册
+     * @param userName
+     * @param openid
+     * @return
+     */
+    public ResultVO login(@RequestParam("userName") String userName,
+                          @RequestParam("openid") String openid) {
+        // 查询openid是否已存在，未存在则执行注册逻辑
+        UserInfoDTO userInfoDTO = userInfoService.selectUserInfoByOpenid(openid);
+        if (!userInfoDTO.getStateCode().equals(UserEnum.SUCCESS.getStateCode())) {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUsername(userName);
+            userInfo.setOpenid(openid);
+            userInfoDTO = accountService.register(userInfo);
+        }
+        UserInfo userInfo = userInfoDTO.getUserInfo();
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateInfo(), userInfo);
     }
 }

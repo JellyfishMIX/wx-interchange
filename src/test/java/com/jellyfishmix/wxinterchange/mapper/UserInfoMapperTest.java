@@ -26,8 +26,7 @@ class UserInfoMapperTest {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(UniqueKeyUtil.getUniqueKey());
         userInfo.setUsername("test_username");
-        userInfo.setOpenid("test_openid");
-        userInfo.setSessionKey("test_session_key");
+        userInfo.setOpenid("test_openid-4");
         int result = userInfoMapper.insertUserInfo(userInfo);
         assertEquals(1, result);
     }
@@ -36,15 +35,22 @@ class UserInfoMapperTest {
     void updateUserInfo() {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid("158628518796132710");
-        userInfo.setUsername("test-4");
+        userInfo.setUsername("test-7");
         int result = userInfoMapper.updateUserInfo(userInfo);
         assertEquals(1, result);
     }
 
     @Test
-    void selectUserInfo() {
+    void selectUserInfoByUid() {
         String uid = "158628505011784344";
-        UserInfo resultUserInfo = userInfoMapper.selectUserInfo(uid);
+        UserInfo resultUserInfo = userInfoMapper.selectUserInfoByUid(uid);
+        assertNotNull(resultUserInfo);
+    }
+
+    @Test
+    void selectUserInfoByOpenid() {
+        String openid = "test_openid-1";
+        UserInfo resultUserInfo = userInfoMapper.selectUserInfoByOpenid(openid);
         assertNotNull(resultUserInfo);
     }
 }

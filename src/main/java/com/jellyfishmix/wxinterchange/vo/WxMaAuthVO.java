@@ -9,9 +9,9 @@ import lombok.Data;
 @Data
 public class WxMaAuthVO<T> {
     /**
-     * response状况，请求成功/失败。0成功，1失败
+     * response状况，请求成功/失败
      */
-    private Integer status;
+    private boolean success;
 
     /**
      * 具体内容
@@ -21,7 +21,7 @@ public class WxMaAuthVO<T> {
     @Override
     public String toString() {
         return "WxMaAuthVO{" +
-                "status=" + status +
+                "status=" + success +
                 ", data=" + data +
                 '}';
     }

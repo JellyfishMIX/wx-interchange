@@ -1,6 +1,5 @@
 package com.jellyfishmix.wxinterchange.entity;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -31,11 +30,6 @@ public class UserInfo {
      * 微信openid
      */
     private String openid;
-
-    /**
-     * 会话密钥，动态更新
-     */
-    private String sessionKey;
 
     /**
      * 创建的项目组数量

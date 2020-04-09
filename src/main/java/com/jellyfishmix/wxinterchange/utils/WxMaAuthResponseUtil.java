@@ -11,14 +11,14 @@ import com.jellyfishmix.wxinterchange.vo.WxMaAuthVO;
 public class WxMaAuthResponseUtil {
     public static WxMaAuthVO success(WxMaAuthSuccessResponse wxMaAuthSuccessResponse) {
         WxMaAuthVO<WxMaAuthSuccessResponse> wxMaAuthVO = new WxMaAuthVO<WxMaAuthSuccessResponse>();
-        wxMaAuthVO.setStatus(0);
+        wxMaAuthVO.setSuccess(true);
         wxMaAuthVO.setData(wxMaAuthSuccessResponse);
         return wxMaAuthVO;
     }
 
     public static WxMaAuthVO fail(WxMaAuthErrorResponse wxMaAuthErrorResponse) {
         WxMaAuthVO<WxMaAuthErrorResponse> wxMaAuthVO = new WxMaAuthVO<WxMaAuthErrorResponse>();
-        wxMaAuthVO.setStatus(1);
+        wxMaAuthVO.setSuccess(false);
         wxMaAuthVO.setData(wxMaAuthErrorResponse);
         return wxMaAuthVO;
     }

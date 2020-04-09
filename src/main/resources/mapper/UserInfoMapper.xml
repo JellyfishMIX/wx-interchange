@@ -5,8 +5,8 @@
 <mapper namespace="com.jellyfishmix.wxinterchange.mapper.UserInfoMapper">
     <!--新增用户信息-->
     <insert id="insertUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="id">
-        insert into wx_interchange.user_info(uid, username, openid, session_key)
-        values (#{uid}, #{username}, #{openid}, #{sessionKey}, #{createdTeamCounts}, #{managedTeamCounts}, #{joinedTeamCounts})
+        insert into wx_interchange.user_info(uid, username, openid)
+        values (#{uid}, #{username}, #{openid})
     </insert>
 
     <!--修改用户信息-->
@@ -16,7 +16,6 @@
             # uid无特殊情况禁止更新
             <!--<if test="uid != null">uid = #{uid}</if>-->
             <if test="username != null">username = #{username},</if>
-            <if test="sessionKey != null">session_key = #{sessionKey},</if>
             <if test="createdTeamCounts != null">created_team_counts = #{createdTeamCounts},</if>
             <if test="managedTeamCounts != null">managed_team_counts = #{managedTeamCounts},</if>
             <if test="joinedTeamCounts != null">joined_team_counts = #{joinedTeamCounts}</if>
@@ -25,10 +24,17 @@
     </update>
 
     <!--通过uid查找用户信息-->
-    <select id="selectUserInfo" resultType="com.jellyfishmix.wxinterchange.entity.UserInfo">
-        select uid, username, openid, session_key `sessionKey`, created_team_counts, managed_team_counts, joined_team_counts
+    <select id="selectUserInfoByUid" resultType="com.jellyfishmix.wxinterchange.entity.UserInfo">
+        select uid, username, openid, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where uid = #{uid}
+    </select>
+
+    <!--通过openid查找用户信息-->
+    <select id="selectUserInfoByOpenid" resultType="com.jellyfishmix.wxinterchange.entity.UserInfo">
+        select uid, username, openid, created_team_counts, managed_team_counts, joined_team_counts
+        from wx_interchange.user_info
+        where openid = #{openid}
     </select>
 
     <!--delete暂时不做-->
