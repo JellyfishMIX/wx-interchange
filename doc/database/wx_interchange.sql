@@ -3,7 +3,7 @@ create table `user_info` (
     `uid` varchar(32) not null comment '用户uid，随机生成，唯一键',
     `username` varchar(64) not null comment '用户名',
     `openid` varchar(64) not null comment '微信用户openid，唯一键',
-    `avatar_url` varchar(1024) not null comment '用户头像URL，头像文件储存在微信服务器',
+    `avatar_url` varchar(1024) null comment '用户头像URL，头像文件储存在微信服务器',
     `created_team_counts` int not null default 0 comment '创建的项目组数量',
     `managed_team_counts` int not null default 0 comment '管理的项目组数量',
     `joined_team_counts` int not null default 0 comment '加入的项目组数量',

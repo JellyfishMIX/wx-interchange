@@ -57,7 +57,7 @@ public class WxMaAuthController {
             UserInfo userInfo = new UserInfo();
             userInfo.setUsername(username);
             userInfo.setOpenid(openid);
-
+            userInfo.setAvatarUrl(avatarUrl);
             userInfoDTO = accountService.register(userInfo);
         }
         UserInfo userInfo = userInfoDTO.getUserInfo();

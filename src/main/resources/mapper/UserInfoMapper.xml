@@ -5,8 +5,8 @@
 <mapper namespace="com.jellyfishmix.wxinterchange.mapper.UserInfoMapper">
     <!--新增用户信息-->
     <insert id="insertUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="id">
-        insert into wx_interchange.user_info(uid, username, openid)
-        values (#{uid}, #{username}, #{openid})
+        insert into wx_interchange.user_info(uid, username, openid, avatar_url)
+        values (#{uid}, #{username}, #{openid}, #{avatarUrl})
     </insert>
 
     <!--修改用户信息-->
@@ -14,8 +14,9 @@
         update wx_interchange.user_info
         <set>
             # uid无特殊情况禁止更新
-            <!--<if test="uid != null">uid = #{uid}</if>-->
+            <!--<if test="uid != null">uid = #{uid},</if>-->
             <if test="username != null">username = #{username},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="createdTeamCounts != null">created_team_counts = #{createdTeamCounts},</if>
             <if test="managedTeamCounts != null">managed_team_counts = #{managedTeamCounts},</if>
             <if test="joinedTeamCounts != null">joined_team_counts = #{joinedTeamCounts}</if>
@@ -28,21 +29,25 @@
         <id column="uid" property="uid" jdbcType="VARCHAR" />
         <id column="username" property="username" jdbcType="VARCHAR" />
         <id column="openid" property="openid" jdbcType="VARCHAR" />
+        <id column="avatar_url" property="avatarUrl" jdbcType="VARCHAR" />
         <id column="created_team_counts" property="createdTeamCounts" jdbcType="INTEGER" />
         <id column="managed_team_counts" property="managedTeamCounts" jdbcType="INTEGER" />
         <id column="joined_team_counts" property="joinedTeamCounts" jdbcType="INTEGER" />
+        <!--无特殊情况不开放creationTime和modifiedTime-->
+        <!--<id column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />-->
+        <!--<id column="modified_time" property="modifiedTime" jdbcType="TIMESTAMP" />-->
     </resultMap>
     
     <!--通过uid查找用户信息-->
     <select id="selectUserInfoByUid" resultMap="userInfoMap">
-        select uid, username, openid, created_team_counts, managed_team_counts, joined_team_counts
+        select uid, username, openid, avatar_url, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where uid = #{uid}
     </select>
 
     <!--通过openid查找用户信息-->
     <select id="selectUserInfoByOpenid" resultMap="userInfoMap">
-        select uid, username, openid, created_team_counts, managed_team_counts, joined_team_counts
+        select uid, username, openid, avatar_url, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where openid = #{openid}
     </select>
