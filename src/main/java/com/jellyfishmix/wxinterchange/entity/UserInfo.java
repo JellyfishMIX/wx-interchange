@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class UserInfo {
     /**
-     * 无实体意义主键
+     * 代理主键
      */
     private Integer id;
 
@@ -27,7 +27,12 @@ public class UserInfo {
     private String username;
 
     /**
-     * 微信openid
+     * 用户头像url
+     */
+    private String avatarUrl;
+
+    /**
+     * 微信用户openid，唯一键
      */
     private String openid;
 
@@ -49,10 +54,10 @@ public class UserInfo {
     /**
      * 创建时间，自动写入
      */
-    private Date createTime;
+    private Date creationTime;
 
     /**
-     * 更新时间，自动写入
+     * 修改时间，自动写入
      */
-    private Date updateTime;
+    private Date modifiedTime;
 }
