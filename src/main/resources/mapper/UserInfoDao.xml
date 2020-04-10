@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jellyfishmix.wxinterchange.mapper.UserInfoMapper">
+<mapper namespace="com.jellyfishmix.wxinterchange.dao.UserInfoDao">
     <!--新增用户信息-->
     <insert id="insertUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="id">
         insert into wx_interchange.user_info(uid, username, openid, avatar_url)

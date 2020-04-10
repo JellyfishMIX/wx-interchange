@@ -31,4 +31,4 @@ build/
 .vscode/
 
 /src/main/resources/application.yml
-/doc/easycode/
+/src/main/java/easycode/

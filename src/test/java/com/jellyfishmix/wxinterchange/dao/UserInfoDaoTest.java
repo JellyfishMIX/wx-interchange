@@ -1,4 +1,4 @@
-package com.jellyfishmix.wxinterchange.mapper;
+package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class UserInfoMapperTest {
+class UserInfoDaoTest {
     @Resource
-    private UserInfoMapper userInfoMapper;
+    private UserInfoDao userInfoDao;
 
     @Test
     @Disabled
@@ -29,7 +29,7 @@ class UserInfoMapperTest {
         userInfo.setUid(UniqueKeyUtil.getUniqueKey());
         userInfo.setUsername("test_username");
         userInfo.setOpenid("test_openid-4");
-        int result = userInfoMapper.insertUserInfo(userInfo);
+        int result = userInfoDao.insertUserInfo(userInfo);
         assertEquals(1, result);
     }
 
@@ -39,7 +39,7 @@ class UserInfoMapperTest {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid("158628518796132710");
         userInfo.setUsername("test-7");
-        int result = userInfoMapper.updateUserInfo(userInfo);
+        int result = userInfoDao.updateUserInfo(userInfo);
         assertEquals(1, result);
     }
 
@@ -47,7 +47,7 @@ class UserInfoMapperTest {
     @Disabled
     void selectUserInfoByUid() {
         String uid = "158628505011784344";
-        UserInfo resultUserInfo = userInfoMapper.selectUserInfoByUid(uid);
+        UserInfo resultUserInfo = userInfoDao.selectUserInfoByUid(uid);
         assertNotNull(resultUserInfo);
     }
 
@@ -55,7 +55,7 @@ class UserInfoMapperTest {
     @Disabled
     void selectUserInfoByOpenid() {
         String openid = "test_openid-1";
-        UserInfo resultUserInfo = userInfoMapper.selectUserInfoByOpenid(openid);
+        UserInfo resultUserInfo = userInfoDao.selectUserInfoByOpenid(openid);
         assertNotNull(resultUserInfo);
     }
 }

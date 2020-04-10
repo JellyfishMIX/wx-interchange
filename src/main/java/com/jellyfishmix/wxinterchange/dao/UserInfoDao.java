@@ -1,4 +1,4 @@
-package com.jellyfishmix.wxinterchange.mapper;
+package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 
@@ -6,7 +6,7 @@ import com.jellyfishmix.wxinterchange.entity.UserInfo;
  * @author JellyfishMIX
  * @date 2020/4/7 6:58 下午
  */
-public interface UserInfoMapper {
+public interface UserInfoDao {
     /**
      * 新增用户信息
      * @param userInfo

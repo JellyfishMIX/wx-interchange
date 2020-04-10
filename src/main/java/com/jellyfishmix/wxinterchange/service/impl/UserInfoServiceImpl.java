@@ -4,7 +4,7 @@ import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.UserException;
-import com.jellyfishmix.wxinterchange.mapper.UserInfoMapper;
+import com.jellyfishmix.wxinterchange.dao.UserInfoDao;
 import com.jellyfishmix.wxinterchange.service.UserInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
     @Resource
-    private UserInfoMapper userInfoMapper;
+    private UserInfoDao userInfoDao;
 
     /**
      * 新增用户信息
@@ -28,7 +28,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     @Transactional(rollbackFor = UserException.class)
     public UserInfoDTO insertUserInfo(UserInfo userInfo) {
-        int effectedNum = userInfoMapper.insertUserInfo(userInfo);
+        int effectedNum = userInfoDao.insertUserInfo(userInfo);
         if (effectedNum <= 0) {
             throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
         }
@@ -43,7 +43,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public UserInfoDTO updateUserInfo(UserInfo userInfo) {
-        int effectedNum = userInfoMapper.updateUserInfo(userInfo);
+        int effectedNum = userInfoDao.updateUserInfo(userInfo);
         if (effectedNum <= 0) {
             throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
         }
@@ -59,7 +59,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfoDTO selectUserInfoByUid(String uid) {
         UserInfoDTO userInfoDTO = null;
-        UserInfo userInfo = userInfoMapper.selectUserInfoByUid(uid);
+        UserInfo userInfo = userInfoDao.selectUserInfoByUid(uid);
         if (userInfo == null) {
             userInfoDTO = new UserInfoDTO(UserEnum.USER_INFO_NULL);
             return userInfoDTO;
@@ -77,7 +77,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfoDTO selectUserInfoByOpenid(String openid) {
         UserInfoDTO userInfoDTO = null;
-        UserInfo userInfo = userInfoMapper.selectUserInfoByOpenid(openid);
+        UserInfo userInfo = userInfoDao.selectUserInfoByOpenid(openid);
         if (userInfo == null) {
             userInfoDTO = new UserInfoDTO(UserEnum.USER_INFO_NULL);
             return userInfoDTO;

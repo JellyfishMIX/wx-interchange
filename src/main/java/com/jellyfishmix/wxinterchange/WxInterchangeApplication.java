@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author JellyfishMIX
  */
 @SpringBootApplication
-@MapperScan(basePackages = "com.jellyfishmix.wxinterchange.mapper")
+@MapperScan(basePackages = "com.jellyfishmix.wxinterchange.dao")
 public class WxInterchangeApplication {
 
     public static void main(String[] args) {
