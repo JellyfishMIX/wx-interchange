@@ -13,8 +13,6 @@
     <update id="updateUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="uid" keyProperty="uid">
         update wx_interchange.user_info
         <set>
-            # uid无特殊情况禁止更新
-            <!--<if test="uid != null">uid = #{uid},</if>-->
             <if test="username != null">username = #{username},</if>
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="createdTeamCounts != null">created_team_counts = #{createdTeamCounts},</if>
@@ -39,14 +37,14 @@
     </resultMap>
     
     <!--通过uid查找用户信息-->
-    <select id="selectUserInfoByUid" resultMap="userInfoMap">
+    <select id="queryByUid" resultMap="userInfoMap">
         select uid, username, openid, avatar_url, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where uid = #{uid}
     </select>
 
     <!--通过openid查找用户信息-->
-    <select id="selectUserInfoByOpenid" resultMap="userInfoMap">
+    <select id="queryByOpenid" resultMap="userInfoMap">
         select uid, username, openid, avatar_url, created_team_counts, managed_team_counts, joined_team_counts
         from wx_interchange.user_info
         where openid = #{openid}

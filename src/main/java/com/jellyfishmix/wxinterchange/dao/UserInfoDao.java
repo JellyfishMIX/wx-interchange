@@ -26,14 +26,14 @@ public interface UserInfoDao {
      * @param uid
      * @return
      */
-    UserInfo selectUserInfoByUid(String uid);
+    UserInfo queryByUid(String uid);
 
     /**
      * 通过openid查找用户信息
      * @param openid
      * @return
      */
-    UserInfo selectUserInfoByOpenid(String openid);
+    UserInfo queryByOpenid(String openid);
 
     // delete暂时不做
 }

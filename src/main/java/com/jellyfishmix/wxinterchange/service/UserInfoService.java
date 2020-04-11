@@ -27,14 +27,14 @@ public interface UserInfoService {
      * @param uid
      * @return
      */
-    UserInfoDTO selectUserInfoByUid(String uid);
+    UserInfoDTO queryByUid(String uid);
 
     /**
      * 通过openid查找用户信息
      * @param openid
      * @return
      */
-    UserInfoDTO selectUserInfoByOpenid(String openid);
+    UserInfoDTO queryByOpenid(String openid);
 
     // delete暂时不做
 }

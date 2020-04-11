@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
         String uid = UniqueKeyUtil.getUniqueKey();
         userInfo.setUid(uid);
         userInfoService.insertUserInfo(userInfo);
-        UserInfoDTO userInfoDTO = userInfoService.selectUserInfoByOpenid(userInfo.getOpenid());
+        UserInfoDTO userInfoDTO = userInfoService.queryByOpenid(userInfo.getOpenid());
         return userInfoDTO;
     }
 }

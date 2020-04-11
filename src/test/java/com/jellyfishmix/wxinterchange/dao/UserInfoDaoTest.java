@@ -47,7 +47,7 @@ class UserInfoDaoTest {
     @Disabled
     void selectUserInfoByUid() {
         String uid = "158628505011784344";
-        UserInfo resultUserInfo = userInfoDao.selectUserInfoByUid(uid);
+        UserInfo resultUserInfo = userInfoDao.queryByUid(uid);
         assertNotNull(resultUserInfo);
     }
 
@@ -55,7 +55,7 @@ class UserInfoDaoTest {
     @Disabled
     void selectUserInfoByOpenid() {
         String openid = "test_openid-1";
-        UserInfo resultUserInfo = userInfoDao.selectUserInfoByOpenid(openid);
+        UserInfo resultUserInfo = userInfoDao.queryByOpenid(openid);
         assertNotNull(resultUserInfo);
     }
 }

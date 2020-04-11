@@ -57,9 +57,9 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return
      */
     @Override
-    public UserInfoDTO selectUserInfoByUid(String uid) {
+    public UserInfoDTO queryByUid(String uid) {
         UserInfoDTO userInfoDTO = null;
-        UserInfo userInfo = userInfoDao.selectUserInfoByUid(uid);
+        UserInfo userInfo = userInfoDao.queryByUid(uid);
         if (userInfo == null) {
             userInfoDTO = new UserInfoDTO(UserEnum.USER_INFO_NULL);
             return userInfoDTO;
@@ -75,9 +75,9 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return
      */
     @Override
-    public UserInfoDTO selectUserInfoByOpenid(String openid) {
+    public UserInfoDTO queryByOpenid(String openid) {
         UserInfoDTO userInfoDTO = null;
-        UserInfo userInfo = userInfoDao.selectUserInfoByOpenid(openid);
+        UserInfo userInfo = userInfoDao.queryByOpenid(openid);
         if (userInfo == null) {
             userInfoDTO = new UserInfoDTO(UserEnum.USER_INFO_NULL);
             return userInfoDTO;
