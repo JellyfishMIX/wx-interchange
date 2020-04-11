@@ -20,7 +20,7 @@ create table `team_info` (
     `gid` varchar(32) null comment '绑定的微信群gid，非必须，外键',
     `team_name` varchar(64) not null comment '项目组名称',
     `avatar_url` varchar(1024) null comment '项目组头像URL，非必须',
-    `grade` int not null default 99 comment '项目组等级，测试项目组为99，官方项目组为1，普通项目组为2，保留0',
+    `grade` int not null default 2 comment '项目组等级，官方项目组为1，普通项目组为2，保留0',
     `number_counts` int not null default 1 comment '项目组成员数量',
     `created_number_counts` int not null default 1 comment '项目组创建者数量',
     `managed_number_counts` int not null default 1 comment '项目组管理者数量',
@@ -32,6 +32,19 @@ create table `team_info` (
     unique key `unique_tid` (`tid`),
     constraint `fk_gid` foreign key (gid) references wx_interchange.wx_group_info(`gid`)
 ) comment '项目组表';
+
+create table `team_user` (
+     `id` int not null auto_increment comment '代理主键',
+     `tid` varchar(32) not null comment '项目组tid，外键',
+     `uid` varchar(32) not null comment '用户uid，外键',
+     `user_avatar_url` varchar(1024) null comment '项目组成员头像URL，头像文件储存在微信服务器',
+     `user_grade` int not null default 3 comment '项目组成员等级，1为创建者，2为管理员，3为普通成员',
+     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+     primary key (`id`),
+     constraint `fk_tid` foreign key (tid) references wx_interchange.team_info(`tid`),
+     constraint `fk_uid` foreign key (uid) references wx_interchange.user_info(`uid`)
+) comment '项目组成员表';
 
 create table `wx_group_info` (
     `id` int not null auto_increment comment '代理主键',

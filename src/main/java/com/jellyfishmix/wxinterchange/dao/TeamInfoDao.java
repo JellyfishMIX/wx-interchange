@@ -13,12 +13,12 @@ import java.util.List;
 public interface TeamInfoDao {
 
     /**
-     * 通过ID查询单条数据
+     * 通过tid查询单条数据
      *
      * @param tid 项目组tid
      * @return 实例对象
      */
-    TeamInfo queryByTid(Integer tid);
+    TeamInfo queryByTid(String tid);
 
     /**
      * 查询指定行数据
@@ -55,11 +55,10 @@ public interface TeamInfoDao {
     int update(TeamInfo teamInfo);
 
     /**
-     * 通过主键删除数据
+     * 通过tid删除数据
      *
      * @param tid 主键
      * @return 影响行数
      */
-    int deleteByTid(Integer tid);
-
+    int deleteByTid(String tid);
 }

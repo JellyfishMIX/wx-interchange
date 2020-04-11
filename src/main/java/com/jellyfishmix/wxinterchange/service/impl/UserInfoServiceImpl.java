@@ -15,13 +15,14 @@ import javax.annotation.Resource;
  * @author JellyfishMIX
  * @date 2020/4/8 11:20 上午
  */
-@Service
+@Service("userInfoService")
 public class UserInfoServiceImpl implements UserInfoService {
     @Resource
     private UserInfoDao userInfoDao;
 
     /**
      * 新增用户信息
+     *
      * @param userInfo
      * @return
      */
@@ -38,6 +39,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     /**
      * 修改用户信息
+     *
      * @param userInfo
      * @return
      */
@@ -53,6 +55,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     /**
      * 通过uid查找用户信息
+     *
      * @param uid
      * @return
      */

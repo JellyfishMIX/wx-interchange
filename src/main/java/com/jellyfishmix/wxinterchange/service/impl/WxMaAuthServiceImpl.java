@@ -20,7 +20,7 @@ import java.io.IOException;
  * @author JellyfishMIX
  * @date 2020/4/9 4:28 下午
  */
-@Service
+@Service("wxMaAuthService")
 @Slf4j
 public class WxMaAuthServiceImpl implements WxMaAuthService {
     @Autowired

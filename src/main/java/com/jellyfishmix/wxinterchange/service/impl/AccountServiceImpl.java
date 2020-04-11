@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @author JellyfishMIX
  * @date 2020/4/9 2:52 下午
  */
-@Service
+@Service("accountService")
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private UserInfoService userInfoService;
