@@ -29,6 +29,15 @@ public interface TeamUserService {
     List<TeamUser> queryAllByLimit(int offset, int limit);
 
     /**
+     * 通过uid查询我创建的项目组
+     *
+     * @param uid 用户uid
+     * @param userGrade 项目组成员等级
+     * @return 对象列表
+     */
+    List<TeamUser> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
+
+    /**
      * 新增数据
      *
      * @param teamUser 实例对象

@@ -49,6 +49,8 @@ public class TeamController {
         TeamUser teamUser = new TeamUser();
         teamUser.setTid(teamInfo.getTid());
         teamUser.setUid(uid);
+        teamUser.setTeamName(teamName);
+        teamUser.setTeamAvatarUrl(teamAvatarUrl);
         // userGrade，1 为创建者等级
         teamUser.setUserGrade(1);
         teamUser.setUserAvatarUrl(creatorAvatarUrl);

@@ -43,6 +43,19 @@ public class TeamUserServiceImpl implements TeamUserService {
     }
 
     /**
+     * 通过uid查询我创建的项目组
+     *
+     * @param uid 用户uid
+     * @param userGrade 项目组成员等级
+     * @return 对象列表
+     */
+    @Override
+    public List<TeamUser> queryTeamListByUidAndUserGrade(String uid, Integer userGrade) {
+        List<TeamUser> teamUserList = teamUserDao.queryTeamListByUidAndUserGrade(uid, userGrade);
+        return teamUserList;
+    }
+
+    /**
      * 新增数据
      *
      * @param teamUser 实例对象

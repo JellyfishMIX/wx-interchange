@@ -29,7 +29,6 @@ public interface TeamUserDao {
      */
     List<TeamUser> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
-
     /**
      * 通过实体作为筛选条件查询
      *
@@ -37,6 +36,15 @@ public interface TeamUserDao {
      * @return 对象列表
      */
     List<TeamUser> queryAll(TeamUser teamUser);
+
+    /**
+     * 通过uid和userGrade查询我所在的项目组
+     *
+     * @param uid 用户uid
+     * @param userGrade 项目组成员等级
+     * @return 对象列表
+     */
+    List<TeamUser> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
 
     /**
      * 新增数据
@@ -61,5 +69,4 @@ public interface TeamUserDao {
      * @return 影响行数
      */
     int deleteById(Integer id);
-
 }

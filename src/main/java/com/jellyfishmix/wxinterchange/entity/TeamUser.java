@@ -25,7 +25,15 @@ public class TeamUser {
     */
     private String uid;
     /**
-    * 项目组成员头像URL，头像文件储存在微信服务器
+     * 项目组名称
+     */
+    private String teamName;
+    /**
+     * 项目组头像URL，非必须，头像文件储存在微信服务器
+     */
+    private String teamAvatarUrl;
+    /**
+    * 项目组成员头像URL，非必须，头像文件储存在微信服务器
     */
     private String userAvatarUrl;
     /**
@@ -33,7 +41,7 @@ public class TeamUser {
     */
     private Integer userGrade;
     /**
-    * 创建时间，自动写入
+    * 创建时间，自动写入（加入项目组的时间）
     */
     private Date creationTime;
     /**
