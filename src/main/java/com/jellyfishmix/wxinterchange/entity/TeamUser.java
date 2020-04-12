@@ -29,6 +29,10 @@ public class TeamUser {
      */
     private String teamName;
     /**
+     * 用户名
+     */
+    private String username;
+    /**
      * 项目组头像URL，非必须，头像文件储存在微信服务器
      */
     private String teamAvatarUrl;

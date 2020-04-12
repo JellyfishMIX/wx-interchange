@@ -30,15 +30,13 @@ public class TeamController {
      * @param teamName 项目组名称
      * @param teamAvatarUrl 项目组头像URL
      * @param teamGrade 项目组等级，官方项目组为1，普通项目组为2，保留0
-     * @param creatorAvatarUrl 项目组创建者头像URL，头像文件存储在微信服务器
      * @return
      */
     @PostMapping("/create_team")
     public ResultVO createTeam(@RequestParam("uid") String uid,
                                @RequestParam("teamName") String teamName,
                                @RequestParam("teamAvatarUrl") String teamAvatarUrl,
-                               @RequestParam("teamGrade") Integer teamGrade,
-                               @RequestParam("creatorAvatarUrl") String creatorAvatarUrl) {
+                               @RequestParam("teamGrade") Integer teamGrade) {
         TeamInfo teamInfo = new TeamInfo();
         teamInfo.setTeamName(teamName);
         teamInfo.setAvatarUrl(teamAvatarUrl);
@@ -53,7 +51,6 @@ public class TeamController {
         teamUser.setTeamAvatarUrl(teamAvatarUrl);
         // userGrade，1 为创建者等级
         teamUser.setUserGrade(1);
-        teamUser.setUserAvatarUrl(creatorAvatarUrl);
 
         teamUserService.insert(teamUser);
 

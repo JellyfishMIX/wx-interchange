@@ -7,6 +7,7 @@
         <result property="tid" column="tid" jdbcType="VARCHAR"/>
         <result property="uid" column="uid" jdbcType="VARCHAR"/>
         <result property="teamName" column="team_name" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR" />
         <result property="teamAvatarUrl" column="team_avatar_url" jdbcType="VARCHAR"/>
         <result property="userAvatarUrl" column="user_avatar_url" jdbcType="VARCHAR"/>
         <result property="userGrade" column="user_grade" jdbcType="INTEGER"/>
@@ -66,15 +67,15 @@
 
     <!--通过uid和userGrade查询我所在的项目组-->
     <select id="queryTeamListByUidAndUserGrade" resultMap="TeamUserMap">
-        select tid, uid, team_name, team_avatar_url, user_avatar_url, user_grade, creation_time
+        select tid, uid, team_name, username, team_avatar_url, user_avatar_url, user_grade, creation_time
         from wx_interchange.team_user
         where uid = #{uid} and user_grade = #{userGrade}
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into wx_interchange.team_user(tid, uid, team_name, team_avatar_url, user_avatar_url, user_grade)
-        values (#{tid}, #{uid}, #{teamName}, #{teamAvatarUrl}, #{userAvatarUrl}, #{userGrade})
+        insert into wx_interchange.team_user(tid, uid, team_name, username, team_avatar_url, user_avatar_url, user_grade)
+        values (#{tid}, #{uid}, #{teamName}, #{username}, #{teamAvatarUrl}, #{userAvatarUrl}, #{userGrade})
     </insert>
 
     <!--通过主键修改数据-->
@@ -88,10 +89,13 @@
                 uid = #{uid},
             </if>
             <if test="teamName != null and teamName != ''">
-                and team_name = #{teamName}
+                team_name = #{teamName}
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username}
             </if>
             <if test="teamAvatarUrl != null and teamName != ''">
-                and team_avatar_url = #{teamAvatarUrl}
+                team_avatar_url = #{teamAvatarUrl}
             </if>
             <if test="userAvatarUrl != null and userAvatarUrl != ''">
                 user_avatar_url = #{userAvatarUrl},

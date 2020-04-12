@@ -1,7 +1,9 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.dao.UserInfoDao;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
+import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.service.TeamUserService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import java.util.List;
 public class TeamUserServiceImpl implements TeamUserService {
     @Resource
     private TeamUserDao teamUserDao;
+    @Resource
+    private UserInfoDao userInfoDao;
 
     /**
      * 通过ID查询单条数据
@@ -63,6 +67,10 @@ public class TeamUserServiceImpl implements TeamUserService {
      */
     @Override
     public TeamUser insert(TeamUser teamUser) {
+        // 暂时不加通过uid查询无userInfo的错误校验
+        UserInfo userInfo = userInfoDao.queryByUid(teamUser.getUid());
+        teamUser.setUsername(userInfo.getUsername());
+        teamUser.setUserAvatarUrl(userInfo.getAvatarUrl());
         this.teamUserDao.insert(teamUser);
         return teamUser;
     }

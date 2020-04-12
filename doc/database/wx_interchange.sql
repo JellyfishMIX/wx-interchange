@@ -38,6 +38,7 @@ create table `team_user` (
      `tid` varchar(32) not null comment '项目组tid，外键',
      `uid` varchar(32) not null comment '用户uid，外键',
      `team_name` varchar(64) not null comment '项目组名称',
+     `username` varchar(64) not null comment '用户名',
      `team_avatar_url` varchar(1024) null comment '项目组头像URL，非必须，头像文件储存在微信服务器',
      `user_avatar_url` varchar(1024) null comment '项目组成员头像URL，头像文件储存在微信服务器',
      `user_grade` int not null default 3 comment '项目组成员等级，1为创建者，2为管理员，3为普通成员',
