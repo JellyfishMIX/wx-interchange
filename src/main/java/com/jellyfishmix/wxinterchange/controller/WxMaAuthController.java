@@ -9,7 +9,6 @@ import com.jellyfishmix.wxinterchange.service.UserInfoService;
 import com.jellyfishmix.wxinterchange.service.WxMaAuthService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/wxma_auth")
-@Slf4j
 public class WxMaAuthController {
     @Autowired
     private UserInfoService userInfoService;
@@ -32,7 +30,7 @@ public class WxMaAuthController {
      * 微信code-openid换取
      * @param code 用户登录凭证（有效期五分钟）。开发者需要在开发者服务器后台调用 [auth.code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)，使用 code 换取 openid 和 session_key 等信息。
      */
-    @GetMapping("/code_to_session")
+    @PostMapping("/code_to_session")
     public ResultVO codeToSession(@RequestParam("code") String code) {
         WxMaCodeToSessionDTO wxMaCodeToSessionDTO = wxMaAuthService.codeToSession(code);
         if (!wxMaCodeToSessionDTO.getSuccess()) {
