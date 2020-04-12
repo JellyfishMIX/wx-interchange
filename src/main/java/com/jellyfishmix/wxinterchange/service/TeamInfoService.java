@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.service;
 
+import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface TeamInfoService {
      * @param tid 项目组tid
      * @return 实例对象
      */
-    TeamInfo queryByTid(String tid);
+    TeamInfoDTO queryByTid(String tid);
 
     /**
      * 查询多条数据
@@ -51,5 +52,4 @@ public interface TeamInfoService {
      * @return 是否成功
      */
     boolean deleteByTid(String tid);
-
 }

@@ -1,7 +1,9 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.dao.TeamInfoDao;
+import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.service.TeamInfoService;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.stereotype.Service;
@@ -21,14 +23,22 @@ public class TeamInfoServiceImpl implements TeamInfoService {
     private TeamInfoDao teamInfoDao;
 
     /**
-     * 通过ID查询单条数据
+     * 通过tid查询单条数据
      *
      * @param tid 主键
      * @return 实例对象
      */
     @Override
-    public TeamInfo queryByTid(String tid) {
-        return this.teamInfoDao.queryByTid(tid);
+    public TeamInfoDTO queryByTid(String tid) {
+        TeamInfo teamInfo = teamInfoDao.queryByTid(tid);
+        TeamInfoDTO teamInfoDTO = null;
+        // 查询teamInfo为null
+        if (teamInfo == null) {
+            teamInfoDTO = new TeamInfoDTO(TeamEnum.TEAM_INFO_NULL);
+            return teamInfoDTO;
+        }
+        teamInfoDTO = new TeamInfoDTO(TeamEnum.SUCCESS, teamInfo);
+        return teamInfoDTO;
     }
 
     /**
@@ -70,7 +80,9 @@ public class TeamInfoServiceImpl implements TeamInfoService {
     @Override
     public TeamInfo update(TeamInfo teamInfo) {
         this.teamInfoDao.update(teamInfo);
-        return this.queryByTid(teamInfo.getTid());
+        TeamInfoDTO teamInfoDTO = null;
+        teamInfoDTO = this.queryByTid(teamInfo.getTid());
+        return teamInfoDTO.getTeamInfo();
     }
 
     /**

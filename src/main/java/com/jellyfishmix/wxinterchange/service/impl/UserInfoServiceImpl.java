@@ -63,6 +63,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoDTO queryByUid(String uid) {
         UserInfoDTO userInfoDTO = null;
         UserInfo userInfo = userInfoDao.queryByUid(uid);
+        // 查询userInfo为null
         if (userInfo == null) {
             userInfoDTO = new UserInfoDTO(UserEnum.USER_INFO_NULL);
             return userInfoDTO;

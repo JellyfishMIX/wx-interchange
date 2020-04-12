@@ -8,7 +8,8 @@ import lombok.Getter;
  */
 @Getter
 public enum TeamEnum implements StateCodeEnum {
-    SUCCESS(0, "操作成功");
+    SUCCESS(0, "操作成功"),
+    TEAM_INFO_NULL(1, "项目组信息为空");
 
     private Integer stateCode;
     private String stateMsg;

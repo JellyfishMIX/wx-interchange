@@ -42,15 +42,4 @@ public class WxMaCodeToSessionDTO {
         this.stateMsg = stateMsg;
         this.codeToSessionErrorResponse = codeToSessionErrorResponse;
     }
-
-    @Override
-    public String toString() {
-        return "WxMaCodeToSessionDTO{" +
-                "success=" + success +
-                ", stateCode=" + stateCode +
-                ", stateMsg='" + stateMsg + '\'' +
-                ", codeToSessionSuccessResponse=" + codeToSessionSuccessResponse +
-                ", codeToSessionErrorResponse=" + codeToSessionErrorResponse +
-                '}';
-    }
 }

@@ -24,13 +24,4 @@ public class UserInfoDTO {
         this.stateMsg = userEnum.getStateMsg();
         this.userInfo = userInfo;
     }
-
-    @Override
-    public String toString() {
-        return "UserInfoDTO{" +
-                "stateCode=" + stateCode +
-                ", stateMsg='" + stateMsg + '\'' +
-                ", userInfo=" + userInfo +
-                '}';
-    }
 }

@@ -20,14 +20,4 @@ public class ResultVO<T> {
      * 具体内容
      */
     private T data;
-
-    @Override
-    public String toString() {
-        return "ResultVO{" +
-                "success=" + success +
-                ", stateCode=" + stateCode +
-                ", stateMsg='" + stateMsg + '\'' +
-                ", data=" + data +
-                '}';
-    }
 }

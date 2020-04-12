@@ -30,7 +30,7 @@ public class WxMaAuthController {
 
     /**
      * 微信code-openid换取
-     * @param code
+     * @param code 用户登录凭证（有效期五分钟）。开发者需要在开发者服务器后台调用 [auth.code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)，使用 code 换取 openid 和 session_key 等信息。
      */
     @GetMapping("/code_to_session")
     public ResultVO codeToSession(@RequestParam("code") String code) {
@@ -43,8 +43,8 @@ public class WxMaAuthController {
 
     /**
      * 登录/注册
-     * @param username
-     * @param openid
+     * @param username 用户名
+     * @param openid 微信用户openid
      * @return
      */
     @PostMapping("/login")
