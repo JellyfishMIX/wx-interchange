@@ -1,15 +1,20 @@
 package com.jellyfishmix.wxinterchange.controller;
 
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
+import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
+import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.service.TeamInfoService;
 import com.jellyfishmix.wxinterchange.service.TeamUserService;
+import com.jellyfishmix.wxinterchange.service.UserInfoService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author JellyfishMIX
@@ -22,6 +27,8 @@ public class TeamController {
     private TeamInfoService teamInfoService;
     @Autowired
     private TeamUserService teamUserService;
+    @Autowired
+    private UserInfoService userInfoService;
 
     /**
      * 创建项目组
@@ -37,6 +44,12 @@ public class TeamController {
                                @RequestParam("teamName") String teamName,
                                @RequestParam("teamAvatarUrl") String teamAvatarUrl,
                                @RequestParam("teamGrade") Integer teamGrade) {
+        // 校验uid是否存在
+        UserInfoDTO userInfoDTO = userInfoService.queryByUid(uid);
+        if (userInfoDTO.getStateCode().equals(UserEnum.USER_INFO_NULL.getStateCode())) {
+            return ResultVOUtil.fail(UserEnum.USER_INFO_NULL.getStateCode(), UserEnum.USER_INFO_NULL.getStateMsg());
+        }
+
         TeamInfo teamInfo = new TeamInfo();
         teamInfo.setTeamName(teamName);
         teamInfo.setAvatarUrl(teamAvatarUrl);
@@ -72,5 +85,38 @@ public class TeamController {
         }
         TeamInfo teamInfo = teamInfoDTO.getTeamInfo();
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfo);
+    }
+
+    /**
+     * 通过tid查询项目组成员列表
+     *
+     * @param tid 项目组tid
+     * @return
+     */
+    @GetMapping("/query_team_user_list_by_tid")
+    public ResultVO queryTeamUserListByTid(@RequestParam("tid") String tid) {
+        List<TeamUser> teamUserList = teamUserService.queryTeamUserListByTid(tid);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamUserList);
+    }
+
+    /**
+     * 修改项目组名称
+     *
+     * @param tid 将要修改的项目组的tid
+     * @param newTeamName 新项目组名称
+     * @return
+     */
+    @PostMapping("/update_team_name")
+    public ResultVO updateTeamName(@RequestParam("tid") String tid,
+                                   @RequestParam("newTeamName") String newTeamName) {
+        TeamInfo teamInfo = new TeamInfo();
+        teamInfo.setTid(tid);
+        teamInfo.setTeamName(newTeamName);
+        TeamInfoDTO teamInfoDTO = teamInfoService.update(teamInfo);
+        // 如果tid对应的teamInfo为空
+        if (teamInfoDTO.getStateCode().equals(TeamEnum.TEAM_INFO_NULL.getStateCode())) {
+            return ResultVOUtil.fail(TeamEnum.TEAM_INFO_NULL.getStateCode(), TeamEnum.TEAM_INFO_NULL.getStateMsg());
+        }
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
     }
 }

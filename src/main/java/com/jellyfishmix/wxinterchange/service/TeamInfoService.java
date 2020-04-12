@@ -43,7 +43,7 @@ public interface TeamInfoService {
      * @param teamInfo 实例对象
      * @return 实例对象
      */
-    TeamInfo update(TeamInfo teamInfo);
+    TeamInfoDTO update(TeamInfo teamInfo);
 
     /**
      * 通过主键删除数据

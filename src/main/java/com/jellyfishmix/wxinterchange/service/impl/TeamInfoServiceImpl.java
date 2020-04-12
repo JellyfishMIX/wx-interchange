@@ -15,6 +15,7 @@ import java.util.List;
  * 项目组表(TeamInfo)表服务实现类
  *
  * @author makejava
+ * @author JellyfishMIX
  * @since 2020-04-11 09:52:53
  */
 @Service("teamInfoService")
@@ -78,11 +79,15 @@ public class TeamInfoServiceImpl implements TeamInfoService {
      * @return 实例对象
      */
     @Override
-    public TeamInfo update(TeamInfo teamInfo) {
-        this.teamInfoDao.update(teamInfo);
+    public TeamInfoDTO update(TeamInfo teamInfo) {
+        int effectedNum = this.teamInfoDao.update(teamInfo);
         TeamInfoDTO teamInfoDTO = null;
+        if (effectedNum <= 0) {
+            teamInfoDTO = new TeamInfoDTO(TeamEnum.TEAM_INFO_NULL);
+            return teamInfoDTO;
+        }
         teamInfoDTO = this.queryByTid(teamInfo.getTid());
-        return teamInfoDTO.getTeamInfo();
+        return teamInfoDTO;
     }
 
     /**

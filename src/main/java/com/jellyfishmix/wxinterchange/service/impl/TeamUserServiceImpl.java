@@ -60,6 +60,18 @@ public class TeamUserServiceImpl implements TeamUserService {
     }
 
     /**
+     * 通过tid查询项目组成员列表
+     *
+     * @param tid 项目组tid
+     * @return
+     */
+    @Override
+    public List<TeamUser> queryTeamUserListByTid(String tid) {
+        List<TeamUser> teamUserList = teamUserDao.queryTeamUserListByTid(tid);
+        return teamUserList;
+    }
+
+    /**
      * 新增数据
      *
      * @param teamUser 实例对象

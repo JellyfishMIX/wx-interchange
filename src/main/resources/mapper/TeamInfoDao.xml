@@ -82,10 +82,13 @@
         values (#{tid}, #{gid}, #{teamName}, #{avatarUrl}, #{grade})
     </insert>
 
-    <!--通过主键修改数据-->
+    <!--通过tid修改数据-->
     <update id="update">
         update wx_interchange.team_info
         <set>
+            <!--<if test="tid != null and tid != ''">-->
+            <!--    tid = #{tid},-->
+            <!--</if>-->
             <if test="gid != null and gid != ''">
                 gid = #{gid},
             </if>

@@ -47,6 +47,14 @@ public interface TeamUserDao {
     List<TeamUser> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
 
     /**
+     * 通过tid查询项目组成员列表
+     *
+     * @param tid 项目组tid
+     * @return
+     */
+    List<TeamUser> queryTeamUserListByTid(String tid);
+
+    /**
      * 新增数据
      *
      * @param teamUser 实例对象
