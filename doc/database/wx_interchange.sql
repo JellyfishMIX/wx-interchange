@@ -18,6 +18,7 @@ create table `team_info` (
     `id` int not null auto_increment comment '代理主键',
     `tid` varchar(32) not null comment '项目组tid，随机生成，唯一键',
     `gid` varchar(32) null comment '绑定的微信群gid，非必须，外键',
+#     `opengid` varchar(32) null comment '绑定的微信群gid，非必须，外键', 暂时不做绑定微信群相关
     `team_name` varchar(64) not null comment '项目组名称',
     `avatar_url` varchar(1024) null comment '项目组头像URL，非必须',
     `grade` int not null default 2 comment '项目组等级，官方项目组为1，普通项目组为2，保留0',

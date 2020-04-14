@@ -55,6 +55,15 @@ public interface TeamUserDao {
     List<TeamUser> queryTeamUserListByTid(String tid);
 
     /**
+     * 通过tid和uid查询单条teamUser
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    TeamUser queryTeamUserByTidAndUid(String tid, String uid);
+
+    /**
      * 新增数据
      *
      * @param teamUser 实例对象

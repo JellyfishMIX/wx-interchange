@@ -86,9 +86,6 @@
     <update id="update">
         update wx_interchange.team_info
         <set>
-            <!--<if test="tid != null and tid != ''">-->
-            <!--    tid = #{tid},-->
-            <!--</if>-->
             <if test="gid != null and gid != ''">
                 gid = #{gid},
             </if>

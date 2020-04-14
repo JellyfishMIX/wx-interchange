@@ -119,4 +119,28 @@ public class TeamController {
         }
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
     }
+
+    /**
+     * 进入项目组
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    @PostMapping("/enter_team")
+    public ResultVO enterTeam(@RequestParam("tid") String tid,
+                              @RequestParam("uid") String uid) {
+        TeamInfoDTO teamInfoDTO = null;
+        // 检查uid用户是否已加入了tid项目组
+        TeamUser teamUser = teamUserService.queryTeamUserByTidAndUid(tid, uid);
+        // 如果未加入，则将此uid用户加入tid对应的项目组
+        if (teamUser == null) {
+            teamInfoDTO = teamUserService.joinTeam(tid, uid);
+            // teamInfoDTO判业务异常逻辑先不写
+            return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
+        }
+
+        teamInfoDTO = teamInfoService.queryByTid(tid);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
+    }
 }

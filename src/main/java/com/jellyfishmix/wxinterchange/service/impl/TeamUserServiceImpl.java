@@ -1,9 +1,13 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.dao.TeamInfoDao;
 import com.jellyfishmix.wxinterchange.dao.UserInfoDao;
+import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
+import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.service.TeamUserService;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +26,8 @@ public class TeamUserServiceImpl implements TeamUserService {
     private TeamUserDao teamUserDao;
     @Resource
     private UserInfoDao userInfoDao;
+    @Resource
+    private TeamInfoDao teamInfoDao;
 
     /**
      * 通过ID查询单条数据
@@ -72,19 +78,64 @@ public class TeamUserServiceImpl implements TeamUserService {
     }
 
     /**
+     * 通过uid和tid查询单条teamUser
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    @Override
+    public TeamUser queryTeamUserByTidAndUid(String tid, String uid) {
+        TeamUser teamUser = teamUserDao.queryTeamUserByTidAndUid(tid, uid);
+        return teamUser;
+    };
+
+    /**
      * 新增数据
      *
      * @param teamUser 实例对象
      * @return 实例对象
      */
     @Override
-    public TeamUser insert(TeamUser teamUser) {
+    public void insert(TeamUser teamUser) {
         // 暂时不加通过uid查询无userInfo的错误校验
         UserInfo userInfo = userInfoDao.queryByUid(teamUser.getUid());
         teamUser.setUsername(userInfo.getUsername());
         teamUser.setUserAvatarUrl(userInfo.getAvatarUrl());
         this.teamUserDao.insert(teamUser);
-        return teamUser;
+    }
+
+    /**
+     * 加入项目组
+     *
+     * @param uid 用户uid
+     * @param tid 项目组tid
+     * @return
+     */
+    @Override
+    public TeamInfoDTO joinTeam(String tid, String uid) {
+        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
+        // 新成员加入，项目组成员++
+        teamInfoFromQuery.setNumberCounts(teamInfoFromQuery.getNumberCounts() + 1);
+        teamInfoFromQuery.setJoinedNumberCounts(teamInfoFromQuery.getJoinedNumberCounts() + 1);
+
+        TeamInfo teamInfoForUpdate = new TeamInfo();
+        teamInfoForUpdate.setTid(tid);
+        teamInfoForUpdate.setNumberCounts(teamInfoFromQuery.getNumberCounts());
+        teamInfoForUpdate.setJoinedNumberCounts(teamInfoFromQuery.getJoinedNumberCounts());
+        teamInfoDao.update(teamInfoForUpdate);
+
+        // teamUser表中添加记录
+        TeamUser teamUser = new TeamUser();
+        teamUser.setTid(teamInfoFromQuery.getTid());
+        teamUser.setUid(uid);
+        teamUser.setTeamName(teamInfoFromQuery.getTeamName());
+        teamUser.setTeamAvatarUrl(teamInfoFromQuery.getAvatarUrl());
+        // userGrade，3 为普通成员等级
+        teamUser.setUserGrade(3);
+
+        this.insert(teamUser);
+        return new TeamInfoDTO(TeamEnum.SUCCESS, teamInfoFromQuery);
     }
 
     /**

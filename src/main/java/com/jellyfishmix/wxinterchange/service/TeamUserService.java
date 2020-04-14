@@ -1,5 +1,7 @@
 package com.jellyfishmix.wxinterchange.service;
 
+import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import java.util.List;
 
@@ -46,12 +48,29 @@ public interface TeamUserService {
     List<TeamUser> queryTeamUserListByTid(String tid);
 
     /**
+     * 通过tid和uid查询单条teamUser
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    TeamUser queryTeamUserByTidAndUid(String tid, String uid);
+
+    /**
      * 新增数据
      *
      * @param teamUser 实例对象
-     * @return 实例对象
      */
-    TeamUser insert(TeamUser teamUser);
+    void insert(TeamUser teamUser);
+
+    /**
+     * 加入项目组
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    TeamInfoDTO joinTeam(String tid, String uid);
 
     /**
      * 修改数据
