@@ -46,7 +46,7 @@ public class UserController {
     }
 
     /**
-     * 获取我创建的项目组列表
+     * 获取我创建的项目组列表（非官方项目组）
      *
      * @param uid 用户uid
      * @return
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     /**
-     * 获取我管理的项目组列表
+     * 获取我管理的项目组列表（非官方项目组）
      *
      * @param uid 用户uid
      * @return
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     /**
-     * 获取我加入的项目组列表
+     * 获取我加入的项目组列表（非官方项目组）
      *
      * @param uid 用户uid
      * @return
@@ -83,4 +83,15 @@ public class UserController {
         List<TeamUser> teamUserList = teamUserService.queryTeamListByUidAndUserGrade(uid, userGrade);
         return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserList);
     }
+
+    // /**
+    //  * 获取我加入的官方组
+    //  *
+    //  * @param uid
+    //  * @return
+    //  */
+    // @GetMapping("/query_official_team_list")
+    // public ResultVO queryOfficialTeamList(@RequestParam("uid") String uid) {
+    //
+    // }
 }

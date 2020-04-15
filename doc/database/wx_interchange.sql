@@ -42,6 +42,7 @@ create table `team_user` (
      `username` varchar(64) not null comment '用户名',
      `team_avatar_url` varchar(1024) null comment '项目组头像URL，非必须，头像文件储存在微信服务器',
      `user_avatar_url` varchar(1024) null comment '项目组成员头像URL，头像文件储存在微信服务器',
+     `team_grade` int not null default 2 comment '项目组等级，官方项目组为1，普通项目组为2，保留0',
      `user_grade` int not null default 3 comment '项目组成员等级，1为创建者，2为管理员，3为普通成员',
      `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
      `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',

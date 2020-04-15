@@ -41,6 +41,10 @@ public class TeamUser {
     */
     private String userAvatarUrl;
     /**
+     * 项目组等级，官方项目组为1，普通项目组为2，保留0
+     */
+    private Integer teamGrade;
+    /**
     * 项目组成员等级，1为创建者，2为管理员，3为普通成员
     */
     private Integer userGrade;

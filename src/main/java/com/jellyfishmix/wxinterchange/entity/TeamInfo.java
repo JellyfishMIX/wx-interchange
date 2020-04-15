@@ -34,7 +34,7 @@ public class TeamInfo {
     */
     private String avatarUrl;
     /**
-    * 项目组等级，测试项目组为99，官方项目组为1，普通项目组为2，保留0
+    * 项目组等级，官方项目组为1，普通项目组为2，保留0
     */
     private Integer grade;
     /**
