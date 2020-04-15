@@ -43,6 +43,17 @@ public class TeamInfoServiceImpl implements TeamInfoService {
     }
 
     /**
+     * 获取官方项目组列表
+     *
+     * @return
+     */
+    @Override
+    public List<TeamInfo> queryOfficialTeamList() {
+        List<TeamInfo> teamInfoList = teamInfoDao.queryOfficialTeamList();
+        return teamInfoList;
+    }
+
+    /**
      * 查询多条数据
      *
      * @param offset 查询起始位置
@@ -53,6 +64,8 @@ public class TeamInfoServiceImpl implements TeamInfoService {
     public List<TeamInfo> queryAllByLimit(int offset, int limit) {
         return this.teamInfoDao.queryAllByLimit(offset, limit);
     }
+
+
 
     /**
      * 新增数据

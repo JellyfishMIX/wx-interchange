@@ -83,15 +83,4 @@ public class UserController {
         List<TeamUser> teamUserList = teamUserService.queryTeamListByUidAndUserGrade(uid, userGrade);
         return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserList);
     }
-
-    // /**
-    //  * 获取我加入的官方组
-    //  *
-    //  * @param uid
-    //  * @return
-    //  */
-    // @GetMapping("/query_official_team_list")
-    // public ResultVO queryOfficialTeamList(@RequestParam("uid") String uid) {
-    //
-    // }
 }

@@ -39,6 +39,13 @@ public interface TeamInfoDao {
     List<TeamInfo> queryAll(TeamInfo teamInfo);
 
     /**
+     * 获取官方项目组列表
+     *
+     * @return
+     */
+    List<TeamInfo> queryOfficialTeamList();
+
+    /**
      * 新增数据
      *
      * @param teamInfo 实例对象

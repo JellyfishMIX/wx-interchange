@@ -38,7 +38,7 @@ public interface TeamUserDao {
     List<TeamUser> queryAll(TeamUser teamUser);
 
     /**
-     * 通过uid和userGrade查询我所在的项目组
+     * 通过uid和userGrade查询我所在的项目组（非官方组）
      *
      * @param uid 用户uid
      * @param userGrade 项目组成员等级

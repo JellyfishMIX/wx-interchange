@@ -21,6 +21,13 @@ public interface TeamInfoService {
     TeamInfoDTO queryByTid(String tid);
 
     /**
+     * 获取官方项目组列表
+     *
+     * @return
+     */
+    List<TeamInfo> queryOfficialTeamList();
+
+    /**
      * 查询多条数据
      *
      * @param offset 查询起始位置

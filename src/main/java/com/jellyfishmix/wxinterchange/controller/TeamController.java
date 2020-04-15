@@ -143,4 +143,15 @@ public class TeamController {
         teamInfoDTO = teamInfoService.queryByTid(tid);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
     }
+
+    /**
+     * 获取官方项目组列表
+     *
+     * @return
+     */
+    @GetMapping("/query_official_team_list")
+    public ResultVO queryOfficialTeamList() {
+        List<TeamInfo> teamInfoList = teamInfoService.queryOfficialTeamList();
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoList);
+    }
 }

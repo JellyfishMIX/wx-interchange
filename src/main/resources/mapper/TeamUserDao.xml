@@ -10,6 +10,7 @@
         <result property="username" column="username" jdbcType="VARCHAR" />
         <result property="teamAvatarUrl" column="team_avatar_url" jdbcType="VARCHAR"/>
         <result property="userAvatarUrl" column="user_avatar_url" jdbcType="VARCHAR"/>
+        <result property="teamGrade" column="team_grade" jdbcType="INTEGER" />
         <result property="userGrade" column="user_grade" jdbcType="INTEGER"/>
         <!--加入时间-->
         <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
@@ -19,7 +20,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="TeamUserMap">
         select
-          id, tid, uid, team_name, team_avatar_url, user_avatar_url, user_grade, creation_time
+          id, tid, uid, team_name, team_avatar_url, user_avatar_url, team_grade, user_grade, creation_time
         from wx_interchange.team_user
         where id = #{id}
     </select>
@@ -56,6 +57,9 @@
             <if test="userAvatarUrl != null and userAvatarUrl != ''">
                 and user_avatar_url = #{userAvatarUrl}
             </if>
+            <if test="teamGrade != null and teamGrade !=''">
+                and team_grade = #{teamGrade}
+            </if>
             <if test="userGrade != null">
                 and user_grade = #{userGrade}
             </if>
@@ -65,11 +69,11 @@
         </where>
     </select>
 
-    <!--通过uid和userGrade查询我所在的项目组-->
+    <!--通过uid和userGrade查询我所在的项目组（非官方组）-->
     <select id="queryTeamListByUidAndUserGrade" resultMap="TeamUserMap">
         select tid, uid, team_name, username, team_avatar_url, user_avatar_url, team_grade, user_grade, creation_time
         from wx_interchange.team_user
-        where uid = #{uid} and user_grade = #{userGrade}
+        where uid = #{uid} and user_grade = #{userGrade} and team_grade != 1
     </select>
 
     <!--通过tid查询项目组成员列表-->
