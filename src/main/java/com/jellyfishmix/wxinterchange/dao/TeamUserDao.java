@@ -11,15 +11,6 @@ import java.util.List;
  * @since 2020-04-11 21:09:44
  */
 public interface TeamUserDao {
-
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    TeamUser queryById(Integer id);
-
     /**
      * 查询指定行数据
      *
@@ -28,14 +19,6 @@ public interface TeamUserDao {
      * @return 对象列表
      */
     List<TeamUser> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
-
-    /**
-     * 通过实体作为筛选条件查询
-     *
-     * @param teamUser 实例对象
-     * @return 对象列表
-     */
-    List<TeamUser> queryAll(TeamUser teamUser);
 
     /**
      * 通过uid和userGrade查询我所在的项目组（非官方组）
@@ -70,14 +53,6 @@ public interface TeamUserDao {
      * @return 影响行数
      */
     int insert(TeamUser teamUser);
-
-    /**
-     * 修改数据
-     *
-     * @param teamUser 实例对象
-     * @return 影响行数
-     */
-    int update(TeamUser teamUser);
 
     /**
      * 通过主键删除数据

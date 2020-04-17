@@ -12,15 +12,6 @@ import java.util.List;
  * @since 2020-04-11 21:09:44
  */
 public interface TeamUserService {
-
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    TeamUser queryById(Integer id);
-
     /**
      * 查询多条数据
      *
@@ -71,14 +62,6 @@ public interface TeamUserService {
      * @return
      */
     TeamInfoDTO joinTeam(String tid, String uid);
-
-    /**
-     * 修改数据
-     *
-     * @param teamUser 实例对象
-     * @return 实例对象
-     */
-    TeamUser update(TeamUser teamUser);
 
     /**
      * 通过主键删除数据

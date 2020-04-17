@@ -60,8 +60,6 @@ public class TeamController {
         TeamUser teamUser = new TeamUser();
         teamUser.setTid(teamInfo.getTid());
         teamUser.setUid(uid);
-        teamUser.setTeamName(teamName);
-        teamUser.setTeamAvatarUrl(teamAvatarUrl);
         // userGrade，1 为创建者等级
         teamUser.setUserGrade(1);
 
@@ -154,4 +152,9 @@ public class TeamController {
         List<TeamInfo> teamInfoList = teamInfoService.queryOfficialTeamList();
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoList);
     }
+
+    // @GetMapping("/delete_team_by_tid")
+    // public ResultVO deleteTeamByTid(@RequestParam("tid") String tid) {
+    //
+    // }
 }

@@ -1,12 +1,10 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
 import com.jellyfishmix.wxinterchange.dao.TeamInfoDao;
-import com.jellyfishmix.wxinterchange.dao.UserInfoDao;
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
-import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.service.TeamUserService;
 import org.springframework.stereotype.Service;
@@ -25,20 +23,7 @@ public class TeamUserServiceImpl implements TeamUserService {
     @Resource
     private TeamUserDao teamUserDao;
     @Resource
-    private UserInfoDao userInfoDao;
-    @Resource
     private TeamInfoDao teamInfoDao;
-
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    @Override
-    public TeamUser queryById(Integer id) {
-        return this.teamUserDao.queryById(id);
-    }
 
     /**
      * 查询多条数据
@@ -98,10 +83,6 @@ public class TeamUserServiceImpl implements TeamUserService {
      */
     @Override
     public void insert(TeamUser teamUser) {
-        // 暂时不加通过uid查询无userInfo的错误校验
-        UserInfo userInfo = userInfoDao.queryByUid(teamUser.getUid());
-        teamUser.setUsername(userInfo.getUsername());
-        teamUser.setUserAvatarUrl(userInfo.getAvatarUrl());
         this.teamUserDao.insert(teamUser);
     }
 
@@ -129,25 +110,11 @@ public class TeamUserServiceImpl implements TeamUserService {
         TeamUser teamUser = new TeamUser();
         teamUser.setTid(teamInfoFromQuery.getTid());
         teamUser.setUid(uid);
-        teamUser.setTeamName(teamInfoFromQuery.getTeamName());
-        teamUser.setTeamAvatarUrl(teamInfoFromQuery.getAvatarUrl());
         // userGrade，3 为普通成员等级
         teamUser.setUserGrade(3);
 
         this.insert(teamUser);
         return new TeamInfoDTO(TeamEnum.SUCCESS, teamInfoFromQuery);
-    }
-
-    /**
-     * 修改数据
-     *
-     * @param teamUser 实例对象
-     * @return 实例对象
-     */
-    @Override
-    public TeamUser update(TeamUser teamUser) {
-        this.teamUserDao.update(teamUser);
-        return this.queryById(teamUser.getId());
     }
 
     /**
