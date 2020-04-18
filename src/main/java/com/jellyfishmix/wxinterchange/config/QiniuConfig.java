@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "qiniu")
 @Data
-public class QiNiuConfig {
+public class QiniuConfig {
     String accessKey;
     String secretKey;
     String bucketName;

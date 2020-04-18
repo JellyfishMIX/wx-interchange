@@ -57,3 +57,10 @@ create table `wx_group_info` (
     unique key `unique_gid`(gid),
     unique key `unique_opengid`(opengid)
 ) comment '微信群信息';
+
+# create table `file_info` (
+#     `id` int not null auto_increment comment '文件信息',
+#     `file_id` varchar(128) not null comment '文件fileId',
+#     `file_name` varchar(64) not null comment '文件名',
+# #     `file_size`
+# ) comment '文件信息';
