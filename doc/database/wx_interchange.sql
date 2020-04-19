@@ -32,8 +32,8 @@ create table `team_info` (
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
     unique key `uk_team_info_tid` (`tid`)
-#     constraint `fk_team_info_gid` foreign key (`gid`) references wx_interchange.wx_group_info(`gid`),
-#     constraint `fk_team_info_opengid` foreign key (`opengid`) references wx_interchange.wx_group_info(`opengid`)
+#     foreign key `fk_team_info_gid` (`gid`) references wx_interchange.wx_group_info(`gid`),
+#     foreign key `fk_team_info_opengid` (`opengid`) references wx_interchange.wx_group_info(`opengid`)
 ) comment '项目组表';
 
 create table `team_user` (
@@ -44,8 +44,8 @@ create table `team_user` (
      `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
      `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
      primary key (`id`),
-     constraint `fk_team_user_tid` foreign key (`tid`) references wx_interchange.team_info(`tid`),
-     constraint `fk_team_user_uid` foreign key (`uid`) references wx_interchange.user_info(`uid`)
+    foreign key `fk_team_user_tid` (`tid`) references wx_interchange.team_info(`tid`),
+    foreign key `fk_team_user_uid` (`uid`) references wx_interchange.user_info(`uid`)
 ) comment '项目组成员表';
 
 # create table `wx_group_info` (
@@ -64,15 +64,17 @@ create table `file_info` (
     `id` int not null auto_increment comment '代理主键',
     `file_id` varchar(128) not null comment '文件fileId',
     `file_key` varchar(128) not null comment '文件资源fileKey',
-    `hash` varchar(128) not null comment '全局唯一的文件hash值',
+    `hash` varchar(128) not null comment '全局唯一的文件fileHash值',
     `file_name` varchar(64) not null comment '文件名',
     `file_url` varchar(1024) not null comment '文件资源URL',
     `file_size` int not null comment '文件大小, 单位为b',
     `mime_type` varchar(64) not null comment '文件类型',
+    `uid` varchar(32) not null comment '上传者uid，外键',
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
-    unique key `uk_file_info_file_id`(`file_id`)
+    unique key `uk_file_info_file_id`(`file_id`),
+    foreign key `fk_file_info_uid` (`uid`) references wx_interchange.user_info(`uid`)
 ) comment '文件信息表';
 
 create table `team_file` (
@@ -83,7 +85,7 @@ create table `team_file` (
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
-    constraint `fk_team_file_tid` foreign key (`tid`) references wx_interchange.team_info(`tid`),
-    constraint `fk_team_file_file_id` foreign key (`file_id`) references wx_interchange.file_info(`file_id`),
-    constraint `fk_team_file_uid` foreign key (`uid`) references wx_interchange.user_info(`uid`)
+    foreign key `fk_team_file_tid`  (`tid`) references wx_interchange.team_info(`tid`),
+    foreign key `fk_team_file_file_id` (`file_id`) references wx_interchange.file_info(`file_id`),
+    foreign key `fk_team_file_uid` (`uid`) references wx_interchange.user_info(`uid`)
 ) comment '项目组文件表';
