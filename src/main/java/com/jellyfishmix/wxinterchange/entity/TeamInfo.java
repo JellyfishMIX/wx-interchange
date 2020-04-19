@@ -22,10 +22,6 @@ public class TeamInfo {
     */
     private String tid;
     /**
-    * 绑定的微信群gid，非必须，外键
-    */
-    private String gid;
-    /**
     * 项目组名称
     */
     private String teamName;

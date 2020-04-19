@@ -10,14 +10,14 @@ create table `user_info` (
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
-    unique key `unique_uid` (`uid`),
-    unique key `unique_openid` (`openid`)
+    unique key `uk_user_info_uid` (`uid`),
+    unique key `uk_user_info_openid` (`openid`)
 ) comment '用户表';
 
 create table `team_info` (
     `id` int not null auto_increment comment '代理主键',
     `tid` varchar(32) not null comment '项目组tid，随机生成，唯一键',
-    `gid` varchar(32) null comment '绑定的微信群gid，非必须，外键',
+#     `gid` varchar(32) null comment '绑定的微信群gid，非必须，外键',
 #     `opengid` varchar(32) null comment '绑定的微信群gid，非必须，外键', 暂时不做绑定微信群相关
     `team_name` varchar(64) not null comment '项目组名称',
     `avatar_url` varchar(1024) null comment '项目组头像URL，非必须',
@@ -30,8 +30,9 @@ create table `team_info` (
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
-    unique key `unique_tid` (`tid`),
-    constraint `fk_gid` foreign key (gid) references wx_interchange.wx_group_info(`gid`)
+    unique key `uk_team_info_tid` (`tid`)
+#     constraint `fk_team_info_gid` foreign key (`gid`) references wx_interchange.wx_group_info(`gid`),
+#     constraint `fk_team_info_opengid` foreign key (`opengid`) references wx_interchange.wx_group_info(`opengid`)
 ) comment '项目组表';
 
 create table `team_user` (
@@ -42,26 +43,26 @@ create table `team_user` (
      `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
      `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
      primary key (`id`),
-     constraint `fk_tid` foreign key (tid) references wx_interchange.team_info(`tid`),
-     constraint `fk_uid` foreign key (uid) references wx_interchange.user_info(`uid`)
+     constraint `fk_team_user_tid` foreign key (`tid`) references wx_interchange.team_info(`tid`),
+     constraint `fk_team_user_uid` foreign key (`uid`) references wx_interchange.user_info(`uid`)
 ) comment '项目组成员表';
 
-create table `wx_group_info` (
-    `id` int not null auto_increment comment '代理主键',
-    `gid` varchar(32) not null comment '微信群gid，随机生成，唯一键',
-    `opengid` varchar(64) not null comment '微信群opengid，唯一键',
-    `wx_group_name` varchar(64) not null comment '微信群名称',
-    `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
-    `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
-    primary key (`id`),
-    unique key `unique_gid`(gid),
-    unique key `unique_opengid`(opengid)
-) comment '微信群信息';
+# create table `wx_group_info` (
+#     `id` int not null auto_increment comment '代理主键',
+#     `gid` varchar(32) not null comment '微信群gid，随机生成，唯一键',
+#     `opengid` varchar(64) not null comment '微信群opengid，唯一键',
+#     `wx_group_name` varchar(64) not null comment '微信群名称',
+#     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+#     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+#     primary key (`id`),
+#     unique key `uk_wx_group_info_gid`(`gid`),
+#     unique key `uk_wx_group_info_opengid`(`opengid`)
+# ) comment '微信群信息';
 
 create table `file_info` (
     `id` int not null auto_increment comment '代理主键',
     `file_id` varchar(128) not null comment '文件fileId',
-    `key` varchar(128) not null comment '文件资源key',
+    `file_key` varchar(128) not null comment '文件资源fileKey',
     `hash` varchar(128) not null comment '全局唯一的文件hash值',
     `file_name` varchar(64) not null comment '文件名',
     `file_url` varchar(1024) not null comment '文件资源URL',
@@ -70,7 +71,7 @@ create table `file_info` (
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
-    unique key (`file_id`)
+    unique key `uk_file_info_file_id`(`file_id`)
 ) comment '文件信息表';
 
 create table `team_file` (
@@ -81,7 +82,7 @@ create table `team_file` (
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
-    constraint `fk_tid` foreign key (tid) references wx_interchange.team_info(`tid`),
-    constraint `fk_file_id` foreign key (file_id) references wx_interchange.file_info(`file_id`),
-    constraint `fk_uid` foreign key (uid) references wx_interchange.user_info(`uid`)
+    constraint `fk_team_file_tid` foreign key (`tid`) references wx_interchange.team_info(`tid`),
+    constraint `fk_team_file_file_id` foreign key (`file_id`) references wx_interchange.file_info(`file_id`),
+    constraint `fk_team_file_uid` foreign key (`uid`) references wx_interchange.user_info(`uid`)
 ) comment '项目组文件表';
