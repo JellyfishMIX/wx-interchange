@@ -3,7 +3,6 @@
 <mapper namespace="com.jellyfishmix.wxinterchange.dao.TeamUserDao">
 
     <resultMap type="com.jellyfishmix.wxinterchange.entity.TeamUser" id="TeamUserMap">
-        <!--<result property="id" column="id" jdbcType="INTEGER"/>-->
         <result property="tid" column="tid" jdbcType="VARCHAR"/>
         <result property="uid" column="uid" jdbcType="VARCHAR"/>
         <result property="teamName" column="team_name" jdbcType="VARCHAR"/>
@@ -20,7 +19,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="TeamUserMap">
         select
-          id, tid, uid, user_grade, creation_time
+          tid, uid, user_grade, creation_time
         from wx_interchange.team_user
         limit #{offset}, #{limit}
     </select>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jellyfishmix.wxinterchange.dao.FileInfoDao">
+
+    <resultMap type="com.jellyfishmix.wxinterchange.entity.FileInfo" id="FileInfoMap">
+        <result property="fileId" column="file_id" jdbcType="VARCHAR"/>
+        <result property="fileKey" column="file_key" jdbcType="VARCHAR"/>
+        <result property="fileHash" column="file_hash" jdbcType="VARCHAR"/>
+        <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
+        <result property="fileUrl" column="file_url" jdbcType="VARCHAR"/>
+        <result property="fileSize" column="file_size" jdbcType="INTEGER"/>
+        <result property="mimeType" column="mime_type" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="VARCHAR" />
+        <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
+        <!--无特殊情况不开放modifiedTime-->
+        <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
+    </resultMap>
+
+    <!--通过fileId查询单个-->
+    <select id="queryByFileId" resultMap="FileInfoMap">
+        select
+          file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, uid, creation_time
+        from wx_interchange.file_info
+        where file_id = #{fileId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="FileInfoMap">
+        select
+          file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, uid, creation_time
+        from wx_interchange.file_info
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id">
+        insert into wx_interchange.file_info(file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, uid)
+        values (#{fileId}, #{fileKey}, #{fileHash}, #{fileName}, #{fileUrl}, #{fileSize}, #{mimeType}, #{uid})
+    </insert>
+
+    <!--通过fileId修改数据-->
+    <update id="update">
+        update wx_interchange.file_info
+        <set>
+            <if test="fileKey != null and fileKey != ''">
+                file_key = #{fileKey},
+            </if>
+            <if test="fileHash != null and fileHash != ''">
+                file_hash = #{fileHash},
+            </if>
+            <if test="fileName != null and fileName != ''">
+                file_name = #{fileName},
+            </if>
+            <if test="fileUrl != null and fileUrl != ''">
+                file_url = #{fileUrl},
+            </if>
+            <if test="fileSize != null">
+                file_size = #{fileSize},
+            </if>
+            <if test="mimeType != null and mimeType != ''">
+                mime_type = #{mimeType},
+            </if>
+        </set>
+        where file_id = #{fileId}
+    </update>
+
+    <!--通过fileId删除-->
+    <delete id="deleteByFileId">
+        delete from wx_interchange.file_info where file_id = #{fileId}
+    </delete>
+</mapper>
