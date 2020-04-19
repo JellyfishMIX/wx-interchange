@@ -32,7 +32,7 @@ public class FileController {
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         // 自定义upToken上传策略，返回key，hash，fsize(fileSize), mimeType
         StringMap putPolicy = new StringMap();
-        putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"fsize\":$(fsize)},\"mimeType\":$(mimeType)");
+        putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"fsize\":$(fsize),\"mimeType\":$(mimeType)}");
         // upToken生存时间
         long expireSeconds = 3600;
 
