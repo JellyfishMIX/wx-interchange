@@ -36,23 +36,23 @@ public class TeamInfo {
     /**
     * 项目组成员数量
     */
-    private Integer numberCounts;
+    private Integer numberCount;
     /**
     * 项目组创建者数量
     */
-    private Integer createdNumberCounts;
+    private Integer createdNumberCount;
     /**
     * 项目组管理者数量
     */
-    private Integer managedNumberCounts;
+    private Integer managedNumberCount;
     /**
     * 项目组加入者数量
     */
-    private Integer joinedNumberCounts;
+    private Integer joinedNumberCount;
     /**
     * 项目组文件数量
     */
-    private Integer fileCounts;
+    private Integer fileCount;
     /**
     * 创建时间，自动写入
     */

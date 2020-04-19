@@ -41,6 +41,4 @@ public class FileController {
         hashMap.put("uptoken", upToken);
         return  hashMap;
     }
-
-
 }

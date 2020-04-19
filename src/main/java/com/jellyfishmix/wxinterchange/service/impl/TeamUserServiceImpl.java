@@ -97,13 +97,13 @@ public class TeamUserServiceImpl implements TeamUserService {
     public TeamInfoDTO joinTeam(String tid, String uid) {
         TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
         // 新成员加入，项目组成员++
-        teamInfoFromQuery.setNumberCounts(teamInfoFromQuery.getNumberCounts() + 1);
-        teamInfoFromQuery.setJoinedNumberCounts(teamInfoFromQuery.getJoinedNumberCounts() + 1);
+        teamInfoFromQuery.setNumberCount(teamInfoFromQuery.getNumberCount() + 1);
+        teamInfoFromQuery.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount() + 1);
 
         TeamInfo teamInfoForUpdate = new TeamInfo();
         teamInfoForUpdate.setTid(tid);
-        teamInfoForUpdate.setNumberCounts(teamInfoFromQuery.getNumberCounts());
-        teamInfoForUpdate.setJoinedNumberCounts(teamInfoFromQuery.getJoinedNumberCounts());
+        teamInfoForUpdate.setNumberCount(teamInfoFromQuery.getNumberCount());
+        teamInfoForUpdate.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount());
         teamInfoDao.update(teamInfoForUpdate);
 
         // teamUser表中添加记录

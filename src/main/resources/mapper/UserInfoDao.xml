@@ -3,6 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jellyfishmix.wxinterchange.dao.UserInfoDao">
+    <!--userInfoMap-->
+    <resultMap id="userInfoMap" type="com.jellyfishmix.wxinterchange.entity.UserInfo">
+        <id column="uid" property="uid" jdbcType="VARCHAR" />
+        <id column="username" property="username" jdbcType="VARCHAR" />
+        <id column="openid" property="openid" jdbcType="VARCHAR" />
+        <id column="avatar_url" property="avatarUrl" jdbcType="VARCHAR" />
+        <id column="global_grade" property="globalGrade" jdbcType="INTEGER" />
+        <id column="created_team_count" property="createdTeamCount" jdbcType="INTEGER" />
+        <id column="managed_team_count" property="managedTeamCount" jdbcType="INTEGER" />
+        <id column="joined_team_count" property="joinedTeamCount" jdbcType="INTEGER" />
+        <!--无特殊情况不开放creationTime和modifiedTime-->
+        <!--<id column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />-->
+        <!--<id column="modified_time" property="modifiedTime" jdbcType="TIMESTAMP" />-->
+    </resultMap>
+
     <!--新增用户信息-->
     <insert id="insertUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="id">
         insert into wx_interchange.user_info(uid, username, openid, avatar_url)
@@ -15,37 +30,23 @@
         <set>
             <if test="username != null">username = #{username},</if>
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
-            <if test="createdTeamCounts != null">created_team_counts = #{createdTeamCounts},</if>
-            <if test="managedTeamCounts != null">managed_team_counts = #{managedTeamCounts},</if>
-            <if test="joinedTeamCounts != null">joined_team_counts = #{joinedTeamCounts}</if>
+            <if test="createdTeamCount != null">created_team_count = #{createdTeamCount},</if>
+            <if test="managedTeamCount != null">managed_team_count = #{managedTeamCount},</if>
+            <if test="joinedTeamCount != null">joined_team_count = #{joinedTeamCount}</if>
         </set>
         where uid = #{uid}
     </update>
-
-    <!--userInfoMap-->
-    <resultMap id="userInfoMap" type="com.jellyfishmix.wxinterchange.entity.UserInfo">
-        <id column="uid" property="uid" jdbcType="VARCHAR" />
-        <id column="username" property="username" jdbcType="VARCHAR" />
-        <id column="openid" property="openid" jdbcType="VARCHAR" />
-        <id column="avatar_url" property="avatarUrl" jdbcType="VARCHAR" />
-        <id column="created_team_counts" property="createdTeamCounts" jdbcType="INTEGER" />
-        <id column="managed_team_counts" property="managedTeamCounts" jdbcType="INTEGER" />
-        <id column="joined_team_counts" property="joinedTeamCounts" jdbcType="INTEGER" />
-        <!--无特殊情况不开放creationTime和modifiedTime-->
-        <!--<id column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />-->
-        <!--<id column="modified_time" property="modifiedTime" jdbcType="TIMESTAMP" />-->
-    </resultMap>
     
     <!--通过uid查找用户信息-->
     <select id="queryByUid" resultMap="userInfoMap">
-        select uid, username, openid, avatar_url, created_team_counts, managed_team_counts, joined_team_counts
+        select uid, username, openid, avatar_url, global_grade, created_team_count, managed_team_count, joined_team_count
         from wx_interchange.user_info
         where uid = #{uid}
     </select>
 
     <!--通过openid查找用户信息-->
     <select id="queryByOpenid" resultMap="userInfoMap">
-        select uid, username, openid, avatar_url, created_team_counts, managed_team_counts, joined_team_counts
+        select uid, username, openid, avatar_url, global_grade, created_team_count, managed_team_count, joined_team_count
         from wx_interchange.user_info
         where openid = #{openid}
     </select>

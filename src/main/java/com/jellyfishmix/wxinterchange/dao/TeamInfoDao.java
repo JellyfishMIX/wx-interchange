@@ -29,15 +29,6 @@ public interface TeamInfoDao {
      */
     List<TeamInfo> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
-
-    /**
-     * 通过实体作为筛选条件查询
-     *
-     * @param teamInfo 实例对象
-     * @return 对象列表
-     */
-    List<TeamInfo> queryAll(TeamInfo teamInfo);
-
     /**
      * 获取官方项目组列表
      *

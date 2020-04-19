@@ -15,47 +15,42 @@ public class UserInfo {
      * 代理主键
      */
     private Integer id;
-
     /**
      * 用户uid，随机生成，唯一键
      */
     private String uid;
-
     /**
      * 用户名
      */
     private String username;
-
     /**
      * 用户头像url
      */
     private String avatarUrl;
-
+    /**
+     * 用户全局等级，超级管理员为1，官方合作者为2，普通用户为3，保留0
+     */
+    private Integer globalGrade;
     /**
      * 微信用户openid，唯一键
      */
     private String openid;
-
     /**
      * 创建的项目组数量
      */
-    private Integer createdTeamCounts;
-
+    private Integer createdTeamCount;
     /**
      * 管理的项目组数量
      */
-    private Integer managedTeamCounts;
-
+    private Integer managedTeamCount;
     /**
      * 加入的项目组数量
      */
-    private Integer joinedTeamCounts;
-
+    private Integer joinedTeamCount;
     /**
      * 创建时间，自动写入
      */
     private Date creationTime;
-
     /**
      * 修改时间，自动写入
      */

@@ -4,9 +4,10 @@ create table `user_info` (
     `username` varchar(64) not null comment '用户名',
     `openid` varchar(64) not null comment '微信用户openid，唯一键',
     `avatar_url` varchar(1024) null comment '用户头像URL，头像文件储存在微信服务器',
-    `created_team_counts` int not null default 0 comment '创建的项目组数量',
-    `managed_team_counts` int not null default 0 comment '管理的项目组数量',
-    `joined_team_counts` int not null default 0 comment '加入的项目组数量',
+    `global_grade` int not null default 3 comment '用户全局等级，超级管理员为1，官方合作者为2，普通用户为3，保留0',
+    `created_team_count` int not null default 0 comment '创建的项目组数量',
+    `managed_team_count` int not null default 0 comment '管理的项目组数量',
+    `joined_team_count` int not null default 0 comment '加入的项目组数量',
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
@@ -22,11 +23,11 @@ create table `team_info` (
     `team_name` varchar(64) not null comment '项目组名称',
     `avatar_url` varchar(1024) null comment '项目组头像URL，非必须',
     `grade` int not null default 2 comment '项目组等级，官方项目组为1，普通项目组为2，保留0',
-    `number_counts` int not null default 1 comment '项目组成员数量',
-    `created_number_counts` int not null default 1 comment '项目组创建者数量',
-    `managed_number_counts` int not null default 0 comment '项目组管理者数量',
-    `joined_number_counts` int not null default 0 comment '项目组加入者数量',
-    `file_counts` int not null default 0 comment '项目组文件数量',
+    `number_count` int not null default 1 comment '项目组成员数量',
+    `created_number_count` int not null default 1 comment '项目组创建者数量',
+    `managed_number_count` int not null default 0 comment '项目组管理者数量',
+    `joined_number_count` int not null default 0 comment '项目组加入者数量',
+    `file_count` int not null default 0 comment '项目组文件数量',
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
@@ -57,7 +58,7 @@ create table `team_user` (
 #     primary key (`id`),
 #     unique key `uk_wx_group_info_gid`(`gid`),
 #     unique key `uk_wx_group_info_opengid`(`opengid`)
-# ) comment '微信群信息';
+# ) comment '微信群信息表';
 
 create table `file_info` (
     `id` int not null auto_increment comment '代理主键',
