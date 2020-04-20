@@ -2,12 +2,17 @@ package com.jellyfishmix.wxinterchange.controller;
 
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.FileInfo;
+import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
+import com.jellyfishmix.wxinterchange.enums.FileEnum;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
+import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
+import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,8 @@ public class TeamController {
     private TeamService teamService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FileService fileService;
 
     /**
      * 创建项目组
@@ -93,6 +100,63 @@ public class TeamController {
     }
 
     /**
+     * 通过tid查询项目组内的文件列表，分页
+     *
+     * @param tid 项目组tid
+     * @param pageIndex 页码，从1开始
+     * @param pageSize 每页的行数
+     * @return
+     */
+    @GetMapping("/query_team_file_list_order_by_creation_time")
+    public ResultVO queryTeamFileListOrderByCreationTime(@RequestParam("tid") String tid,
+                                                         @RequestParam("pageIndex") Integer pageIndex,
+                                                         @RequestParam("pageSize") Integer pageSize) {
+        int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
+        List<TeamFile> teamFileList = fileService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileList);
+    }
+
+    /**
+     * 向项目组上传文件（.pdf, .docx, .xlsx, .pptx等任意格式的文件）
+     *
+     * @param tid 上传至tid群组
+     * @param uid 上传者uid
+     * @param fileKey 文件资源key
+     * @param fileHash 全局唯一的文件hash值
+     * @param fileName 文件名
+     * @param fileUrl 文件资源URL
+     * @param fileSize 文件大小（单位为b）
+     * @param mimeType 文件类型
+     * @return
+     */
+    @PostMapping("/upload_file_to_team")
+    public ResultVO uploadFileToTeam(@RequestParam("tid") String tid,
+                                     @RequestParam("uid") String uid,
+                                     @RequestParam("key") String fileKey,
+                                     @RequestParam("hash") String fileHash,
+                                     @RequestParam("fileName") String fileName,
+                                     @RequestParam("fileUrl") String fileUrl,
+                                     @RequestParam("fileSize") Integer fileSize,
+                                     @RequestParam("mimeType") String mimeType) {
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFileKey(fileKey);
+        fileInfo.setFileHash(fileHash);
+        fileInfo.setFileName(fileName);
+        fileInfo.setFileUrl(fileUrl);
+        fileInfo.setFileSize(fileSize);
+        fileInfo.setMimeType(mimeType);
+        fileInfo.setUid(uid);
+
+        TeamFile teamFile = new TeamFile();
+        teamFile.setTid(tid);
+        teamFile.setFileId(fileInfo.getFileId());
+        teamFile.setUid(uid);
+
+        fileInfo = teamService.uploadFileToTeam(fileInfo, teamFile);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfo);
+    }
+
+    /**
      * 修改项目组名称
      *
      * @param tid 将要修改的项目组的tid
@@ -147,9 +211,4 @@ public class TeamController {
         List<TeamInfo> teamInfoList = teamService.queryOfficialTeamList();
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoList);
     }
-
-    // @GetMapping("/delete_team_by_tid")
-    // public ResultVO deleteTeamByTid(@RequestParam("tid") String tid) {
-    //
-    // }
 }

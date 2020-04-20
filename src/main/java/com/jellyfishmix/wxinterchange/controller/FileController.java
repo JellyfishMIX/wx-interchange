@@ -1,21 +1,12 @@
 package com.jellyfishmix.wxinterchange.controller;
 
 import com.jellyfishmix.wxinterchange.config.QiniuConfig;
-import com.jellyfishmix.wxinterchange.entity.FileInfo;
-import com.jellyfishmix.wxinterchange.entity.TeamFile;
-import com.jellyfishmix.wxinterchange.enums.FileEnum;
-import com.jellyfishmix.wxinterchange.service.FileService;
-import com.jellyfishmix.wxinterchange.service.TeamService;
-import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
-import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
-import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,10 +18,6 @@ import java.util.Map;
 public class FileController {
     @Autowired
     private QiniuConfig qiniuConfig;
-    @Autowired
-    private FileService fileService;
-    @Autowired
-    private TeamService teamService;
 
     /**
      * 获取七牛云文件上传upToken
@@ -52,62 +39,5 @@ public class FileController {
         hashMap.put("success", true);
         hashMap.put("uptoken", upToken);
         return  hashMap;
-    }
-
-    /**
-     * 向项目组上传文件（.pdf, .docx, .xlsx, .pptx等任意格式的文件）
-     *
-     * @param tid 上传至tid群组
-     * @param uid 上传者uid
-     * @param fileKey 文件资源key
-     * @param fileHash 全局唯一的文件hash值
-     * @param fileName 文件名
-     * @param fileUrl 文件资源URL
-     * @param fileSize 文件大小（单位为b）
-     * @param mimeType 文件类型
-     * @return
-     */
-    @PostMapping("/upload_file_to_team")
-    public ResultVO uploadFileToTeam(@RequestParam("tid") String tid,
-                                     @RequestParam("uid") String uid,
-                                     @RequestParam("key") String fileKey,
-                                     @RequestParam("hash") String fileHash,
-                                     @RequestParam("fileName") String fileName,
-                                     @RequestParam("fileUrl") String fileUrl,
-                                     @RequestParam("fileSize") Integer fileSize,
-                                     @RequestParam("mimeType") String mimeType) {
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setFileKey(fileKey);
-        fileInfo.setFileHash(fileHash);
-        fileInfo.setFileName(fileName);
-        fileInfo.setFileUrl(fileUrl);
-        fileInfo.setFileSize(fileSize);
-        fileInfo.setMimeType(mimeType);
-        fileInfo.setUid(uid);
-
-        TeamFile teamFile = new TeamFile();
-        teamFile.setTid(tid);
-        teamFile.setFileId(fileInfo.getFileId());
-        teamFile.setUid(uid);
-
-        fileInfo = teamService.uploadFileToTeam(fileInfo, teamFile);
-        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfo);
-    }
-
-    /**
-     * 通过tid查询项目组内的文件列表，分页
-     *
-     * @param tid 项目组tid
-     * @param pageIndex 页码，从1开始
-     * @param pageSize 每页的行数
-     * @return
-     */
-    @GetMapping("/query_team_file_list_order_by_creation_time")
-    public ResultVO queryTeamFileListOrderByCreationTime(@RequestParam("tid") String tid,
-                                                         @RequestParam("pageIndex") Integer pageIndex,
-                                                         @RequestParam("pageSize") Integer pageSize) {
-        int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
-        List<TeamFile> teamFileList = fileService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
-        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileList);
     }
 }
