@@ -3,7 +3,7 @@ package com.jellyfishmix.wxinterchange.service.impl;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.service.AccountService;
-import com.jellyfishmix.wxinterchange.service.UserInfoService;
+import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service("accountService")
 public class AccountServiceImpl implements AccountService {
     @Autowired
-    private UserInfoService userInfoService;
+    private UserService userService;
 
     /**
      * 注册账户
@@ -26,8 +26,8 @@ public class AccountServiceImpl implements AccountService {
     public UserInfoDTO register(UserInfo userInfo) {
         String uid = UniqueKeyUtil.getUniqueKey();
         userInfo.setUid(uid);
-        userInfoService.insertUserInfo(userInfo);
-        UserInfoDTO userInfoDTO = userInfoService.queryByOpenid(userInfo.getOpenid());
+        userService.insertUserInfo(userInfo);
+        UserInfoDTO userInfoDTO = userService.queryByOpenid(userInfo.getOpenid());
         return userInfoDTO;
     }
 }

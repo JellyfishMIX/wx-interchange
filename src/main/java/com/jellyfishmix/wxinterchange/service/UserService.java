@@ -7,7 +7,7 @@ import com.jellyfishmix.wxinterchange.entity.UserInfo;
  * @author JellyfishMIX
  * @date 2020/4/8 11:18 上午
  */
-public interface UserInfoService {
+public interface UserService {
     /**
      * 新增用户信息
      * @param userInfo

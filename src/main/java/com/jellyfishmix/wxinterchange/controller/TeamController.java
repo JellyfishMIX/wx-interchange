@@ -8,10 +8,11 @@ import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.service.TeamInfoService;
 import com.jellyfishmix.wxinterchange.service.TeamUserService;
-import com.jellyfishmix.wxinterchange.service.UserInfoService;
+import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class TeamController {
     @Autowired
     private TeamUserService teamUserService;
     @Autowired
-    private UserInfoService userInfoService;
+    private UserService userService;
 
     /**
      * 创建项目组
@@ -40,12 +41,13 @@ public class TeamController {
      * @return
      */
     @PostMapping("/create_team")
+    @Transactional
     public ResultVO createTeam(@RequestParam("uid") String uid,
                                @RequestParam("teamName") String teamName,
                                @RequestParam("teamAvatarUrl") String teamAvatarUrl,
                                @RequestParam("teamGrade") Integer teamGrade) {
         // 校验uid是否存在
-        UserInfoDTO userInfoDTO = userInfoService.queryByUid(uid);
+        UserInfoDTO userInfoDTO = userService.queryByUid(uid);
         if (userInfoDTO.getStateCode().equals(UserEnum.USER_INFO_NULL.getStateCode())) {
             return ResultVOUtil.fail(UserEnum.USER_INFO_NULL.getStateCode(), UserEnum.USER_INFO_NULL.getStateMsg());
         }
@@ -126,6 +128,7 @@ public class TeamController {
      * @return
      */
     @PostMapping("/enter_team")
+    @Transactional
     public ResultVO enterTeam(@RequestParam("tid") String tid,
                               @RequestParam("uid") String uid) {
         TeamInfoDTO teamInfoDTO = null;

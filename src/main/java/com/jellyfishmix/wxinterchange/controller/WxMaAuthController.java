@@ -5,7 +5,7 @@ import com.jellyfishmix.wxinterchange.dto.WxMaCodeToSessionDTO;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.service.AccountService;
-import com.jellyfishmix.wxinterchange.service.UserInfoService;
+import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.service.WxMaAuthService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/wxma_auth")
 public class WxMaAuthController {
     @Autowired
-    private UserInfoService userInfoService;
+    private UserService userService;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -50,7 +50,7 @@ public class WxMaAuthController {
                           @RequestParam("openid") String openid,
                           @RequestParam("avatarUrl") String avatarUrl) {
         // 查询openid是否已存在，未存在则执行注册逻辑
-        UserInfoDTO userInfoDTO = userInfoService.queryByOpenid(openid);
+        UserInfoDTO userInfoDTO = userService.queryByOpenid(openid);
         if (userInfoDTO.getStateCode().equals(UserEnum.USER_INFO_NULL.getStateCode())) {
             UserInfo userInfo = new UserInfo();
             userInfo.setUsername(username);

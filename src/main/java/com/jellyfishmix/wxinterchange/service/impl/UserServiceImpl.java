@@ -5,7 +5,7 @@ import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.UserException;
 import com.jellyfishmix.wxinterchange.dao.UserInfoDao;
-import com.jellyfishmix.wxinterchange.service.UserInfoService;
+import com.jellyfishmix.wxinterchange.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @date 2020/4/8 11:20 上午
  */
 @Service("userInfoService")
-public class UserInfoServiceImpl implements UserInfoService {
+public class UserServiceImpl implements UserService {
     @Resource
     private UserInfoDao userInfoDao;
 

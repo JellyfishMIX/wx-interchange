@@ -1,8 +1,10 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.dao.TeamFileDao;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
-import com.jellyfishmix.wxinterchange.service.FileInfoService;
+import com.jellyfishmix.wxinterchange.entity.TeamFile;
+import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,11 @@ import java.util.List;
  * @since 2020-04-19 23:26:14
  */
 @Service("fileInfoService")
-public class FileInfoServiceImpl implements FileInfoService {
+public class FileServiceImpl implements FileService {
     @Resource
     private FileInfoDao fileInfoDao;
+    @Resource
+    private TeamFileDao teamFileDao;
 
     /**
      * 通过fileId查询单条数据
@@ -29,6 +33,20 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Override
     public FileInfo queryByFileId(String fileId) {
         return this.fileInfoDao.queryByFileId(fileId);
+    }
+
+    /**
+     * 查询项目组文件列表，通过上传日期排序
+     *
+     * @param tid 项目组tid
+     * @param pageIndex 页码
+     * @param pageSize 每页容量
+     * @return
+     */
+    @Override
+    public List<TeamFile> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize) {
+        List<TeamFile> teamFileList = teamFileDao.queryTeamFileListOrderByCreationTime(tid, pageIndex, pageSize);
+        return teamFileList;
     }
 
     /**
@@ -50,9 +68,10 @@ public class FileInfoServiceImpl implements FileInfoService {
      * @return 实例对象
      */
     @Override
-    public FileInfo insert(FileInfo fileInfo) {
+    public FileInfo insert(FileInfo fileInfo, TeamFile teamFile) {
         fileInfo.setFileId(UniqueKeyUtil.getUniqueKey());
         this.fileInfoDao.insert(fileInfo);
+        this.teamFileDao.insert(teamFile);
         fileInfo = fileInfoDao.queryByFileId(fileInfo.getFileId());
         return fileInfo;
     }

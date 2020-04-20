@@ -4,14 +4,14 @@ import com.jellyfishmix.wxinterchange.config.QiniuConfig;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
-import com.jellyfishmix.wxinterchange.service.FileInfoService;
-import com.jellyfishmix.wxinterchange.service.TeamFileService;
+import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,9 +28,7 @@ public class FileController {
     @Autowired
     private QiniuConfig qiniuConfig;
     @Autowired
-    private FileInfoService fileInfoService;
-    @Autowired
-    private TeamFileService teamFileService;
+    private FileService fileService;
 
     /**
      * 获取七牛云文件上传upToken
@@ -68,6 +66,7 @@ public class FileController {
      * @return
      */
     @PostMapping("/upload_file_to_team")
+    @Transactional
     public ResultVO uploadFileToTeam(@RequestParam("tid") String tid,
                                      @RequestParam("uid") String uid,
                                      @RequestParam("key") String fileKey,
@@ -85,13 +84,12 @@ public class FileController {
         fileInfo.setMimeType(mimeType);
         fileInfo.setUid(uid);
 
-        fileInfo = fileInfoService.insert(fileInfo);
-
         TeamFile teamFile = new TeamFile();
         teamFile.setTid(tid);
         teamFile.setFileId(fileInfo.getFileId());
         teamFile.setUid(uid);
-        teamFileService.insert(teamFile);
+
+        fileInfo = fileService.insert(fileInfo, teamFile);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfo);
     }
 
@@ -108,7 +106,7 @@ public class FileController {
                                                          @RequestParam("pageIndex") Integer pageIndex,
                                                          @RequestParam("pageSize") Integer pageSize) {
         int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
-        List<TeamFile> teamFileList = teamFileService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
+        List<TeamFile> teamFileList = fileService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileList);
     }
 }
