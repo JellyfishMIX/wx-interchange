@@ -46,7 +46,7 @@
     <select id="queryTeamUserByTidAndUid" resultMap="TeamUserMap">
         select tid, uid, user_grade
         from wx_interchange.team_user
-        where tid = #{tid} and uid = #{uid}
+        where uid = #{uid} and tid = #{tid}
     </select>
 
     <!--新增所有列-->

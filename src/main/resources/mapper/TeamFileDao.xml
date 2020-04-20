@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jellyfishmix.wxinterchange.dao.TeamFileDao">
+
+    <resultMap type="com.jellyfishmix.wxinterchange.entity.TeamFile" id="TeamFileMap">
+        <result property="tid" column="tid" jdbcType="VARCHAR"/>
+        <result property="fileId" column="file_id" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="VARCHAR"/>
+        <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
+        <!--无特殊情况不开放modifiedTime-->
+        <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryByTidAndFileId" resultMap="TeamFileMap">
+        select
+          tid, file_id, uid, creation_time
+        from wx_interchange.team_file
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TeamFileMap">
+        select
+          tid, file_id, uid, creation_time
+        from wx_interchange.team_file
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id">
+        insert into wx_interchange.team_file(tid, file_id, uid, creation_time)
+        values (#{tid}, #{fileId}, #{uid}, #{creationTime})
+    </insert>
+
+    <!--通过tid和fileId修改数据-->
+    <update id="update">
+        update wx_interchange.team_file
+        <set>
+            <if test="tid != null and tid != ''">
+                tid = #{tid},
+            </if>
+            <if test="fileId != null and fileId != ''">
+                file_id = #{fileId},
+            </if>
+            <if test="uid != null and uid != ''">
+                uid = #{uid},
+            </if>
+        </set>
+        where file_id = #{fileId} and tid = #{tid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_interchange.team_file where id = #{id}
+    </delete>
+</mapper>

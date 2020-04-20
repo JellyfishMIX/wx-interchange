@@ -3,6 +3,7 @@ package com.jellyfishmix.wxinterchange.service.impl;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
 import com.jellyfishmix.wxinterchange.service.FileInfoService;
+import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,7 +51,9 @@ public class FileInfoServiceImpl implements FileInfoService {
      */
     @Override
     public FileInfo insert(FileInfo fileInfo) {
+        fileInfo.setFileId(UniqueKeyUtil.getUniqueKey());
         this.fileInfoDao.insert(fileInfo);
+        fileInfo = fileInfoDao.queryByFileId(fileInfo.getFileId());
         return fileInfo;
     }
 

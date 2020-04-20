@@ -45,6 +45,10 @@ public class FileInfo {
     */
     private String mimeType;
     /**
+     * 上传者uid，外键
+     */
+    private String uid;
+    /**
     * 创建时间，自动写入
     */
     private Date creationTime;
