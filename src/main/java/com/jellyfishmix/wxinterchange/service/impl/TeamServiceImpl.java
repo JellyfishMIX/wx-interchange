@@ -1,12 +1,17 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
+import com.jellyfishmix.wxinterchange.dao.TeamFileDao;
 import com.jellyfishmix.wxinterchange.dao.TeamInfoDao;
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.FileInfo;
+import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
-import com.jellyfishmix.wxinterchange.service.TeamUserService;
+import com.jellyfishmix.wxinterchange.service.TeamService;
+import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,23 +23,45 @@ import java.util.List;
  * @author makejava
  * @since 2020-04-11 21:09:44
  */
-@Service("teamUserService")
-public class TeamUserServiceImpl implements TeamUserService {
+@Service("teamService")
+public class TeamServiceImpl implements TeamService {
     @Resource
     private TeamUserDao teamUserDao;
     @Resource
     private TeamInfoDao teamInfoDao;
+    @Resource
+    private FileInfoDao fileInfoDao;
+    @Resource
+    private TeamFileDao teamFileDao;
 
     /**
-     * 查询多条数据
+     * 通过tid查询单条数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param tid 主键
+     * @return 实例对象
      */
     @Override
-    public List<TeamUser> queryAllByLimit(int offset, int limit) {
-        return this.teamUserDao.queryAllByLimit(offset, limit);
+    public TeamInfoDTO queryTeamInfoByTid(String tid) {
+        TeamInfo teamInfo = teamInfoDao.queryByTid(tid);
+        TeamInfoDTO teamInfoDTO = null;
+        // 查询teamInfo为null
+        if (teamInfo == null) {
+            teamInfoDTO = new TeamInfoDTO(TeamEnum.TEAM_INFO_NULL);
+            return teamInfoDTO;
+        }
+        teamInfoDTO = new TeamInfoDTO(TeamEnum.SUCCESS, teamInfo);
+        return teamInfoDTO;
+    }
+
+    /**
+     * 获取官方项目组列表
+     *
+     * @return
+     */
+    @Override
+    public List<TeamInfo> queryOfficialTeamList() {
+        List<TeamInfo> teamInfoList = teamInfoDao.queryOfficialTeamList();
+        return teamInfoList;
     }
 
     /**
@@ -76,14 +103,48 @@ public class TeamUserServiceImpl implements TeamUserService {
     };
 
     /**
-     * 新增数据
+     * 创建项目组
      *
+     * @param teamInfo 实例对象
      * @param teamUser 实例对象
      * @return 实例对象
      */
     @Override
-    public void insert(TeamUser teamUser) {
+    public TeamInfo createTeam(TeamInfo teamInfo, TeamUser teamUser) {
+        // 生成唯一tid
+        String tid = UniqueKeyUtil.getUniqueKey();
+        teamInfo.setTid(tid);
+        this.teamInfoDao.insert(teamInfo);
+        teamUser.setTid(tid);
         this.teamUserDao.insert(teamUser);
+
+        // 查询新insert的teamInfo信息
+        teamInfo = teamInfoDao.queryByTid(tid);
+        return teamInfo;
+    }
+
+    /**
+     * 向项目组上传文件
+     *
+     * @param fileInfo 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public FileInfo uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile) {
+        fileInfo.setFileId(UniqueKeyUtil.getUniqueKey());
+        this.fileInfoDao.insert(fileInfo);
+        this.teamFileDao.insert(teamFile);
+
+        String tid = teamFile.getTid();
+
+        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
+        TeamInfo teamInfoForUpdate = new TeamInfo();
+        teamInfoForUpdate.setTid(tid);
+        teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + 1);
+        teamInfoDao.updateByTid(teamInfoForUpdate);
+
+        fileInfo = fileInfoDao.queryByFileId(fileInfo.getFileId());
+        return fileInfo;
     }
 
     /**
@@ -104,7 +165,7 @@ public class TeamUserServiceImpl implements TeamUserService {
         teamInfoForUpdate.setTid(tid);
         teamInfoForUpdate.setNumberCount(teamInfoFromQuery.getNumberCount());
         teamInfoForUpdate.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount());
-        teamInfoDao.update(teamInfoForUpdate);
+        teamInfoDao.updateByTid(teamInfoForUpdate);
 
         // teamUser表中添加记录
         TeamUser teamUser = new TeamUser();
@@ -113,18 +174,25 @@ public class TeamUserServiceImpl implements TeamUserService {
         // userGrade，3 为普通成员等级
         teamUser.setUserGrade(3);
 
-        this.insert(teamUser);
+        teamUserDao.insert(teamUser);
         return new TeamInfoDTO(TeamEnum.SUCCESS, teamInfoFromQuery);
     }
 
     /**
-     * 通过主键删除数据
+     * 修改数据
      *
-     * @param id 主键
-     * @return 是否成功
+     * @param teamInfo 实例对象
+     * @return 实例对象
      */
     @Override
-    public boolean deleteById(Integer id) {
-        return this.teamUserDao.deleteById(id) > 0;
+    public TeamInfoDTO updateTeamInfo(TeamInfo teamInfo) {
+        int effectedNum = this.teamInfoDao.updateByTid(teamInfo);
+        TeamInfoDTO teamInfoDTO = null;
+        if (effectedNum <= 0) {
+            teamInfoDTO = new TeamInfoDTO(TeamEnum.TEAM_INFO_NULL);
+            return teamInfoDTO;
+        }
+        teamInfoDTO = this.queryTeamInfoByTid(teamInfo.getTid());
+        return teamInfoDTO;
     }
 }

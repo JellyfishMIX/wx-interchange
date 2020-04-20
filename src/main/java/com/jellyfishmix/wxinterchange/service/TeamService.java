@@ -1,6 +1,8 @@
 package com.jellyfishmix.wxinterchange.service;
 
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.FileInfo;
+import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import java.util.List;
@@ -11,15 +13,21 @@ import java.util.List;
  * @author makejava
  * @since 2020-04-11 21:09:44
  */
-public interface TeamUserService {
+public interface TeamService {
     /**
-     * 查询多条数据
+     * 通过tid查询单条数据
      *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
+     * @param tid 项目组tid
+     * @return 实例对象
      */
-    List<TeamUser> queryAllByLimit(int offset, int limit);
+    TeamInfoDTO queryTeamInfoByTid(String tid);
+
+    /**
+     * 获取官方项目组列表
+     *
+     * @return
+     */
+    List<TeamInfo> queryOfficialTeamList();
 
     /**
      * 通过uid和userGrade查询我所在的项目组（非官方组）
@@ -48,11 +56,22 @@ public interface TeamUserService {
     TeamUser queryTeamUserByTidAndUid(String tid, String uid);
 
     /**
-     * 新增数据
+     * 创建项目组
      *
+     * @param teamInfo 实例对象
      * @param teamUser 实例对象
+     * @return
      */
-    void insert(TeamUser teamUser);
+    TeamInfo createTeam(TeamInfo teamInfo, TeamUser teamUser);
+
+    /**
+     * 向项目组上传文件
+     *
+     * @param fileInfo 实例对象
+     * @param teamFile 项目组文件对象
+     * @return 实例对象
+     */
+    FileInfo uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile);
 
     /**
      * 加入项目组
@@ -64,10 +83,10 @@ public interface TeamUserService {
     TeamInfoDTO joinTeam(String tid, String uid);
 
     /**
-     * 通过主键删除数据
+     * 修改数据
      *
-     * @param id 主键
-     * @return 是否成功
+     * @param teamInfo 实例对象
+     * @return 实例对象
      */
-    boolean deleteById(Integer id);
+    TeamInfoDTO updateTeamInfo(TeamInfo teamInfo);
 }

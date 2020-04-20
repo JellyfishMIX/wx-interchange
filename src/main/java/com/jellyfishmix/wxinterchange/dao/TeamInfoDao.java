@@ -50,7 +50,7 @@ public interface TeamInfoDao {
      * @param teamInfo 实例对象
      * @return 影响行数
      */
-    int update(TeamInfo teamInfo);
+    int updateByTid(TeamInfo teamInfo);
 
     /**
      * 通过tid删除数据

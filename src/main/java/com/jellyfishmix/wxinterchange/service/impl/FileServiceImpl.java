@@ -17,7 +17,7 @@ import java.util.List;
  * @author makejava
  * @since 2020-04-19 23:26:14
  */
-@Service("fileInfoService")
+@Service("fileService")
 public class FileServiceImpl implements FileService {
     @Resource
     private FileInfoDao fileInfoDao;
@@ -47,33 +47,6 @@ public class FileServiceImpl implements FileService {
     public List<TeamFile> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize) {
         List<TeamFile> teamFileList = teamFileDao.queryTeamFileListOrderByCreationTime(tid, pageIndex, pageSize);
         return teamFileList;
-    }
-
-    /**
-     * 查询多条数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    @Override
-    public List<FileInfo> queryAllByLimit(int offset, int limit) {
-        return this.fileInfoDao.queryAllByLimit(offset, limit);
-    }
-
-    /**
-     * 新增数据
-     *
-     * @param fileInfo 实例对象
-     * @return 实例对象
-     */
-    @Override
-    public FileInfo insert(FileInfo fileInfo, TeamFile teamFile) {
-        fileInfo.setFileId(UniqueKeyUtil.getUniqueKey());
-        this.fileInfoDao.insert(fileInfo);
-        this.teamFileDao.insert(teamFile);
-        fileInfo = fileInfoDao.queryByFileId(fileInfo.getFileId());
-        return fileInfo;
     }
 
     /**

@@ -17,7 +17,7 @@ public interface UserService {
 
     /**
      * 修改用户信息
-     * @param userInfo
+     * @param userInfo 用户信息实例对象
      * @return
      */
     UserInfoDTO updateUserInfo(UserInfo userInfo);

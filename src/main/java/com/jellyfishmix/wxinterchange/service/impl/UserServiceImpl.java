@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * @author JellyfishMIX
  * @date 2020/4/8 11:20 上午
  */
-@Service("userInfoService")
+@Service("userService")
 public class UserServiceImpl implements UserService {
     @Resource
     private UserInfoDao userInfoDao;

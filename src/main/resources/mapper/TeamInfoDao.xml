@@ -46,7 +46,7 @@
     </insert>
 
     <!--通过tid修改数据-->
-    <update id="update">
+    <update id="updateByTid">
         update wx_interchange.team_info
         <set>
             <if test="teamName != null and teamName != ''">

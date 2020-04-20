@@ -5,13 +5,13 @@ import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
 import com.jellyfishmix.wxinterchange.service.FileService;
+import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,6 +29,8 @@ public class FileController {
     private QiniuConfig qiniuConfig;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private TeamService teamService;
 
     /**
      * 获取七牛云文件上传upToken
@@ -66,7 +68,6 @@ public class FileController {
      * @return
      */
     @PostMapping("/upload_file_to_team")
-    @Transactional
     public ResultVO uploadFileToTeam(@RequestParam("tid") String tid,
                                      @RequestParam("uid") String uid,
                                      @RequestParam("key") String fileKey,
@@ -89,7 +90,7 @@ public class FileController {
         teamFile.setFileId(fileInfo.getFileId());
         teamFile.setUid(uid);
 
-        fileInfo = fileService.insert(fileInfo, teamFile);
+        fileInfo = teamService.uploadFileToTeam(fileInfo, teamFile);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfo);
     }
 

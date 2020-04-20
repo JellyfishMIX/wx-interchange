@@ -6,13 +6,11 @@ import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
-import com.jellyfishmix.wxinterchange.service.TeamInfoService;
-import com.jellyfishmix.wxinterchange.service.TeamUserService;
+import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,9 +23,7 @@ import java.util.List;
 @RequestMapping("/team")
 public class TeamController {
     @Autowired
-    private TeamInfoService teamInfoService;
-    @Autowired
-    private TeamUserService teamUserService;
+    private TeamService teamService;
     @Autowired
     private UserService userService;
 
@@ -41,7 +37,6 @@ public class TeamController {
      * @return
      */
     @PostMapping("/create_team")
-    @Transactional
     public ResultVO createTeam(@RequestParam("uid") String uid,
                                @RequestParam("teamName") String teamName,
                                @RequestParam("teamAvatarUrl") String teamAvatarUrl,
@@ -56,16 +51,14 @@ public class TeamController {
         teamInfo.setTeamName(teamName);
         teamInfo.setAvatarUrl(teamAvatarUrl);
         teamInfo.setGrade(teamGrade);
-        teamInfo = teamInfoService.insert(teamInfo);
 
         // teamUser表中添加记录
         TeamUser teamUser = new TeamUser();
-        teamUser.setTid(teamInfo.getTid());
         teamUser.setUid(uid);
         // userGrade，1 为创建者等级
         teamUser.setUserGrade(1);
 
-        teamUserService.insert(teamUser);
+        teamInfo = teamService.createTeam(teamInfo, teamUser);
 
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfo);
     }
@@ -78,7 +71,7 @@ public class TeamController {
      */
     @GetMapping("/query_team_info_by_tid")
     public ResultVO queryTeamInfoByTid(@RequestParam("tid") String tid) {
-        TeamInfoDTO teamInfoDTO = teamInfoService.queryByTid(tid);
+        TeamInfoDTO teamInfoDTO = teamService.queryTeamInfoByTid(tid);
         // 查询teamInfo为null
         if (teamInfoDTO.getStateCode().equals(TeamEnum.TEAM_INFO_NULL.getStateCode())) {
             return ResultVOUtil.fail(TeamEnum.TEAM_INFO_NULL.getStateCode(), TeamEnum.TEAM_INFO_NULL.getStateMsg());
@@ -95,7 +88,7 @@ public class TeamController {
      */
     @GetMapping("/query_team_user_list_by_tid")
     public ResultVO queryTeamUserListByTid(@RequestParam("tid") String tid) {
-        List<TeamUser> teamUserList = teamUserService.queryTeamUserListByTid(tid);
+        List<TeamUser> teamUserList = teamService.queryTeamUserListByTid(tid);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamUserList);
     }
 
@@ -112,7 +105,7 @@ public class TeamController {
         TeamInfo teamInfo = new TeamInfo();
         teamInfo.setTid(tid);
         teamInfo.setTeamName(newTeamName);
-        TeamInfoDTO teamInfoDTO = teamInfoService.update(teamInfo);
+        TeamInfoDTO teamInfoDTO = teamService.updateTeamInfo(teamInfo);
         // 如果tid对应的teamInfo为空
         if (teamInfoDTO.getStateCode().equals(TeamEnum.TEAM_INFO_NULL.getStateCode())) {
             return ResultVOUtil.fail(TeamEnum.TEAM_INFO_NULL.getStateCode(), TeamEnum.TEAM_INFO_NULL.getStateMsg());
@@ -128,20 +121,19 @@ public class TeamController {
      * @return
      */
     @PostMapping("/enter_team")
-    @Transactional
     public ResultVO enterTeam(@RequestParam("tid") String tid,
                               @RequestParam("uid") String uid) {
         TeamInfoDTO teamInfoDTO = null;
         // 检查uid用户是否已加入了tid项目组
-        TeamUser teamUser = teamUserService.queryTeamUserByTidAndUid(tid, uid);
+        TeamUser teamUser = teamService.queryTeamUserByTidAndUid(tid, uid);
         // 如果未加入，则将此uid用户加入tid对应的项目组
         if (teamUser == null) {
-            teamInfoDTO = teamUserService.joinTeam(tid, uid);
+            teamInfoDTO = teamService.joinTeam(tid, uid);
             // teamInfoDTO判业务异常逻辑先不写
             return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
         }
 
-        teamInfoDTO = teamInfoService.queryByTid(tid);
+        teamInfoDTO = teamService.queryTeamInfoByTid(tid);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
     }
 
@@ -152,7 +144,7 @@ public class TeamController {
      */
     @GetMapping("/query_official_team_list")
     public ResultVO queryOfficialTeamList() {
-        List<TeamInfo> teamInfoList = teamInfoService.queryOfficialTeamList();
+        List<TeamInfo> teamInfoList = teamService.queryOfficialTeamList();
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoList);
     }
 
