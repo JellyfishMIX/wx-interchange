@@ -68,7 +68,7 @@ create table `file_info` (
     `file_name` varchar(64) not null comment '文件名',
     `file_url` varchar(1024) not null comment '文件资源URL',
     `file_size` int not null comment '文件大小, 单位为b',
-    `mime_type` varchar(64) not null comment '文件类型',
+    `mime_type` varchar(128) not null comment '文件类型',
     `uid` varchar(32) not null comment '上传者uid，外键',
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',

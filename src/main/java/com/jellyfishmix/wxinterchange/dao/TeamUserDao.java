@@ -27,7 +27,7 @@ public interface TeamUserDao {
      * @param userGrade 项目组成员等级
      * @return 对象列表
      */
-    List<TeamUser> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
+    List<TeamUser> queryTeamListByUidAndUserGrade(@Param("uid") String uid, @Param("userGrade") Integer userGrade);
 
     /**
      * 通过tid查询项目组成员列表
@@ -44,7 +44,7 @@ public interface TeamUserDao {
      * @param uid 用户uid
      * @return
      */
-    TeamUser queryTeamUserByTidAndUid(String tid, String uid);
+    TeamUser queryTeamUserByTidAndUid(@Param("tid") String tid, @Param("uid") String uid);
 
     /**
      * 新增数据

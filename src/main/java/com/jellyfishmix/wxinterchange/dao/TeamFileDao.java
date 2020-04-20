@@ -19,7 +19,17 @@ public interface TeamFileDao {
      * @param fileId 文件fileId
      * @return 实例对象
      */
-    TeamFile queryByTidAndFileId(String tid, String fileId);
+    TeamFile queryByTidAndFileId(@Param("tid") String tid, @Param("fileId") String fileId);
+
+    /**
+     * 查询项目组文件列表，通过上传日期排序
+     *
+     * @param tid 项目组tid
+     * @param offset 查询起始位置
+     * @param limit 查询条数
+     * @return
+     */
+    List<TeamFile> queryTeamFileListOrderByCreationTime(@Param("tid") String tid, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
      * 查询指定行数据

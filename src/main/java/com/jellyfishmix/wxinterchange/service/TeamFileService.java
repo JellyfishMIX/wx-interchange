@@ -1,6 +1,7 @@
 package com.jellyfishmix.wxinterchange.service;
 
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
+
 import java.util.List;
 
 /**
@@ -18,6 +19,16 @@ public interface TeamFileService {
      * @return 实例对象
      */
     TeamFile queryByTidAndFileId(String tid, String fileId);
+
+    /**
+     * 查询项目组文件列表，通过上传日期排序
+     *
+     * @param tid 项目组tid
+     * @param pageIndex 页码
+     * @param pageSize 每页容量
+     * @return
+     */
+    List<TeamFile> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize);
 
     /**
      * 查询多条数据

@@ -6,6 +6,7 @@ import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
 import com.jellyfishmix.wxinterchange.service.FileInfoService;
 import com.jellyfishmix.wxinterchange.service.TeamFileService;
+import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import com.qiniu.util.Auth;
@@ -98,14 +99,16 @@ public class FileController {
      * 通过tid查询项目组内的文件列表，分页
      *
      * @param tid 项目组tid
-     * @param page 页码
-     * @param pageSize 每页的容量
+     * @param pageIndex 页码，从1开始
+     * @param pageSize 每页的行数
      * @return
      */
-    public ResultVO queryTeamFileListByTid(@RequestParam("tid") String tid,
-                                           @RequestParam("page") Integer page,
-                                           @RequestParam("pageSize") Integer pageSize) {
-        List<TeamFile> teamFileList;
-        return null;
+    @GetMapping("/query_team_file_list_order_by_creation_time")
+    public ResultVO queryTeamFileListOrderByCreationTime(@RequestParam("tid") String tid,
+                                                         @RequestParam("pageIndex") Integer pageIndex,
+                                                         @RequestParam("pageSize") Integer pageSize) {
+        int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
+        List<TeamFile> teamFileList = teamFileService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileList);
     }
 }
