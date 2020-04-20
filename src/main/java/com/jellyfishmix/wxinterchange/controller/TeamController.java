@@ -31,8 +31,6 @@ public class TeamController {
     private TeamService teamService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private FileService fileService;
 
     /**
      * 创建项目组
@@ -112,7 +110,7 @@ public class TeamController {
                                                          @RequestParam("pageIndex") Integer pageIndex,
                                                          @RequestParam("pageSize") Integer pageSize) {
         int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
-        List<TeamFile> teamFileList = fileService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
+        List<TeamFile> teamFileList = teamService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileList);
     }
 

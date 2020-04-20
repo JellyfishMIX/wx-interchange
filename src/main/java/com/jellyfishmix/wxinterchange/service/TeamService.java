@@ -56,6 +56,16 @@ public interface TeamService {
     TeamUser queryTeamUserByTidAndUid(String tid, String uid);
 
     /**
+     * 查询项目组文件列表，通过上传日期排序
+     *
+     * @param tid 项目组tid
+     * @param pageIndex 页码
+     * @param pageSize 每页容量
+     * @return
+     */
+    List<TeamFile> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize);
+
+    /**
      * 创建项目组
      *
      * @param teamInfo 实例对象
