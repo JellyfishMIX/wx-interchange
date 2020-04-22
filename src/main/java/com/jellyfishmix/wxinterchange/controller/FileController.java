@@ -40,4 +40,8 @@ public class FileController {
         hashMap.put("uptoken", upToken);
         return  hashMap;
     }
+
+    // 通过fileId查询文件信息
+
+    // 上传项目组头像、用户头像
 }

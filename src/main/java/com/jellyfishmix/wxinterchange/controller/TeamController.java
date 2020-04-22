@@ -209,4 +209,6 @@ public class TeamController {
         List<TeamInfo> teamInfoList = teamService.queryOfficialTeamList();
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoList);
     }
+
+    // 删除项目组内的文件（单个）
 }
