@@ -57,10 +57,10 @@ public interface TeamFileDao {
     int updateByTidAndFileId(TeamFile teamFile);
 
     /**
-     * 通过主键删除数据
+     * 通过fileId删除数据
      *
-     * @param id 主键
-     * @return 影响行数
+     * @param fileId 文件fileId
+     * @return
      */
-    int deleteById(Integer id);
+    void deleteByFileId(String fileId);
 }

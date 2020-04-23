@@ -67,8 +67,8 @@
         where file_id = #{fileId} and tid = #{tid}
     </update>
 
-    <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from wx_interchange.team_file where id = #{id}
+    <!--通过fileId删除数据-->
+    <delete id="deleteByFileId">
+        delete from wx_interchange.team_file where file_id = #{fileId}
     </delete>
 </mapper>

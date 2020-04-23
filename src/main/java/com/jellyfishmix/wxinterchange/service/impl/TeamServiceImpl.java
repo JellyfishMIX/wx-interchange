@@ -145,17 +145,15 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public FileInfo uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile) {
-        fileInfo.setFileId(UniqueKeyUtil.getUniqueKey());
+        String fileId = UniqueKeyUtil.getUniqueKey();
+        fileInfo.setFileId(fileId);
+        teamFile.setFileId(fileId);
         this.fileInfoDao.insert(fileInfo);
         this.teamFileDao.insert(teamFile);
 
         String tid = teamFile.getTid();
-
-        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
-        TeamInfo teamInfoForUpdate = new TeamInfo();
-        teamInfoForUpdate.setTid(tid);
-        teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + 1);
-        teamInfoDao.updateByTid(teamInfoForUpdate);
+        // 修改项目组文件计数
+        this.updateFileCount(tid, 1);
 
         fileInfo = fileInfoDao.queryByFileId(fileInfo.getFileId());
         return fileInfo;
@@ -208,5 +206,36 @@ public class TeamServiceImpl implements TeamService {
         }
         teamInfoDTO = this.queryTeamInfoByTid(teamInfo.getTid());
         return teamInfoDTO;
+    }
+
+    /**
+     * 修改项目组文件计数
+     *
+     * @param tid            项目组tid
+     * @param countChangeNum 计数更改的数量，有正负
+     * @return
+     */
+    @Override
+    public void updateFileCount(String tid, Integer countChangeNum) {
+        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
+        TeamInfo teamInfoForUpdate = new TeamInfo();
+        teamInfoForUpdate.setTid(tid);
+        teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + countChangeNum);
+        teamInfoDao.updateByTid(teamInfoForUpdate);
+    }
+
+    /**
+     * 删除项目组内的文件（单个）
+     *
+     * @param tid    项目组tid
+     * @param fileId 文件fileId
+     * @return
+     */
+    @Override
+    public void deleteFileFromTeam(String tid, String fileId) {
+        teamFileDao.deleteByFileId(fileId);
+        fileInfoDao.deleteByFileId(fileId);
+
+        this.updateFileCount(tid, -1);
     }
 }

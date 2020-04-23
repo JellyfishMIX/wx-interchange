@@ -99,4 +99,22 @@ public interface TeamService {
      * @return 实例对象
      */
     TeamInfoDTO updateTeamInfo(TeamInfo teamInfo);
+
+    /**
+     * 修改项目组文件计数
+     *
+     * @param tid 项目组tid
+     * @param countChangeNum 计数更改的数量，有正负
+     * @return
+     */
+    void updateFileCount(String tid, Integer countChangeNum);
+
+    /**
+     * 删除项目组内的文件（单个）
+     *
+     * @param tid 项目组tid
+     * @param fileId 文件fileId
+     * @return
+     */
+    void deleteFileFromTeam(String tid, String fileId);
 }

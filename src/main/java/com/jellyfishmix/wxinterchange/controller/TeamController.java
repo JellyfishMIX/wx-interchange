@@ -9,7 +9,6 @@ import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
-import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
@@ -95,6 +94,17 @@ public class TeamController {
     public ResultVO queryTeamUserListByTid(@RequestParam("tid") String tid) {
         List<TeamUser> teamUserList = teamService.queryTeamUserListByTid(tid);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamUserList);
+    }
+
+    /**
+     * 获取官方项目组列表
+     *
+     * @return
+     */
+    @GetMapping("/query_official_team_list")
+    public ResultVO queryOfficialTeamList() {
+        List<TeamInfo> teamInfoList = teamService.queryOfficialTeamList();
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoList);
     }
 
     /**
@@ -200,15 +210,16 @@ public class TeamController {
     }
 
     /**
-     * 获取官方项目组列表
+     * 删除项目组内的文件（单个）
      *
+     * @param tid 项目组tid
+     * @param fileId 文件fileId
      * @return
      */
-    @GetMapping("/query_official_team_list")
-    public ResultVO queryOfficialTeamList() {
-        List<TeamInfo> teamInfoList = teamService.queryOfficialTeamList();
-        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoList);
+    @PostMapping("/delete_file_from_team")
+    public ResultVO deleteFileFromTeam(@RequestParam("tid") String tid,
+                                       @RequestParam("fileId") String fileId) {
+        teamService.deleteFileFromTeam(tid, fileId);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
-
-    // 删除项目组内的文件（单个）
 }
