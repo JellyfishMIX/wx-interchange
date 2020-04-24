@@ -16,4 +16,11 @@ public interface FileService {
      * @return 实例对象
      */
     FileInfoDTO queryByFileId(String fileId);
+
+    /**
+     * 从七牛云bucket中删除文件
+     *
+     * @param fileKey 文件fileKey
+     */
+    void deleteFromQiniuBucket(String fileKey);
 }

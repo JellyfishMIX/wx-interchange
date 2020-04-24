@@ -18,25 +18,6 @@
         <!--<id column="modified_time" property="modifiedTime" jdbcType="TIMESTAMP" />-->
     </resultMap>
 
-    <!--新增用户信息-->
-    <insert id="insertUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="id">
-        insert into wx_interchange.user_info(uid, username, openid, avatar_url)
-        values (#{uid}, #{username}, #{openid}, #{avatarUrl})
-    </insert>
-
-    <!--修改用户信息-->
-    <update id="updateUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="uid" keyProperty="uid">
-        update wx_interchange.user_info
-        <set>
-            <if test="username != null">username = #{username},</if>
-            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
-            <if test="createdTeamCount != null">created_team_count = #{createdTeamCount},</if>
-            <if test="managedTeamCount != null">managed_team_count = #{managedTeamCount},</if>
-            <if test="joinedTeamCount != null">joined_team_count = #{joinedTeamCount}</if>
-        </set>
-        where uid = #{uid}
-    </update>
-    
     <!--通过uid查找用户信息-->
     <select id="queryByUid" resultMap="userInfoMap">
         select uid, username, openid, avatar_url, global_grade, created_team_count, managed_team_count, joined_team_count
@@ -50,6 +31,25 @@
         from wx_interchange.user_info
         where openid = #{openid}
     </select>
+
+    <!--新增用户信息-->
+    <insert id="insertUserInfo" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="id">
+        insert into wx_interchange.user_info(uid, username, openid, avatar_url)
+        values (#{uid}, #{username}, #{openid}, #{avatarUrl})
+    </insert>
+
+    <!--修改用户信息-->
+    <update id="updateUserInfoByUid" parameterType="com.jellyfishmix.wxinterchange.entity.UserInfo" keyColumn="uid" keyProperty="uid">
+        update wx_interchange.user_info
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="createdTeamCount != null">created_team_count = #{createdTeamCount},</if>
+            <if test="managedTeamCount != null">managed_team_count = #{managedTeamCount},</if>
+            <if test="joinedTeamCount != null">joined_team_count = #{joinedTeamCount}</if>
+        </set>
+        where uid = #{uid}
+    </update>
 
     <!--delete暂时不做-->
 </mapper>

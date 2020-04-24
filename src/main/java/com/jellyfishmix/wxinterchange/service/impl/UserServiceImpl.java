@@ -1,5 +1,7 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
+import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author JellyfishMIX
@@ -19,39 +22,8 @@ import javax.annotation.Resource;
 public class UserServiceImpl implements UserService {
     @Resource
     private UserInfoDao userInfoDao;
-
-    /**
-     * 新增用户信息
-     *
-     * @param userInfo
-     * @return
-     */
-    @Override
-    @Transactional(rollbackFor = UserException.class)
-    public UserInfoDTO insertUserInfo(UserInfo userInfo) {
-        int effectedNum = userInfoDao.insertUserInfo(userInfo);
-        if (effectedNum <= 0) {
-            throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
-        }
-        UserInfoDTO userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS);
-        return userInfoDTO;
-    }
-
-    /**
-     * 修改用户信息
-     *
-     * @param userInfo
-     * @return
-     */
-    @Override
-    public UserInfoDTO updateUserInfo(UserInfo userInfo) {
-        int effectedNum = userInfoDao.updateUserInfo(userInfo);
-        if (effectedNum <= 0) {
-            throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
-        }
-        UserInfoDTO userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS);
-        return userInfoDTO;
-    }
+    @Resource
+    private TeamUserDao teamUserDao;
 
     /**
      * 通过uid查找用户信息
@@ -88,6 +60,74 @@ public class UserServiceImpl implements UserService {
         }
         userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS, userInfo);
         return userInfoDTO;
+    }
+
+    /**
+     * 通过uid和userGrade查询我所在的项目组（非官方组）
+     *
+     * @param uid 用户uid
+     * @param userGrade 项目组成员等级
+     * @return 对象列表
+     */
+    @Override
+    public List<TeamUserDTO> queryTeamListByUidAndUserGrade(String uid, Integer userGrade) {
+        List<TeamUserDTO> teamUserList = teamUserDao.queryTeamListByUidAndUserGrade(uid, userGrade);
+        return teamUserList;
+    }
+
+    /**
+     * 新增用户信息
+     *
+     * @param userInfo
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = UserException.class)
+    public UserInfoDTO insertUserInfo(UserInfo userInfo) {
+        int effectedNum = userInfoDao.insertUserInfo(userInfo);
+        if (effectedNum <= 0) {
+            throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
+        }
+        UserInfoDTO userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS);
+        return userInfoDTO;
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param userInfo
+     * @return
+     */
+    @Override
+    public UserInfoDTO updateUserInfo(UserInfo userInfo) {
+        int effectedNum = userInfoDao.updateUserInfoByUid(userInfo);
+        if (effectedNum <= 0) {
+            throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
+        }
+        UserInfoDTO userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS);
+        return userInfoDTO;
+    }
+
+    /**
+     * 更新用户的计数属性
+     *
+     * @param uid            用户uid
+     * @param userEnum       操作标志Enum
+     * @param countChangeNum 计数更改的数量，有正负
+     */
+    @Override
+    public void updateUserInfoCountProperty(String uid, UserEnum userEnum, Integer countChangeNum) {
+        UserInfo userInfoFromQuery = userInfoDao.queryByUid(uid);
+        UserInfo userInfoForUpdate = new UserInfo();
+        userInfoForUpdate.setUid(uid);
+        if (userEnum.getStateCode().equals(UserEnum.UPDATE_CREATED_TEAM_COUNT.getStateCode())) {
+            userInfoForUpdate.setCreatedTeamCount(userInfoFromQuery.getCreatedTeamCount() + countChangeNum);
+        } else if (userEnum.getStateCode().equals(UserEnum.UPDATE_MANAGED_TEAM_COUNT.getStateCode())) {
+            userInfoForUpdate.setManagedTeamCount(userInfoFromQuery.getManagedTeamCount() + countChangeNum);
+        } else if (userEnum.getStateCode().equals(UserEnum.UPDATE_JOINED_TEAM_COUNT.getStateCode())) {
+            userInfoForUpdate.setJoinedTeamCount(userInfoFromQuery.getJoinedTeamCount() + countChangeNum);
+        }
+        userInfoDao.updateUserInfoByUid(userInfoForUpdate);
     }
 
     // delete暂时不做

@@ -55,7 +55,7 @@ public class UserController {
     @GetMapping("/query_created_team_list_by_uid")
     public ResultVO queryCreatedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 1;
-        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
+        List<TeamUserDTO> teamUserDTOList = userService.queryTeamListByUidAndUserGrade(uid, userGrade);
         return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 
@@ -68,7 +68,7 @@ public class UserController {
     @GetMapping("/query_managed_team_list_by_uid")
     public ResultVO queryManagedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 2;
-        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
+        List<TeamUserDTO> teamUserDTOList = userService.queryTeamListByUidAndUserGrade(uid, userGrade);
         return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 
@@ -81,7 +81,7 @@ public class UserController {
     @GetMapping("/query_joined_team_list_by_uid")
     public ResultVO queryJoinedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 3;
-        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
+        List<TeamUserDTO> teamUserDTOList = userService.queryTeamListByUidAndUserGrade(uid, userGrade);
         return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 }

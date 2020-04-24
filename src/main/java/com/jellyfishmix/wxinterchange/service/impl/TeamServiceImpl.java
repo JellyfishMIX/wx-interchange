@@ -13,9 +13,15 @@ import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
+import com.jellyfishmix.wxinterchange.enums.UserEnum;
+import com.jellyfishmix.wxinterchange.exception.TeamException;
+import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
+import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,6 +40,10 @@ public class TeamServiceImpl implements TeamService {
     private FileInfoDao fileInfoDao;
     @Resource
     private TeamFileDao teamFileDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private FileService fileService;
 
     /**
      * 通过tid查询单条数据
@@ -63,19 +73,6 @@ public class TeamServiceImpl implements TeamService {
     public List<TeamInfo> queryOfficialTeamList() {
         List<TeamInfo> teamInfoList = teamInfoDao.queryOfficialTeamList();
         return teamInfoList;
-    }
-
-    /**
-     * 通过uid和userGrade查询我所在的项目组（非官方组）
-     *
-     * @param uid 用户uid
-     * @param userGrade 项目组成员等级
-     * @return 对象列表
-     */
-    @Override
-    public List<TeamUserDTO> queryTeamListByUidAndUserGrade(String uid, Integer userGrade) {
-        List<TeamUserDTO> teamUserList = teamUserDao.queryTeamListByUidAndUserGrade(uid, userGrade);
-        return teamUserList;
     }
 
     /**
@@ -125,6 +122,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 实例对象
      */
     @Override
+    @Transactional(rollbackFor = TeamException.class)
     public TeamInfo createTeam(TeamInfo teamInfo, TeamUser teamUser) {
         // 生成唯一tid
         String tid = UniqueKeyUtil.getUniqueKey();
@@ -132,6 +130,9 @@ public class TeamServiceImpl implements TeamService {
         this.teamInfoDao.insert(teamInfo);
         teamUser.setTid(tid);
         this.teamUserDao.insert(teamUser);
+
+        // uid用户，createdTeamCount ++
+        userService.updateUserInfoCountProperty(teamUser.getUid(), UserEnum.UPDATE_CREATED_TEAM_COUNT, 1);
 
         // 查询新insert的teamInfo信息
         teamInfo = teamInfoDao.queryByTid(tid);
@@ -145,6 +146,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 实例对象
      */
     @Override
+    @Transactional(rollbackFor = TeamException.class)
     public FileInfoDTO uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile) {
         String fileId = UniqueKeyUtil.getUniqueKey();
         fileInfo.setFileId(fileId);
@@ -154,7 +156,7 @@ public class TeamServiceImpl implements TeamService {
 
         String tid = teamFile.getTid();
         // 修改项目组文件计数
-        this.updateFileCount(tid, 1);
+        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, 1);
 
         return fileInfoDao.queryByFileId(fileInfo.getFileId());
     }
@@ -167,26 +169,23 @@ public class TeamServiceImpl implements TeamService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = TeamException.class)
     public TeamInfoDTO joinTeam(String tid, String uid) {
-        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
         // 新成员加入，项目组成员++
-        teamInfoFromQuery.setNumberCount(teamInfoFromQuery.getNumberCount() + 1);
-        teamInfoFromQuery.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount() + 1);
-
-        TeamInfo teamInfoForUpdate = new TeamInfo();
-        teamInfoForUpdate.setTid(tid);
-        teamInfoForUpdate.setNumberCount(teamInfoFromQuery.getNumberCount());
-        teamInfoForUpdate.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount());
-        teamInfoDao.updateByTid(teamInfoForUpdate);
+        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_NUMBER_COUNT, 1);
+        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_JOINED_NUMBER_COUNT, 1);
 
         // teamUser表中添加记录
+        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
         TeamUser teamUser = new TeamUser();
         teamUser.setTid(teamInfoFromQuery.getTid());
         teamUser.setUid(uid);
         // userGrade，3 为普通成员等级
         teamUser.setUserGrade(3);
-
         teamUserDao.insert(teamUser);
+
+        // 修改uid用户加入的项目组数量
+        userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, 1);
         return new TeamInfoDTO(TeamEnum.SUCCESS, teamInfoFromQuery);
     }
 
@@ -209,18 +208,26 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
-     * 修改项目组文件计数
+     * 更新项目组的计数属性
      *
      * @param tid            项目组tid
+     * @param teamEnum       操作标志Enum
      * @param countChangeNum 计数更改的数量，有正负
-     * @return
      */
     @Override
-    public void updateFileCount(String tid, Integer countChangeNum) {
+    public void updateTeamInfoCountProperty(String tid, TeamEnum teamEnum, Integer countChangeNum) {
         TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
         TeamInfo teamInfoForUpdate = new TeamInfo();
         teamInfoForUpdate.setTid(tid);
-        teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + countChangeNum);
+        if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_NUMBER_COUNT.getStateCode())) {
+            teamInfoForUpdate.setNumberCount(teamInfoFromQuery.getNumberCount() + countChangeNum);
+        } else if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_MANAGED_NUMBER_COUNT.getStateCode())) {
+            teamInfoForUpdate.setManagedNumberCount(teamInfoFromQuery.getManagedNumberCount() + countChangeNum);
+        } else if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_JOINED_NUMBER_COUNT.getStateCode())) {
+            teamInfoForUpdate.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount() + countChangeNum);
+        } else if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_FILE_COUNT.getStateCode())) {
+            teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + countChangeNum);
+        }
         teamInfoDao.updateByTid(teamInfoForUpdate);
     }
 
@@ -232,10 +239,15 @@ public class TeamServiceImpl implements TeamService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = TeamException.class)
     public void deleteFileFromTeam(String tid, String fileId) {
         teamFileDao.deleteByFileId(fileId);
         fileInfoDao.deleteByFileId(fileId);
 
-        this.updateFileCount(tid, -1);
+        // 修改项目组文件计数
+        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -1);
+
+        FileInfoDTO fileInfoDTO = fileInfoDao.queryByFileId(fileId);
+        fileService.deleteFromQiniuBucket(fileInfoDTO.getFileKey());
     }
 }

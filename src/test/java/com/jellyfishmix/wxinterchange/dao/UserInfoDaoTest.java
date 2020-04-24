@@ -39,7 +39,7 @@ class UserInfoDaoTest {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid("158628518796132710");
         userInfo.setUsername("test-7");
-        int result = userInfoDao.updateUserInfo(userInfo);
+        int result = userInfoDao.updateUserInfoByUid(userInfo);
         assertEquals(1, result);
     }
 

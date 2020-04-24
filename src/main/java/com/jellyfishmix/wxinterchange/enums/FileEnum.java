@@ -8,6 +8,7 @@ import lombok.Getter;
  */
 @Getter
 public enum  FileEnum implements StateCodeEnum {
+    // 操作处理结果Enum
     SUCCESS(0, "操作成功");
 
     private Integer stateCode;

@@ -8,6 +8,8 @@ import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
+import com.jellyfishmix.wxinterchange.enums.TeamEnum;
+
 import java.util.List;
 
 /**
@@ -29,15 +31,6 @@ public interface TeamService {
      * @return
      */
     List<TeamInfo> queryOfficialTeamList();
-
-    /**
-     * 通过uid和userGrade查询我所在的项目组（非官方组）
-     *
-     * @param uid 用户uid
-     * @param userGrade 项目组成员等级
-     * @return 对象列表
-     */
-    List<TeamUserDTO> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
 
     /**
      * 通过tid查询项目组成员列表
@@ -102,13 +95,13 @@ public interface TeamService {
     TeamInfoDTO updateTeamInfo(TeamInfo teamInfo);
 
     /**
-     * 修改项目组文件计数
+     * 更新项目组的计数属性
      *
      * @param tid 项目组tid
+     * @param teamEnum 操作标志Enum
      * @param countChangeNum 计数更改的数量，有正负
-     * @return
      */
-    void updateFileCount(String tid, Integer countChangeNum);
+    void updateTeamInfoCountProperty(String tid, TeamEnum teamEnum, Integer countChangeNum);
 
     /**
      * 删除项目组内的文件（单个）
