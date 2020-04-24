@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.controller;
 
+import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
@@ -54,8 +55,8 @@ public class UserController {
     @GetMapping("/query_created_team_list_by_uid")
     public ResultVO queryCreatedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 1;
-        List<TeamUser> teamUserList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
-        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserList);
+        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 
     /**
@@ -67,8 +68,8 @@ public class UserController {
     @GetMapping("/query_managed_team_list_by_uid")
     public ResultVO queryManagedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 2;
-        List<TeamUser> teamUserList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
-        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserList);
+        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 
     /**
@@ -80,7 +81,7 @@ public class UserController {
     @GetMapping("/query_joined_team_list_by_uid")
     public ResultVO queryJoinedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 3;
-        List<TeamUser> teamUserList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
-        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserList);
+        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamListByUidAndUserGrade(uid, userGrade);
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 }

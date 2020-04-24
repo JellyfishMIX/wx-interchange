@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.dao;
 
+import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -19,7 +20,7 @@ public interface TeamFileDao {
      * @param fileId 文件fileId
      * @return 实例对象
      */
-    TeamFile queryByTidAndFileId(@Param("tid") String tid, @Param("fileId") String fileId);
+    TeamFileDTO queryByTidAndFileId(@Param("tid") String tid, @Param("fileId") String fileId);
 
     /**
      * 查询项目组文件列表，通过上传日期排序
@@ -29,16 +30,7 @@ public interface TeamFileDao {
      * @param limit 查询条数
      * @return
      */
-    List<TeamFile> queryTeamFileListOrderByCreationTime(@Param("tid") String tid, @Param("offset") int offset, @Param("limit") int limit);
-
-    /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    List<TeamFile> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
+    List<TeamFileDTO> queryTeamFileListOrderByCreationTime(@Param("tid") String tid, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
      * 新增数据

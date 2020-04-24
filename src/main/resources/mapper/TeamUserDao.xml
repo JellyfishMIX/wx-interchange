@@ -2,30 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jellyfishmix.wxinterchange.dao.TeamUserDao">
 
-    <resultMap type="com.jellyfishmix.wxinterchange.entity.TeamUser" id="TeamUserMap">
+    <resultMap id="TeamUserMap" type="com.jellyfishmix.wxinterchange.entity.TeamUser">
+        <result property="tid" column="tid" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="VARCHAR"/>
+        <result property="userGrade" column="user_grade" jdbcType="INTEGER"/>
+        <!--加入时间-->
+        <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
+        <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
+    </resultMap>
+    
+    <resultMap id="TeamUserDTOMap" type="com.jellyfishmix.wxinterchange.dto.TeamUserDTO">
         <result property="tid" column="tid" jdbcType="VARCHAR"/>
         <result property="uid" column="uid" jdbcType="VARCHAR"/>
         <result property="teamName" column="team_name" jdbcType="VARCHAR"/>
         <result property="username" column="username" jdbcType="VARCHAR" />
         <result property="teamAvatarUrl" column="team_avatar_url" jdbcType="VARCHAR"/>
         <result property="userAvatarUrl" column="user_avatar_url" jdbcType="VARCHAR"/>
-        <result property="teamGrade" column="team_grade" jdbcType="INTEGER" />
+        <result property="teamGrade" column="team_grade" jdbcType="INTEGER"/>
         <result property="userGrade" column="user_grade" jdbcType="INTEGER"/>
         <!--加入时间-->
         <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
         <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
     </resultMap>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="TeamUserMap">
-        select
-          tid, uid, user_grade, creation_time
-        from wx_interchange.team_user
-        limit #{offset}, #{limit}
-    </select>
-
     <!--通过uid和userGrade查询我所在的项目组（非官方组）-->
-    <select id="queryTeamListByUidAndUserGrade" resultMap="TeamUserMap">
+    <select id="queryTeamListByUidAndUserGrade" resultMap="TeamUserDTOMap">
         select team_user.tid, team_info.team_name, team_info.avatar_url `team_avatar_url`, team_info.grade `team_grade`, user_grade
         from wx_interchange.team_user
         left join wx_interchange.team_info
@@ -34,7 +35,7 @@
     </select>
 
     <!--通过tid查询项目组成员列表-->
-    <select id="queryTeamUserListByTid" resultMap="TeamUserMap">
+    <select id="queryTeamUserListByTid" resultMap="TeamUserDTOMap">
         select team_user.uid, user_info.username, user_info.avatar_url `user_avatar_url`, user_grade, team_user.creation_time
         from wx_interchange.team_user
         left join wx_interchange.user_info
@@ -54,9 +55,4 @@
         insert into wx_interchange.team_user(tid, uid, user_grade)
         values (#{tid}, #{uid}, #{userGrade})
     </insert>
-
-    <!--通过主键删除-->
-    <delete id="deleteById">
-        delete from wx_interchange.team_user where id = #{id}
-    </delete>
 </mapper>

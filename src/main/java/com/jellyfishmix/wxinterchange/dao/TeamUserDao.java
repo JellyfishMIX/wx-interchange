@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.dao;
 
+import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -12,22 +13,13 @@ import java.util.List;
  */
 public interface TeamUserDao {
     /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    List<TeamUser> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
-
-    /**
      * 通过uid和userGrade查询我所在的项目组（非官方组）
      *
      * @param uid 用户uid
      * @param userGrade 项目组成员等级
      * @return 对象列表
      */
-    List<TeamUser> queryTeamListByUidAndUserGrade(@Param("uid") String uid, @Param("userGrade") Integer userGrade);
+    List<TeamUserDTO> queryTeamListByUidAndUserGrade(@Param("uid") String uid, @Param("userGrade") Integer userGrade);
 
     /**
      * 通过tid查询项目组成员列表
@@ -35,7 +27,7 @@ public interface TeamUserDao {
      * @param tid 项目组tid
      * @return
      */
-    List<TeamUser> queryTeamUserListByTid(String tid);
+    List<TeamUserDTO> queryTeamUserListByTid(String tid);
 
     /**
      * 通过tid和uid查询单条teamUser
@@ -53,12 +45,4 @@ public interface TeamUserDao {
      * @return 影响行数
      */
     int insert(TeamUser teamUser);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 影响行数
-     */
-    int deleteById(Integer id);
 }

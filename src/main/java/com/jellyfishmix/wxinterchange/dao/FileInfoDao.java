@@ -1,8 +1,7 @@
 package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
-import org.apache.ibatis.annotations.Param;
-import java.util.List;
+import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 
 /**
  * 文件信息表(FileInfo)表数据库访问层
@@ -18,16 +17,7 @@ public interface FileInfoDao {
      * @param fileId 文件fileId
      * @return 实例对象
      */
-    FileInfo queryByFileId(String fileId);
-
-    /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    List<FileInfo> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
+    FileInfoDTO queryByFileId(String fileId);
 
     /**
      * 新增数据
@@ -52,5 +42,4 @@ public interface FileInfoDao {
      * @return 影响行数
      */
     int deleteByFileId(String fileId);
-
 }

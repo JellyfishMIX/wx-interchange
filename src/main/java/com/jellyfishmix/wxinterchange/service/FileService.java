@@ -1,6 +1,6 @@
 package com.jellyfishmix.wxinterchange.service;
 
-import com.jellyfishmix.wxinterchange.entity.FileInfo;
+import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 
 /**
  * 文件信息表(FileInfo)表服务接口
@@ -15,5 +15,5 @@ public interface FileService {
      * @param fileId 文件fileId
      * @return 实例对象
      */
-    FileInfo queryByFileId(String fileId);
+    FileInfoDTO queryByFileId(String fileId);
 }

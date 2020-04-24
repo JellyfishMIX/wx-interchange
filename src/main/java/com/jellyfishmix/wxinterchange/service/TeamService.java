@@ -1,6 +1,9 @@
 package com.jellyfishmix.wxinterchange.service;
 
+import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
+import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
+import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
@@ -8,9 +11,7 @@ import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import java.util.List;
 
 /**
- * 项目组成员表(TeamUser)表服务接口
- *
- * @author makejava
+ * @author JellyfishMIX
  * @since 2020-04-11 21:09:44
  */
 public interface TeamService {
@@ -36,7 +37,7 @@ public interface TeamService {
      * @param userGrade 项目组成员等级
      * @return 对象列表
      */
-    List<TeamUser> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
+    List<TeamUserDTO> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
 
     /**
      * 通过tid查询项目组成员列表
@@ -44,7 +45,7 @@ public interface TeamService {
      * @param tid 项目组tid
      * @return
      */
-    List<TeamUser> queryTeamUserListByTid(String tid);
+    List<TeamUserDTO> queryTeamUserListByTid(String tid);
 
     /**
      * 通过tid和uid查询单条teamUser
@@ -63,7 +64,7 @@ public interface TeamService {
      * @param pageSize 每页容量
      * @return
      */
-    List<TeamFile> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize);
+    List<TeamFileDTO> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize);
 
     /**
      * 创建项目组
@@ -81,7 +82,7 @@ public interface TeamService {
      * @param teamFile 项目组文件对象
      * @return 实例对象
      */
-    FileInfo uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile);
+    FileInfoDTO uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile);
 
     /**
      * 加入项目组

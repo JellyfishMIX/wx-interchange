@@ -30,26 +30,6 @@ public class TeamFile {
     */
     private String uid;
     /**
-     * 文件名
-     */
-    private String fileName;
-    /**
-     * 文件资源URL
-     */
-    private String fileUrl;
-    /**
-     * 文件大小
-     */
-    private String fileSize;
-    /**
-     * 文件类型
-     */
-    private String mimeType;
-    /**
-     * 上传者名称
-     */
-    private String username;
-    /**
     * 创建时间，自动写入
     */
     private Date creationTime;

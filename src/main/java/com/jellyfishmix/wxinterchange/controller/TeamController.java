@@ -1,7 +1,6 @@
 package com.jellyfishmix.wxinterchange.controller;
 
-import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
-import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
+import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
@@ -92,8 +91,8 @@ public class TeamController {
      */
     @GetMapping("/query_team_user_list_by_tid")
     public ResultVO queryTeamUserListByTid(@RequestParam("tid") String tid) {
-        List<TeamUser> teamUserList = teamService.queryTeamUserListByTid(tid);
-        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamUserList);
+        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamUserListByTid(tid);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 
     /**
@@ -120,8 +119,8 @@ public class TeamController {
                                                          @RequestParam("pageIndex") Integer pageIndex,
                                                          @RequestParam("pageSize") Integer pageSize) {
         int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
-        List<TeamFile> teamFileList = teamService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
-        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileList);
+        List<TeamFileDTO> teamFileDTOList = teamService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }
 
     /**
@@ -160,8 +159,8 @@ public class TeamController {
         teamFile.setFileId(fileInfo.getFileId());
         teamFile.setUid(uid);
 
-        fileInfo = teamService.uploadFileToTeam(fileInfo, teamFile);
-        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfo);
+        FileInfoDTO fileInfoDTO = teamService.uploadFileToTeam(fileInfo, teamFile);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTO);
     }
 
     /**

@@ -3,7 +3,10 @@ package com.jellyfishmix.wxinterchange.service.impl;
 import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
 import com.jellyfishmix.wxinterchange.dao.TeamFileDao;
 import com.jellyfishmix.wxinterchange.dao.TeamInfoDao;
+import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
+import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
+import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
@@ -18,9 +21,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 项目组成员表(TeamUser)表服务实现类
- *
- * @author makejava
+ * @author JellyfishMIX
  * @since 2020-04-11 21:09:44
  */
 @Service("teamService")
@@ -72,8 +73,8 @@ public class TeamServiceImpl implements TeamService {
      * @return 对象列表
      */
     @Override
-    public List<TeamUser> queryTeamListByUidAndUserGrade(String uid, Integer userGrade) {
-        List<TeamUser> teamUserList = teamUserDao.queryTeamListByUidAndUserGrade(uid, userGrade);
+    public List<TeamUserDTO> queryTeamListByUidAndUserGrade(String uid, Integer userGrade) {
+        List<TeamUserDTO> teamUserList = teamUserDao.queryTeamListByUidAndUserGrade(uid, userGrade);
         return teamUserList;
     }
 
@@ -84,8 +85,8 @@ public class TeamServiceImpl implements TeamService {
      * @return
      */
     @Override
-    public List<TeamUser> queryTeamUserListByTid(String tid) {
-        List<TeamUser> teamUserList = teamUserDao.queryTeamUserListByTid(tid);
+    public List<TeamUserDTO> queryTeamUserListByTid(String tid) {
+        List<TeamUserDTO> teamUserList = teamUserDao.queryTeamUserListByTid(tid);
         return teamUserList;
     }
 
@@ -111,9 +112,9 @@ public class TeamServiceImpl implements TeamService {
      * @return
      */
     @Override
-    public List<TeamFile> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize) {
-        List<TeamFile> teamFileList = teamFileDao.queryTeamFileListOrderByCreationTime(tid, pageIndex, pageSize);
-        return teamFileList;
+    public List<TeamFileDTO> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize) {
+        List<TeamFileDTO> teamFileDTOList = teamFileDao.queryTeamFileListOrderByCreationTime(tid, pageIndex, pageSize);
+        return teamFileDTOList;
     }
 
     /**
@@ -144,7 +145,7 @@ public class TeamServiceImpl implements TeamService {
      * @return 实例对象
      */
     @Override
-    public FileInfo uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile) {
+    public FileInfoDTO uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile) {
         String fileId = UniqueKeyUtil.getUniqueKey();
         fileInfo.setFileId(fileId);
         teamFile.setFileId(fileId);
@@ -155,8 +156,7 @@ public class TeamServiceImpl implements TeamService {
         // 修改项目组文件计数
         this.updateFileCount(tid, 1);
 
-        fileInfo = fileInfoDao.queryByFileId(fileInfo.getFileId());
-        return fileInfo;
+        return fileInfoDao.queryByFileId(fileInfo.getFileId());
     }
 
     /**

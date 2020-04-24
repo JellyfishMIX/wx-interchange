@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jellyfishmix.wxinterchange.dao.FileInfoDao">
 
-    <resultMap type="com.jellyfishmix.wxinterchange.entity.FileInfo" id="FileInfoMap">
+    <resultMap id="FileInfoMap" type="com.jellyfishmix.wxinterchange.entity.FileInfo">
         <result property="fileId" column="file_id" jdbcType="VARCHAR"/>
         <result property="fileKey" column="file_key" jdbcType="VARCHAR"/>
         <result property="fileHash" column="file_hash" jdbcType="VARCHAR"/>
@@ -10,26 +10,35 @@
         <result property="fileUrl" column="file_url" jdbcType="VARCHAR"/>
         <result property="fileSize" column="file_size" jdbcType="INTEGER"/>
         <result property="mimeType" column="mime_type" jdbcType="VARCHAR"/>
-        <result property="uid" column="uid" jdbcType="VARCHAR" />
+        <result property="uid" column="uid" jdbcType="VARCHAR"/>
         <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
         <!--无特殊情况不开放modifiedTime-->
         <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
     </resultMap>
 
-    <!--通过fileId查询单个-->
-    <select id="queryByFileId" resultMap="FileInfoMap">
-        select
-          file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, uid, creation_time
-        from wx_interchange.file_info
-        where file_id = #{fileId}
-    </select>
+    <resultMap id="FileInfoDTOMap" type="com.jellyfishmix.wxinterchange.dto.FileInfoDTO">
+        <result property="fileId" column="file_id" jdbcType="VARCHAR"/>
+        <result property="fileKey" column="file_key" jdbcType="VARCHAR"/>
+        <result property="fileHash" column="file_hash" jdbcType="VARCHAR"/>
+        <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
+        <result property="fileUrl" column="file_url" jdbcType="VARCHAR"/>
+        <result property="fileSize" column="file_size" jdbcType="INTEGER"/>
+        <result property="mimeType" column="mime_type" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
+        <!--无特殊情况不开放modifiedTime-->
+        <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
+    </resultMap>
 
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="FileInfoMap">
+    <!--通过fileId查询单个文件信息-->
+    <select id="queryByFileId" resultMap="FileInfoDTOMap">
         select
-          file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, uid, creation_time
+          file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, file_info.uid, user_info.username, file_info.creation_time
         from wx_interchange.file_info
-        limit #{offset}, #{limit}
+        join wx_interchange.user_info
+        on file_info.uid = user_info.uid
+        where file_id = #{fileId}
     </select>
 
     <!--新增所有列-->

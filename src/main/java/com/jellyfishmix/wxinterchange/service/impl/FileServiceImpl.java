@@ -1,6 +1,6 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
-import com.jellyfishmix.wxinterchange.entity.FileInfo;
+import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
 import com.jellyfishmix.wxinterchange.service.FileService;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class FileServiceImpl implements FileService {
      * @return 实例对象
      */
     @Override
-    public FileInfo queryByFileId(String fileId) {
+    public FileInfoDTO queryByFileId(String fileId) {
         return this.fileInfoDao.queryByFileId(fileId);
     }
 }

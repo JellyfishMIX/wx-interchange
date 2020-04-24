@@ -1,6 +1,11 @@
 package com.jellyfishmix.wxinterchange.controller;
 
 import com.jellyfishmix.wxinterchange.config.QiniuConfig;
+import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
+import com.jellyfishmix.wxinterchange.enums.FileEnum;
+import com.jellyfishmix.wxinterchange.service.FileService;
+import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
+import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,8 @@ import java.util.Map;
 public class FileController {
     @Autowired
     private QiniuConfig qiniuConfig;
+    @Autowired
+    private FileService fileService;
 
     /**
      * 获取七牛云文件上传upToken
@@ -41,7 +48,17 @@ public class FileController {
         return  hashMap;
     }
 
-    // 通过fileId查询文件信息
+    /**
+     * 通过fileId查询文件信息
+     *
+     * @param fileId 文件fileId
+     * @return
+     */
+    @GetMapping("/query_file_info_by_file_id")
+    public ResultVO queryFileInfoByFileId(@RequestParam("fileId") String fileId) {
+        FileInfoDTO fileInfoDTO = fileService.queryByFileId(fileId);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTO);
+    }
 
     // 上传项目组头像、用户头像
 }
