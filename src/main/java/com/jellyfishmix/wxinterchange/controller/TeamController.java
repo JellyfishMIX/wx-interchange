@@ -118,8 +118,7 @@ public class TeamController {
     public ResultVO queryTeamFileListOrderByCreationTime(@RequestParam("tid") String tid,
                                                          @RequestParam("pageIndex") Integer pageIndex,
                                                          @RequestParam("pageSize") Integer pageSize) {
-        int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
-        List<TeamFileDTO> teamFileDTOList = teamService.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
+        List<TeamFileDTO> teamFileDTOList = teamService.queryTeamFileListOrderByCreationTime(tid, pageIndex, pageSize);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }
 
@@ -220,5 +219,23 @@ public class TeamController {
                                        @RequestParam("fileId") String fileId) {
         teamService.deleteFileFromTeam(tid, fileId);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
+    }
+
+    /**
+     * 通过关键词搜索项目组内的文件
+     *
+     * @param tid 项目组tid
+     * @param keyword 关键词
+     * @param pageIndex 页码，从1开始
+     * @param pageSize 每页行数
+     * @return
+     */
+    @GetMapping("/search_team_file_list_by_keyword")
+    public ResultVO searchTeamFileListByKeyword(@RequestParam("tid") String tid,
+                                           @RequestParam("keyword") String keyword,
+                                           @RequestParam("pageIndex") int pageIndex,
+                                           @RequestParam("pageSize") int pageSize) {
+        List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tid, keyword, pageIndex, pageSize);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }
 }

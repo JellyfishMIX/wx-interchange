@@ -18,6 +18,7 @@ import com.jellyfishmix.wxinterchange.exception.TeamException;
 import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
+import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,14 +105,29 @@ public class TeamServiceImpl implements TeamService {
      * 查询项目组文件列表，通过上传日期排序
      *
      * @param tid 项目组tid
-     * @param pageIndex 页码
+     * @param pageIndex 页码，从1开始
      * @param pageSize 每页容量
      * @return
      */
     @Override
     public List<TeamFileDTO> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize) {
-        List<TeamFileDTO> teamFileDTOList = teamFileDao.queryTeamFileListOrderByCreationTime(tid, pageIndex, pageSize);
-        return teamFileDTOList;
+        int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
+        return teamFileDao.queryTeamFileListOrderByCreationTime(tid, rowIndex, pageSize);
+    }
+
+    /**
+     * 通过关键词搜索项目组内的文件
+     *
+     * @param tid       项目组tid
+     * @param keyword   关键词
+     * @param pageIndex 页码，从1开始
+     * @param pageSize  每页行数
+     * @return
+     */
+    @Override
+    public List<TeamFileDTO> searchTeamFileListByKeyword(String tid, String keyword, int pageIndex, int pageSize) {
+        int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
+        return teamFileDao.queryTeamFileListByKeyword(tid, keyword, rowIndex, pageSize);
     }
 
     /**

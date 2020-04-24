@@ -33,6 +33,17 @@ public interface TeamFileDao {
     List<TeamFileDTO> queryTeamFileListOrderByCreationTime(@Param("tid") String tid, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
+     * 通过关键词搜索项目组内的文件
+     *
+     * @param tid 项目组tid
+     * @param keyword 关键词
+     * @param offset 查询起始位置
+     * @param limit 查询条数
+     * @return
+     */
+    List<TeamFileDTO> queryTeamFileListByKeyword(@Param("tid") String tid, @Param("keyword") String keyword, @Param("offset") int offset, @Param("limit") int limit);
+
+    /**
      * 新增数据
      *
      * @param teamFile 实例对象

@@ -53,11 +53,22 @@ public interface TeamService {
      * 查询项目组文件列表，通过上传日期排序
      *
      * @param tid 项目组tid
-     * @param pageIndex 页码
+     * @param pageIndex 页码，从1开始
      * @param pageSize 每页容量
      * @return
      */
     List<TeamFileDTO> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize);
+
+    /**
+     * 通过关键词搜索项目组内的文件
+     *
+     * @param tid 项目组tid
+     * @param keyword 关键词
+     * @param pageIndex 页码，从1开始
+     * @param pageSize 每页行数
+     * @return
+     */
+    List<TeamFileDTO> searchTeamFileListByKeyword(String tid, String keyword, int pageIndex, int pageSize);
 
     /**
      * 创建项目组
