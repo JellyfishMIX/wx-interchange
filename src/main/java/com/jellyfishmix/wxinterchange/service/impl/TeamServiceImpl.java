@@ -241,13 +241,16 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional(rollbackFor = TeamException.class)
     public void deleteFileFromTeam(String tid, String fileId) {
+        // 此处查询需要在fileInfoDao.deleteByFileId()的前面，从七牛云bucket删除资源需要使用查出的数据
+        FileInfoDTO fileInfoDTO = fileInfoDao.queryByFileId(fileId);
+
         teamFileDao.deleteByFileId(fileId);
         fileInfoDao.deleteByFileId(fileId);
 
         // 修改项目组文件计数
         this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -1);
 
-        FileInfoDTO fileInfoDTO = fileInfoDao.queryByFileId(fileId);
+        // 从七牛云bucket删除资源
         fileService.deleteFromQiniuBucket(fileInfoDTO.getFileKey());
     }
 }
