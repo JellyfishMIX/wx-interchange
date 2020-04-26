@@ -47,7 +47,7 @@ public class UserController {
     }
 
     /**
-     * 获取我创建的项目组列表（非官方项目组）
+     * 获取我创建的项目组列表（非官方项目组，暂时返回官方组）
      *
      * @param uid 用户uid
      * @return
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     /**
-     * 获取我管理的项目组列表（非官方项目组）
+     * 获取我管理的项目组列表（非官方项目组，暂时返回官方组）
      *
      * @param uid 用户uid
      * @return
@@ -73,7 +73,7 @@ public class UserController {
     }
 
     /**
-     * 获取我加入的项目组列表（非官方项目组）
+     * 获取我加入的项目组列表（非官方项目组，暂时返回官方组）
      *
      * @param uid 用户uid
      * @return

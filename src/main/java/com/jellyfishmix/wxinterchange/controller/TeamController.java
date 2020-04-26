@@ -10,7 +10,6 @@ import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
-import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,6 +122,24 @@ public class TeamController {
     }
 
     /**
+     * 通过关键词搜索项目组内的文件
+     *
+     * @param tid 项目组tid
+     * @param keyword 关键词
+     * @param pageIndex 页码，从1开始
+     * @param pageSize 每页行数
+     * @return
+     */
+    @GetMapping("/search_team_file_list_by_keyword")
+    public ResultVO searchTeamFileListByKeyword(@RequestParam("tid") String tid,
+                                                @RequestParam("keyword") String keyword,
+                                                @RequestParam("pageIndex") int pageIndex,
+                                                @RequestParam("pageSize") int pageSize) {
+        List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tid, keyword, pageIndex, pageSize);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamFileDTOList);
+    }
+
+    /**
      * 向项目组上传文件（.pdf, .docx, .xlsx, .pptx等任意格式的文件）
      *
      * @param tid 上传至tid群组
@@ -219,23 +236,5 @@ public class TeamController {
                                        @RequestParam("fileId") String fileId) {
         teamService.deleteFileFromTeam(tid, fileId);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
-    }
-
-    /**
-     * 通过关键词搜索项目组内的文件
-     *
-     * @param tid 项目组tid
-     * @param keyword 关键词
-     * @param pageIndex 页码，从1开始
-     * @param pageSize 每页行数
-     * @return
-     */
-    @GetMapping("/search_team_file_list_by_keyword")
-    public ResultVO searchTeamFileListByKeyword(@RequestParam("tid") String tid,
-                                           @RequestParam("keyword") String keyword,
-                                           @RequestParam("pageIndex") int pageIndex,
-                                           @RequestParam("pageSize") int pageSize) {
-        List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tid, keyword, pageIndex, pageSize);
-        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }
 }

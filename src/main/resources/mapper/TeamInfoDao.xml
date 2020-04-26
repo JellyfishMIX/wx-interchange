@@ -81,5 +81,4 @@
     <delete id="deleteByTid">
         delete from wx_interchange.team_info where tid = #{tid}
     </delete>
-
 </mapper>

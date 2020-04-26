@@ -19,6 +19,7 @@ import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
+import com.jellyfishmix.wxinterchange.utils.RedisLockUtil;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -159,7 +160,7 @@ public class TeamServiceImpl implements TeamService {
      * 向项目组上传文件
      *
      * @param fileInfo 实例对象
-     * @return 实例对象
+     * @return FileInfoDTO
      */
     @Override
     @Transactional(rollbackFor = TeamException.class)
@@ -168,11 +169,26 @@ public class TeamServiceImpl implements TeamService {
         fileInfo.setFileId(fileId);
         teamFile.setFileId(fileId);
         this.fileInfoDao.insert(fileInfo);
-        this.teamFileDao.insert(teamFile);
 
         String tid = teamFile.getTid();
+        // 分布式锁过期时间
+        int timeout = 10 * 1000;
+        long time = System.currentTimeMillis() + timeout;
+        // 加锁
+        while (!RedisLockUtil.lock(tid, String.valueOf(time))) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        this.teamFileDao.insert(teamFile);
         // 修改项目组文件计数
         this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, 1);
+
+        // 解锁
+        RedisLockUtil.unlock(tid, String.valueOf(time));
 
         return fileInfoDao.queryByFileId(fileInfo.getFileId());
     }

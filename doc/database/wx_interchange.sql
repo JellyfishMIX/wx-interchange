@@ -89,3 +89,21 @@ create table `team_file` (
     foreign key `fk_team_file_file_id` (`file_id`) references wx_interchange.file_info(`file_id`),
     foreign key `fk_team_file_uid` (`uid`) references wx_interchange.user_info(`uid`)
 ) comment '项目组文件表';
+
+create table `team_avatar` (
+   `id` int not null auto_increment comment '代理主键',
+   `avatar_id` varchar(128) not null comment '头像文件avatarId',
+   `tid` varchar(32) not null comment '所属项目组tid，外键',
+   `file_key` varchar(128) not null comment '文件资源fileKey',
+   `hash` varchar(128) not null comment '全局唯一的文件Hash值',
+   `file_name` varchar(64) not null comment '文件名',
+   `file_url` varchar(1024) not null comment '文件资源URL',
+   `file_size` int not null comment '文件大小, 单位为b',
+   `mime_type` varchar(128) not null comment '文件类型',
+   `uid` varchar(32) not null comment '上传者uid，外键',
+   `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+   `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+   primary key (`id`),
+   unique key `uk_team_avatar_avatar_id`(`avatar_id`),
+   foreign key `fk_team_avatar_tid`(`tid`) references wx_interchange.team_info(`tid`)
+) comment '项目组头像表';
