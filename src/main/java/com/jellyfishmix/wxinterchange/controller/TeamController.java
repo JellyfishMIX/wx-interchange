@@ -1,6 +1,5 @@
 package com.jellyfishmix.wxinterchange.controller;
 
-import com.google.gson.JsonObject;
 import com.jellyfishmix.wxinterchange.converter.JSONArrayToListConverter;
 import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
@@ -18,7 +17,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
