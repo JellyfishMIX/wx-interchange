@@ -16,16 +16,17 @@ import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
 import com.jellyfishmix.wxinterchange.service.FileService;
+import com.jellyfishmix.wxinterchange.service.RedisLockService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
-import com.jellyfishmix.wxinterchange.utils.RedisLockUtil;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,8 @@ public class TeamServiceImpl implements TeamService {
     private UserService userService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private RedisLockService redisLockService;
 
     /**
      * 通过tid查询单条数据
@@ -159,23 +162,35 @@ public class TeamServiceImpl implements TeamService {
     /**
      * 向项目组上传文件
      *
-     * @param fileInfo 实例对象
-     * @return FileInfoDTO
+     * @param tid 项目组tid
+     * @param uid 上传者uid
+     * @param fileInfoList 文件信息List
      */
     @Override
     @Transactional(rollbackFor = TeamException.class)
-    public FileInfoDTO uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile) {
-        String fileId = UniqueKeyUtil.getUniqueKey();
-        fileInfo.setFileId(fileId);
-        teamFile.setFileId(fileId);
-        this.fileInfoDao.insert(fileInfo);
+    public void uploadFileToTeam(String tid, String uid, List<FileInfo> fileInfoList) {
+        List<TeamFile>  teamFileList = new ArrayList<>();
+        for (int i = 0; i < fileInfoList.size(); i++) {
+            String fileId = UniqueKeyUtil.getUniqueKey();
+            FileInfo fileInfo = fileInfoList.get(i);
+            fileInfo.setFileId(fileId);
+            fileInfo.setUid(uid);
+            fileInfoList.set(i, fileInfo);
 
-        String tid = teamFile.getTid();
+            TeamFile teamFile = new TeamFile();
+            teamFile.setTid(tid);
+            teamFile.setFileId(fileId);
+            teamFile.setUid(uid);
+            teamFileList.add(teamFile);
+        }
+        this.fileInfoDao.insertList(fileInfoList);
+
+        // 加分布式锁，避免出现S锁和X锁循环等待死锁
         // 分布式锁过期时间
         int timeout = 10 * 1000;
         long time = System.currentTimeMillis() + timeout;
         // 加锁
-        while (!RedisLockUtil.lock(tid, String.valueOf(time))) {
+        while (!redisLockService.lock(tid, String.valueOf(time))) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -183,14 +198,12 @@ public class TeamServiceImpl implements TeamService {
             }
         }
 
-        this.teamFileDao.insert(teamFile);
+        this.teamFileDao.insertList(teamFileList);
         // 修改项目组文件计数
-        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, 1);
+        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, fileInfoList.size());
 
         // 解锁
-        RedisLockUtil.unlock(tid, String.valueOf(time));
-
-        return fileInfoDao.queryByFileId(fileInfo.getFileId());
+        redisLockService.unlock(tid, String.valueOf(time));
     }
 
     /**

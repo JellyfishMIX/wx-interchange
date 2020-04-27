@@ -3,6 +3,8 @@ package com.jellyfishmix.wxinterchange.dao;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 
+import java.util.List;
+
 /**
  * 文件信息表(FileInfo)表数据库访问层
  *
@@ -20,12 +22,12 @@ public interface FileInfoDao {
     FileInfoDTO queryByFileId(String fileId);
 
     /**
-     * 新增数据
+     * 新增数据（多个）
      *
-     * @param fileInfo 实例对象
+     * @param fileInfoList 实例对象列表
      * @return 影响行数
      */
-    int insert(FileInfo fileInfo);
+    int insertList(List<FileInfo> fileInfoList);
 
     /**
      * 修改数据

@@ -44,12 +44,12 @@ public interface TeamFileDao {
     List<TeamFileDTO> queryTeamFileListByKeyword(@Param("tid") String tid, @Param("keyword") String keyword, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
-     * 新增数据
+     * 新增数据（多个）
      *
-     * @param teamFile 实例对象
+     * @param teamFileList 实例对象列表
      * @return 影响行数
      */
-    int insert(TeamFile teamFile);
+    int insertList(List<TeamFile> teamFileList);
 
     /**
      * 通过tid和fileId修改数据

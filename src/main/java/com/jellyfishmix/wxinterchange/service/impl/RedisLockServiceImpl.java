@@ -1,5 +1,6 @@
-package com.jellyfishmix.wxinterchange.utils;
+package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.service.RedisLockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -12,16 +13,17 @@ import org.springframework.util.StringUtils;
  */
 @Component
 @Slf4j
-public class RedisLockUtil {
+public class RedisLockServiceImpl implements RedisLockService {
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     /**
      * 加锁
      * @param key key值
      * @param value 当前时间 + 超时时间
      * @return true拿到锁，false未拿到锁
      */
-    public static boolean lock(String key, String value) {
-        StringRedisTemplate redisTemplate = new StringRedisTemplate();
-
+    public boolean lock(String key, String value) {
         // 此处redisTemplate.opsForValue().setIfAbsent(key, value)使用了redis官方文档的SETNX方法
         // 将key设置值为value，如果key不存在，这种情况下等同SET命令。 当key存在时，什么也不做。SETNX是"SET if Not eXists"的简写。
         // 此处.setIfAbsent(key, value)，如果key不存在，返回true，即设置成功。 当key存在时，返回false，即设置失败。
@@ -40,7 +42,6 @@ public class RedisLockUtil {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -50,8 +51,7 @@ public class RedisLockUtil {
      * @param key key值
      * @param value 当前时间 + 超时时间。此处用来做校验，key和value对应再删除。
      */
-    public static void unlock(String key, String value) {
-        StringRedisTemplate redisTemplate = new StringRedisTemplate();
+    public void unlock(String key, String value) {
         try {
             String currentValue = redisTemplate.opsForValue().get(key);
             if (!StringUtils.isEmpty(currentValue) && currentValue.equals(value)) {

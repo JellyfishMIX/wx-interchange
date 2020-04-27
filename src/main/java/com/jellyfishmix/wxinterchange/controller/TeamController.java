@@ -1,8 +1,8 @@
 package com.jellyfishmix.wxinterchange.controller;
 
+import com.jellyfishmix.wxinterchange.converter.JSONArrayToListConverter;
 import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
-import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
@@ -12,6 +12,8 @@ import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -140,43 +142,21 @@ public class TeamController {
     }
 
     /**
-     * 向项目组上传文件（.pdf, .docx, .xlsx, .pptx等任意格式的文件）
+     * 向项目组上传文件（.pdf, .docx, .xlsx, .pptx等任意格式的文件），支持多文件
      *
-     * @param tid 上传至tid群组
-     * @param uid 上传者uid
-     * @param fileKey 文件资源key
-     * @param fileHash 全局唯一的文件hash值
-     * @param fileName 文件名
-     * @param fileUrl 文件资源URL
-     * @param fileSize 文件大小（单位为b）
-     * @param mimeType 文件类型
+     * @param jsonStr jsonStr
      * @return
      */
     @PostMapping("/upload_file_to_team")
-    public ResultVO uploadFileToTeam(@RequestParam("tid") String tid,
-                                     @RequestParam("uid") String uid,
-                                     @RequestParam("key") String fileKey,
-                                     @RequestParam("hash") String fileHash,
-                                     @RequestParam("fileName") String fileName,
-                                     @RequestParam("fileUrl") String fileUrl,
-                                     @RequestParam("fileSize") Integer fileSize,
-                                     @RequestParam("mimeType") String mimeType) {
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setFileKey(fileKey);
-        fileInfo.setFileHash(fileHash);
-        fileInfo.setFileName(fileName);
-        fileInfo.setFileUrl(fileUrl);
-        fileInfo.setFileSize(fileSize);
-        fileInfo.setMimeType(mimeType);
-        fileInfo.setUid(uid);
-
-        TeamFile teamFile = new TeamFile();
-        teamFile.setTid(tid);
-        teamFile.setFileId(fileInfo.getFileId());
-        teamFile.setUid(uid);
-
-        FileInfoDTO fileInfoDTO = teamService.uploadFileToTeam(fileInfo, teamFile);
-        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTO);
+    public ResultVO uploadFileToTeam(@RequestBody String jsonStr) {
+        System.out.println(jsonStr);
+        JSONObject jsonObject = new JSONObject(jsonStr);
+        JSONArray fileInfoJsonArray = jsonObject.getJSONArray("fileInfoList");
+        List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToFileInfoList(fileInfoJsonArray);
+        String tid = jsonObject.getString("tid");
+        String uid = jsonObject.getString("uid");
+        teamService.uploadFileToTeam(tid, uid, fileInfoList);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 
     /**

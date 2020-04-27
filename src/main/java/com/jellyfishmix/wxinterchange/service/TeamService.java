@@ -82,11 +82,11 @@ public interface TeamService {
     /**
      * 向项目组上传文件
      *
-     * @param fileInfo 实例对象
-     * @param teamFile 项目组文件对象
-     * @return 实例对象
+     * @param tid 项目组tid
+     * @param uid 上传者uid
+     * @param fileInfoList 文件信息List
      */
-    FileInfoDTO uploadFileToTeam(FileInfo fileInfo, TeamFile teamFile);
+    void uploadFileToTeam(String tid, String uid, List<FileInfo> fileInfoList);
 
     /**
      * 加入项目组
