@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.controller;
 
+import com.google.gson.JsonObject;
 import com.jellyfishmix.wxinterchange.converter.JSONArrayToListConverter;
 import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -147,9 +149,8 @@ public class TeamController {
      * @param jsonStr jsonStr
      * @return
      */
-    @PostMapping("/upload_file_to_team")
+    @PostMapping("/upload_file_list_to_team")
     public ResultVO uploadFileToTeam(@RequestBody String jsonStr) {
-        System.out.println(jsonStr);
         JSONObject jsonObject = new JSONObject(jsonStr);
         JSONArray fileInfoJsonArray = jsonObject.getJSONArray("fileInfoList");
         List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToFileInfoList(fileInfoJsonArray);
@@ -205,16 +206,18 @@ public class TeamController {
     }
 
     /**
-     * 删除项目组内的文件（单个）
+     * 批量删除项目组内的文件
      *
-     * @param tid 项目组tid
-     * @param fileId 文件fileId
+     * @param jsonStr jsonStr
      * @return
      */
-    @PostMapping("/delete_file_from_team")
-    public ResultVO deleteFileFromTeam(@RequestParam("tid") String tid,
-                                       @RequestParam("fileId") String fileId) {
-        teamService.deleteFileFromTeam(tid, fileId);
+    @PostMapping("/delete_file_list_from_team")
+    public ResultVO deleteFileFromTeam(@RequestBody String jsonStr) {
+        JSONObject jsonObject = new JSONObject(jsonStr);
+        JSONArray fileInfoJsonArray = jsonObject.getJSONArray("fileInfoList");
+        List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToTidList(fileInfoJsonArray);
+        String tid = jsonObject.getString("tid");
+        teamService.deleteFileListFromTeam(tid, fileInfoList);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 }

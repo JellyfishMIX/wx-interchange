@@ -37,8 +37,28 @@
           file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, file_info.uid, user_info.username, file_info.creation_time
         from wx_interchange.file_info
         join wx_interchange.user_info
-        on file_info.uid = user_info.uid
+            on file_info.uid = user_info.uid
         where file_id = #{fileId}
+    </select>
+
+    <!--通过fileId查询多个文件信息-->
+    <select id="queryListByFileId" resultMap="FileInfoMap">
+        select
+            file_id, file_key, file_hash, file_name, file_url, file_size, mime_type, uid, creation_time
+        from wx_interchange.file_info
+        where
+        file_id in
+        <foreach collection="list" item="fileInfo" index="index" open="(" separator="," close=")">
+            #{fileInfo.fileId}
+        </foreach>
+    </select>
+
+    <!--通过fileHash查询单个文件信息，用于校验是否存在-->
+    <select id="queryByFileHash" resultMap="FileInfoDTOMap">
+        select
+            file_id
+        from wx_interchange.file_info
+        where file_hash = #{fileHash}
     </select>
 
     <!--新增数据（多个）-->
@@ -79,5 +99,15 @@
     <!--通过fileId删除-->
     <delete id="deleteByFileId">
         delete from wx_interchange.file_info where file_id = #{fileId}
+    </delete>
+
+    <!--通过fileId批量删除-->
+    <delete id="deleteListByFileId">
+        delete from wx_interchange.file_info
+        where
+        file_id in
+        <foreach collection="list" item="fileInfo" index="index" open="(" separator="," close=")">
+            #{fileInfo.fileId}
+        </foreach>
     </delete>
 </mapper>

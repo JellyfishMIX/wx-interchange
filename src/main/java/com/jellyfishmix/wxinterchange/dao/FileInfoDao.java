@@ -22,6 +22,22 @@ public interface FileInfoDao {
     FileInfoDTO queryByFileId(String fileId);
 
     /**
+     * 通过一组tid查询对应的
+     *
+     * @param fileInfoList 包含tid的一组List
+     * @return
+     */
+    List<FileInfo> queryListByFileId(List<FileInfo> fileInfoList);
+
+    /**
+     * 通过fileHash查询单个文件信息
+     *
+     * @param fileHash 文件hash值
+     * @return
+     */
+    FileInfoDTO queryByFileHash(String fileHash);
+
+    /**
      * 新增数据（多个）
      *
      * @param fileInfoList 实例对象列表
@@ -44,4 +60,12 @@ public interface FileInfoDao {
      * @return 影响行数
      */
     int deleteByFileId(String fileId);
+
+    /**
+     * 通过fileId删除数据
+     *
+     * @param fileInfoList 文件fileInfoList
+     * @return 影响行数
+     */
+    int deleteListByFileId(List<FileInfo> fileInfoList);
 }

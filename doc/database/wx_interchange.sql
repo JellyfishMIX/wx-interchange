@@ -95,7 +95,7 @@ create table `team_avatar` (
    `avatar_id` varchar(128) not null comment '头像文件avatarId',
    `tid` varchar(32) not null comment '所属项目组tid，外键',
    `file_key` varchar(128) not null comment '文件资源fileKey',
-   `hash` varchar(128) not null comment '全局唯一的文件Hash值',
+   `file_hash` varchar(128) not null comment '全局唯一的文件Hash值',
    `file_name` varchar(64) not null comment '文件名',
    `file_url` varchar(1024) not null comment '文件资源URL',
    `file_size` int not null comment '文件大小, 单位为b',

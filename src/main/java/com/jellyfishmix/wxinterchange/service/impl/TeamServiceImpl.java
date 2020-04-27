@@ -187,7 +187,7 @@ public class TeamServiceImpl implements TeamService {
 
         // 加分布式锁，避免出现S锁和X锁循环等待死锁
         // 分布式锁过期时间
-        int timeout = 10 * 1000;
+        int timeout = 20 * 1000;
         long time = System.currentTimeMillis() + timeout;
         // 加锁
         while (!redisLockService.lock(tid, String.valueOf(time))) {
@@ -289,13 +289,66 @@ public class TeamServiceImpl implements TeamService {
         // 此处查询需要在fileInfoDao.deleteByFileId()的前面，从七牛云bucket删除资源需要使用查出的数据
         FileInfoDTO fileInfoDTO = fileInfoDao.queryByFileId(fileId);
 
-        teamFileDao.deleteByFileId(fileId);
-        fileInfoDao.deleteByFileId(fileId);
+        // 加redis分布式锁，避免检索唯一键tid（读操作）、写操作时出现S锁和X锁循环等待造成死锁
+        // 分布式锁过期时间
+        int timeout = 10 * 1000;
+        String tidForLock = tid.concat("-deleteFileFromTeam");
+        redisLockService.lock(tidForLock, String.valueOf(timeout));
 
+        teamFileDao.deleteByFileId(fileId);
         // 修改项目组文件计数
         this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -1);
 
+        // 解锁
+        redisLockService.unlock(tidForLock, String.valueOf(timeout));
+
+        // 不可调换顺序，否则会造成teamFileDao.deleteListByFileId()时tid外键报错
+        fileInfoDao.deleteByFileId(fileId);
+
         // 从七牛云bucket删除资源
-        fileService.deleteFromQiniuBucket(fileInfoDTO.getFileKey());
+        // 查询fileHash是否在file_info表中还存在，还存在则不能删。因为同样的hash对应七牛云的同一个文件。
+        FileInfoDTO fileInfoDTOForCheck = fileInfoDao.queryByFileHash(fileInfoDTO.getFileHash());
+        if (fileInfoDTOForCheck == null) {
+            fileService.deleteFromQiniuBucket(fileInfoDTO.getFileKey());
+        }
+    }
+
+    /**
+     * 删除项目组内的文件
+     *
+     * @param tid 项目组tid
+     * @param fileInfoList 文件信息List
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = TeamException.class)
+    public void deleteFileListFromTeam(String tid, List<FileInfo> fileInfoList) {
+        // 此处查询需要在fileInfoDao.deleteByFileId()的前面，从七牛云bucket删除资源需要使用查出的数据
+        List<FileInfo> fileInfoListFromQuery = fileInfoDao.queryListByFileId(fileInfoList);
+
+        // 加redis分布式锁，避免检索唯一键tid（读操作）、写操作时出现S锁和X锁循环等待造成死锁
+        // 分布式锁过期时间
+        int timeout = 20 * 1000;
+        String tidForLock = tid.concat("-deleteFileListFromTeam");
+        redisLockService.lock(tidForLock, String.valueOf(timeout));
+
+        teamFileDao.deleteListByFileId(fileInfoList);
+        // 修改项目组文件计数
+        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -fileInfoList.size());
+
+        // 解锁
+        redisLockService.unlock(tidForLock, String.valueOf(timeout));
+
+        // 不可调换顺序，否则会造成teamFileDao.deleteListByFileId()时tid外键报错
+        fileInfoDao.deleteListByFileId(fileInfoList);
+
+        // 从七牛云bucket删除资源
+        for (int i = 0; i < fileInfoListFromQuery.size(); i++) {
+            // 查询fileHash是否在file_info表中还存在，还存在则不能删。因为同样的hash对应七牛云的同一个文件。
+            FileInfoDTO fileInfoDTOForCheck = fileInfoDao.queryByFileHash(fileInfoListFromQuery.get(i).getFileHash());
+            if (fileInfoDTOForCheck == null) {
+                fileService.deleteFromQiniuBucket(fileInfoListFromQuery.get(i).getFileKey());
+            }
+        }
     }
 }

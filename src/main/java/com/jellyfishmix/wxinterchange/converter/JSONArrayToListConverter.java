@@ -29,4 +29,17 @@ public class JSONArrayToListConverter {
         }
         return fileInfoList;
     }
+
+    public static List<FileInfo> convertToTidList(JSONArray jsonArray) {
+        List<FileInfo> fileInfoList = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonArrayElement = jsonArray.getJSONObject(i);
+            FileInfo fileInfo = new FileInfo();
+            for (int j = 0; j < jsonArrayElement.length(); j++) {
+                fileInfo.setFileId(jsonArrayElement.getString("fileId"));
+            }
+            fileInfoList.add(fileInfo);
+        }
+        return fileInfoList;
+    }
 }

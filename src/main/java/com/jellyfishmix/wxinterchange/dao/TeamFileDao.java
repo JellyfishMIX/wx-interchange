@@ -1,6 +1,7 @@
 package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
+import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamFile;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -49,7 +50,7 @@ public interface TeamFileDao {
      * @param teamFileList 实例对象列表
      * @return 影响行数
      */
-    int insertList(List<TeamFile> teamFileList);
+    void insertList(List<TeamFile> teamFileList);
 
     /**
      * 通过tid和fileId修改数据
@@ -66,4 +67,12 @@ public interface TeamFileDao {
      * @return
      */
     void deleteByFileId(String fileId);
+
+    /**
+     * 通过fileId批量删除数据
+     *
+     * @param fileInfoList fileInfoList，使用里面的tid删除数据
+     * @return
+     */
+    void deleteListByFileId(List<FileInfo> fileInfoList);
 }

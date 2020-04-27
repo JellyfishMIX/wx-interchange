@@ -45,7 +45,7 @@ public class FileController {
         String upToken = auth.uploadToken(qiniuConfig.getBucketName(), null, expireSeconds, putPolicy);
         hashMap.put("success", true);
         hashMap.put("uptoken", upToken);
-        return  hashMap;
+        return hashMap;
     }
 
     /**
