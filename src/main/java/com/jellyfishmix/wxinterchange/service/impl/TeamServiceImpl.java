@@ -1,17 +1,11 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
-import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
-import com.jellyfishmix.wxinterchange.dao.TeamFileDao;
-import com.jellyfishmix.wxinterchange.dao.TeamInfoDao;
+import com.jellyfishmix.wxinterchange.dao.*;
 import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
-import com.jellyfishmix.wxinterchange.entity.FileInfo;
-import com.jellyfishmix.wxinterchange.entity.TeamFile;
-import com.jellyfishmix.wxinterchange.entity.TeamInfo;
-import com.jellyfishmix.wxinterchange.entity.TeamUser;
-import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
+import com.jellyfishmix.wxinterchange.entity.*;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
@@ -47,6 +41,8 @@ public class TeamServiceImpl implements TeamService {
     private UserService userService;
     @Autowired
     private FileService fileService;
+    @Resource
+    private TeamAvatarDao teamAvatarDao;
     @Autowired
     private RedisLockService redisLockService;
 
@@ -207,6 +203,21 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
+     * 向项目组上传项目组头像文件
+     *
+     * @param tid        项目组tid
+     * @param teamAvatar 项目组头像文件
+     */
+    @Override
+    public TeamAvatar uploadTeamAvatar(String tid, TeamAvatar teamAvatar) {
+        String avatarId = UniqueKeyUtil.getUniqueKey();
+        teamAvatar.setAvatarId(avatarId);
+        teamAvatarDao.insert(teamAvatar);
+        // 删除原头像操作，更改项目组头像URL时再做
+        return teamAvatar;
+    }
+
+    /**
      * 加入项目组
      *
      * @param uid 用户uid
@@ -241,15 +252,20 @@ public class TeamServiceImpl implements TeamService {
      * @return 实例对象
      */
     @Override
-    public TeamInfoDTO updateTeamInfo(TeamInfo teamInfo) {
-        int effectedNum = this.teamInfoDao.updateByTid(teamInfo);
-        TeamInfoDTO teamInfoDTO = null;
-        if (effectedNum <= 0) {
-            teamInfoDTO = new TeamInfoDTO(TeamEnum.TEAM_INFO_NULL);
-            return teamInfoDTO;
+    @Transactional(rollbackFor = TeamException.class)
+    public TeamInfo updateTeamInfo(TeamInfo teamInfo) {
+        teamInfoDao.updateByTid(teamInfo);
+        // 删除原头像文件
+        if (teamInfo.getAvatarUrl() != null) {
+            TeamAvatar oldTeamAvatar = teamAvatarDao.queryByTid(teamInfo.getTid());
+            if (oldTeamAvatar != null) {
+                teamAvatarDao.deleteByAvatarId(oldTeamAvatar.getAvatarId());
+                // 从七牛云bucket删除资源
+                fileService.deleteFromQiniuBucket(oldTeamAvatar.getFileHash(), oldTeamAvatar.getFileKey());
+            }
         }
-        teamInfoDTO = this.queryTeamInfoByTid(teamInfo.getTid());
-        return teamInfoDTO;
+        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(teamInfo.getTid());
+        return teamInfoFromQuery;
     }
 
     /**
@@ -306,11 +322,7 @@ public class TeamServiceImpl implements TeamService {
         fileInfoDao.deleteByFileId(fileId);
 
         // 从七牛云bucket删除资源
-        // 查询fileHash是否在file_info表中还存在，还存在则不能删。因为同样的hash对应七牛云的同一个文件。
-        FileInfoDTO fileInfoDTOForCheck = fileInfoDao.queryByFileHash(fileInfoDTO.getFileHash());
-        if (fileInfoDTOForCheck == null) {
-            fileService.deleteFromQiniuBucket(fileInfoDTO.getFileKey());
-        }
+        fileService.deleteFromQiniuBucket(fileInfoDTO.getFileHash(), fileInfoDTO.getFileKey());
     }
 
     /**
@@ -344,11 +356,7 @@ public class TeamServiceImpl implements TeamService {
 
         // 从七牛云bucket删除资源
         for (int i = 0; i < fileInfoListFromQuery.size(); i++) {
-            // 查询fileHash是否在file_info表中还存在，还存在则不能删。因为同样的hash对应七牛云的同一个文件。
-            FileInfoDTO fileInfoDTOForCheck = fileInfoDao.queryByFileHash(fileInfoListFromQuery.get(i).getFileHash());
-            if (fileInfoDTOForCheck == null) {
-                fileService.deleteFromQiniuBucket(fileInfoListFromQuery.get(i).getFileKey());
-            }
+            fileService.deleteFromQiniuBucket(fileInfoListFromQuery.get(i).getFileHash(), fileInfoListFromQuery.get(i).getFileKey());
         }
     }
 }

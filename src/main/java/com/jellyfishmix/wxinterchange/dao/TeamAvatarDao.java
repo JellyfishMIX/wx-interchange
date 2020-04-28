@@ -18,6 +18,22 @@ public interface TeamAvatarDao {
     TeamAvatar queryByAvatarId(String avatarId);
 
     /**
+     * 通过tid查询
+     *
+     * @param tid 项目组tid
+     * @return
+     */
+    TeamAvatar queryByTid(String tid);
+
+    /**
+     * 通过fileHash查询项目组头像文件信息
+     *
+     * @param fileHash 全局唯一的文件Hash值
+     * @return
+     */
+    TeamAvatar queryByFileHash(String fileHash);
+
+    /**
      * 新增数据
      *
      * @param teamAvatar 实例对象

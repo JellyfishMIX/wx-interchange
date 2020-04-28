@@ -11,6 +11,7 @@ public enum TeamEnum implements StateCodeEnum {
     // 操作处理结果Enum
     SUCCESS(0, "操作成功"),
     TEAM_INFO_NULL(1, "项目组信息为空"),
+    TEAM_INFO_PARAM_NULL(2, "项目组信息传参为空"),
 
     // 操作标志Enum
     UPDATE_NUMBER_COUNT(101, "更新项目组成员计数"),

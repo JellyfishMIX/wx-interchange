@@ -1,13 +1,9 @@
 package com.jellyfishmix.wxinterchange.service;
 
-import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
-import com.jellyfishmix.wxinterchange.entity.FileInfo;
-import com.jellyfishmix.wxinterchange.entity.TeamFile;
-import com.jellyfishmix.wxinterchange.entity.TeamInfo;
-import com.jellyfishmix.wxinterchange.entity.TeamUser;
+import com.jellyfishmix.wxinterchange.entity.*;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 
 import java.util.List;
@@ -89,6 +85,15 @@ public interface TeamService {
     void uploadFileToTeam(String tid, String uid, List<FileInfo> fileInfoList);
 
     /**
+     * 向项目组上传项目组头像文件
+     *
+     * @param tid 项目组tid
+     * @param teamAvatar 项目组头像文件
+     * @return 项目组头像文件TeamAvatar
+     */
+    TeamAvatar uploadTeamAvatar(String tid, TeamAvatar teamAvatar);
+
+    /**
      * 加入项目组
      *
      * @param tid 项目组tid
@@ -103,7 +108,7 @@ public interface TeamService {
      * @param teamInfo 实例对象
      * @return 实例对象
      */
-    TeamInfoDTO updateTeamInfo(TeamInfo teamInfo);
+    TeamInfo updateTeamInfo(TeamInfo teamInfo);
 
     /**
      * 更新项目组的计数属性

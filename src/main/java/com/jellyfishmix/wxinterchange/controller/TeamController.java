@@ -3,6 +3,7 @@ package com.jellyfishmix.wxinterchange.controller;
 import com.jellyfishmix.wxinterchange.converter.JSONArrayToListConverter;
 import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
+import com.jellyfishmix.wxinterchange.entity.TeamAvatar;
 import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
@@ -140,7 +141,6 @@ public class TeamController {
         List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tid, keyword, pageIndex, pageSize);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }
-
     /**
      * 向项目组上传文件（.pdf, .docx, .xlsx, .pptx等任意格式的文件），支持多文件
      *
@@ -159,24 +159,65 @@ public class TeamController {
     }
 
     /**
-     * 修改项目组名称
+     * 向项目组上传项目组头像文件（和“修改项目组信息”组合使用）
      *
-     * @param tid 将要修改的项目组的tid
-     * @param newTeamName 新项目组名称
+     * @param tid tid项目组tid
+     * @param uid 上传者uid
+     * @param fileKey 文件fileKey
+     * @param fileHash 文件fileHash
+     * @param fileName 文件fileName
+     * @param fileUrl 文件URL
+     * @param fileSize 文件大小（以b为单位）
+     * @param mimeType 文件类型
      * @return
      */
-    @PostMapping("/update_team_name")
+    @PostMapping("/upload_team_avatar")
+    public ResultVO uploadTeamAvatar(@RequestParam("tid") String tid,
+                                     @RequestParam("uid") String uid,
+                                     @RequestParam("key") String fileKey,
+                                     @RequestParam("hash") String fileHash,
+                                     @RequestParam("fileName") String fileName,
+                                     @RequestParam("fileUrl") String fileUrl,
+                                     @RequestParam("fileSize") Integer fileSize,
+                                     @RequestParam("mimeType") String mimeType) {
+        TeamAvatar teamAvatar = new TeamAvatar();
+        teamAvatar.setTid(tid);
+        teamAvatar.setFileKey(fileKey);
+        teamAvatar.setFileHash(fileHash);
+        teamAvatar.setFileName(fileName);
+        teamAvatar.setFileUrl(fileUrl);
+        teamAvatar.setFileSize(fileSize);
+        teamAvatar.setMimeType(mimeType);
+        teamAvatar.setUid(uid);
+        teamService.uploadTeamAvatar(tid, teamAvatar);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamAvatar);
+    }
+
+    /**
+     * 修改项目组信息
+     *
+     * @param tid 将要修改的项目组的tid
+     * @param newTeamName 新项目组名称，非必须
+     * @param newTeamAvatarUrl 新项目组头像URL，非必须
+     * @return
+     */
+    @PostMapping("/update_team_info")
     public ResultVO updateTeamName(@RequestParam("tid") String tid,
-                                   @RequestParam("newTeamName") String newTeamName) {
+                                   @RequestParam(value = "newTeamName", required = false) String newTeamName,
+                                   @RequestParam(value = "newTeamAvatarUrl", required = false) String newTeamAvatarUrl) {
         TeamInfo teamInfo = new TeamInfo();
         teamInfo.setTid(tid);
-        teamInfo.setTeamName(newTeamName);
-        TeamInfoDTO teamInfoDTO = teamService.updateTeamInfo(teamInfo);
-        // 如果tid对应的teamInfo为空
-        if (teamInfoDTO.getStateCode().equals(TeamEnum.TEAM_INFO_NULL.getStateCode())) {
-            return ResultVOUtil.fail(TeamEnum.TEAM_INFO_NULL.getStateCode(), TeamEnum.TEAM_INFO_NULL.getStateMsg());
+        if (newTeamName != null) {
+            teamInfo.setTeamName(newTeamName);
         }
-        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoDTO.getTeamInfo());
+        if (newTeamAvatarUrl != null) {
+            teamInfo.setAvatarUrl(newTeamAvatarUrl);
+        }
+        if (newTeamName == null && newTeamAvatarUrl == null) {
+            return ResultVOUtil.fail(TeamEnum.TEAM_INFO_PARAM_NULL.getStateCode(), TeamEnum.TEAM_INFO_PARAM_NULL.getStateMsg());
+        }
+        TeamInfo teamInfoFromQuery = teamService.updateTeamInfo(teamInfo);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoFromQuery);
     }
 
     /**

@@ -59,7 +59,4 @@ public class FileController {
         FileInfoDTO fileInfoDTO = fileService.queryByFileId(fileId);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTO);
     }
-
-    // // 上传项目组头像、用户头像
-    // public ResultVO uploadAvatar
 }

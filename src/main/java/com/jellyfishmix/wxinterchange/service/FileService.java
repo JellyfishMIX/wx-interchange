@@ -20,7 +20,8 @@ public interface FileService {
     /**
      * 从七牛云bucket中删除文件
      *
+     * @param fileHash 全局唯一的文件Hash值，用来检查是否可以从七牛云bucket中删除
      * @param fileKey 文件fileKey
      */
-    void deleteFromQiniuBucket(String fileKey);
+    void deleteFromQiniuBucket(String fileHash, String fileKey);
 }

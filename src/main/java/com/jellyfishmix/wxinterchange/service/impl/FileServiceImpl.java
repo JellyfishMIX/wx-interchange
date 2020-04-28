@@ -1,8 +1,10 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
 import com.jellyfishmix.wxinterchange.config.QiniuConfig;
+import com.jellyfishmix.wxinterchange.dao.TeamAvatarDao;
 import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
+import com.jellyfishmix.wxinterchange.entity.TeamAvatar;
 import com.jellyfishmix.wxinterchange.service.FileService;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.BucketManager;
@@ -24,6 +26,8 @@ import javax.annotation.Resource;
 public class FileServiceImpl implements FileService {
     @Resource
     private FileInfoDao fileInfoDao;
+    @Resource
+    private TeamAvatarDao teamAvatarDao;
     @Autowired
     private QiniuConfig qiniuConfig;
 
@@ -41,10 +45,18 @@ public class FileServiceImpl implements FileService {
     /**
      * 从七牛云bucket中删除文件
      *
+     * @param fileHash 全局唯一的文件Hash值，用来检查是否可以从七牛云bucket中删除
      * @param fileKey 文件fileKey
      */
     @Override
-    public void deleteFromQiniuBucket(String fileKey) {
+    public void deleteFromQiniuBucket(String fileHash, String fileKey) {
+        // 查询fileHash是否在file_info表和team_avatar表中还存在，还存在则不能删。因为同样的hash对应七牛云的同一个文件。
+        FileInfoDTO fileInfoDTOForCheck = fileInfoDao.queryByFileHash(fileHash);
+        TeamAvatar teamAvatarForCheck = teamAvatarDao.queryByFileHash(fileHash);
+        if (fileInfoDTOForCheck != null || teamAvatarForCheck != null) {
+            return;
+        }
+
         Configuration qiniuConfiguration = new Configuration(Region.region1());
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, qiniuConfiguration);

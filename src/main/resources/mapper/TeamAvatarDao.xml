@@ -17,12 +17,28 @@
         <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
     </resultMap>
 
-    <!--查询单个-->
+    <!--通过avatarId查询单个-->
     <select id="queryByAvatarId" resultMap="TeamAvatarMap">
         select
-          id, avatar_id, tid, file_key, file_hash, file_name, file_url, file_size, mime_type, uid
+          avatar_id, tid, file_key, file_hash, file_name, file_url, file_size, mime_type, uid
         from wx_interchange.team_avatar
         where avatar_id = #{avatarId}
+    </select>
+
+    <!--通过tid查询单个-->
+    <select id="queryByTid" resultMap="TeamAvatarMap">
+        select
+            avatar_id, tid, file_key, file_hash, file_name, file_url, file_size, mime_type, uid
+        from wx_interchange.team_avatar
+        where tid = #{tid}
+    </select>
+
+    <!--通过fileHash查询单个-->
+    <select id="queryByFileHash" resultMap="TeamAvatarMap">
+        select
+            avatar_id, tid, file_key, file_hash, file_name, file_url, file_size, mime_type, uid
+        from wx_interchange.team_avatar
+        where file_hash = #{fileHash}
     </select>
 
     <!--新增所有列-->

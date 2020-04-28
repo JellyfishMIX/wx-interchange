@@ -55,23 +55,23 @@
             <if test="avatarUrl != null and avatarUrl != ''">
                 avatar_url = #{avatarUrl},
             </if>
-            <if test="grade != null">
+            <if test="grade != null and grade != ''">
                 grade = #{grade},
             </if>
-            <if test="numberCount != null">
+            <if test="numberCount != null and numberCount != ''">
                 number_count = #{numberCount},
             </if>
-            <if test="createdNumberCount != null">
+            <if test="createdNumberCount != null and createdNumberCount != ''">
                 created_number_count = #{createdNumberCount},
             </if>
-            <if test="managedNumberCount != null">
+            <if test="managedNumberCount != null and managedNumberCount != ''">
                 managed_number_count = #{managedNumberCount},
             </if>
-            <if test="joinedNumberCount != null">
+            <if test="joinedNumberCount != null and joinedNumberCount != ''">
                 joined_number_count = #{joinedNumberCount},
             </if>
-            <if test="fileCount != null">
-                file_count = #{fileCount},
+            <if test="fileCount != null and fileCount != ''">
+                file_count = #{fileCount}
             </if>
         </set>
         where tid = #{tid}
