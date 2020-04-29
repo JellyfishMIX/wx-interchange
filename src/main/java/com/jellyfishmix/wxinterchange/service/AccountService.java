@@ -10,7 +10,7 @@ import com.jellyfishmix.wxinterchange.entity.UserInfo;
 public interface AccountService {
     /**
      * 注册账户
-     * @param userInfo
+     * @param userInfo 用户信息对象
      * @return
      */
     UserInfoDTO register(UserInfo userInfo);

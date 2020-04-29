@@ -12,6 +12,15 @@ import java.util.List;
  */
 public interface CollectionFileDao {
     /**
+     * 通过collectionId和fileId查询单条数据
+     *
+     * @param collectionId 收藏集collectionId
+     * @param fileId 文件fileId
+     * @return
+     */
+    CollectionFile queryByCollectionIdAndFileId(@Param("collectionId") String collectionId, @Param("fileId") String fileId);
+
+    /**
      * 通过collectionId查询收藏集文件列表
      *
      * @param collectionId 收藏集collectionId
@@ -19,10 +28,10 @@ public interface CollectionFileDao {
      * @param limit 查询条数
      * @return 收藏集文件列表
      */
-    List<CollectionFile> queryListByCollectionIdAndFileId(@Param("collection_id") String collectionId, @Param("offset") int offset, @Param("limit") int limit);
+    List<CollectionFile> queryListByCollectionId(@Param("collection_id") String collectionId, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
-     * 新增数据
+     * 新增数据（单个）
      *
      * @param collectionFile 实例对象
      * @return 影响行数
@@ -30,10 +39,19 @@ public interface CollectionFileDao {
     int insert(CollectionFile collectionFile);
 
     /**
+     * 新增数据（多个）
+     *
+     * @param collectionFileList 实例对象列表
+     * @return 影响行数
+     */
+    int insertList(List<CollectionFile> collectionFileList);
+
+    /**
      * 通过collectionId和fileId删除数据
      *
      * @param collectionId 收藏集collectionId
+     * @param fileId 文件fileId
      * @return 影响行数
      */
-    int deleteById(String collectionId);
+    int deleteByCollectionIdAndFileId(String collectionId, String fileId);
 }

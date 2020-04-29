@@ -3,11 +3,14 @@ package com.jellyfishmix.wxinterchange.service.impl;
 import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.CollectionInfo;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.UserException;
 import com.jellyfishmix.wxinterchange.dao.UserInfoDao;
+import com.jellyfishmix.wxinterchange.service.CollectionService;
 import com.jellyfishmix.wxinterchange.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private UserInfoDao userInfoDao;
     @Resource
     private TeamUserDao teamUserDao;
+    @Autowired
+    private CollectionService collectionService;
 
     /**
      * 通过uid查找用户信息
@@ -89,6 +94,11 @@ public class UserServiceImpl implements UserService {
             throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
         }
         UserInfoDTO userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS);
+
+        // 每个新用户默认拥有一个默认收藏集
+        CollectionInfo collectionInfo = new CollectionInfo();
+        collectionInfo.setUid(userInfo.getUid());
+        collectionService.createCollection(collectionInfo);
         return userInfoDTO;
     }
 

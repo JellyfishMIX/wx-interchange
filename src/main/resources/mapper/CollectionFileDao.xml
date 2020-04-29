@@ -21,8 +21,14 @@
         <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
     </resultMap>
 
+    <select id="queryByCollectionIdAndFileId" resultMap="CollectionFileMap">
+        select collection_id, file_id
+        from wx_interchange.collection_file
+        where collection_id = #{collectionId} and file_id = #{fileId}
+    </select>
+
     <!--查询收藏集文件列表-->
-    <select id="queryListByCollectionIdAndFileId" resultMap="CollectionFileDTOMap">
+    <select id="queryListByCollectionId" resultMap="CollectionFileDTOMap">
         select
           collection_id, collection_file.file_id, file_info.file_name, file_info.file_url, file_info.file_size, file_info.mime_type, collection_file.creation_time
         from wx_interchange.collection_file
@@ -33,13 +39,22 @@
         limit #{offset}, #{limit}
     </select>
 
-    <!--新增所有列-->
+    <!--新增数据（单个）-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         insert into wx_interchange.collection_file(collection_id, file_id)
         values (#{collectionId}, #{fileId})
     </insert>
 
-    <!--通过主键删除-->
+    <!--新增数据（多个）-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into wx_interchange.collection_file(collection_id, file_id)
+        values
+        <foreach collection="list" item="collectionFile" index="index" separator=",">
+            (#{collectionId}, #{fileId})
+        </foreach>
+    </insert>
+
+    <!--通过collection_id和file_id删除-->
     <delete id="deleteByCollectionIdAndFileId">
         delete from wx_interchange.collection_file where collection_id = #{collectionId} and file_id = #{fileId}
     </delete>

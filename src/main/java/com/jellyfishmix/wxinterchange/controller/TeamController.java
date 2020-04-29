@@ -154,7 +154,7 @@ public class TeamController {
         List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToFileInfoList(fileInfoJsonArray);
         String tid = jsonObject.getString("tid");
         String uid = jsonObject.getString("uid");
-        teamService.uploadFileToTeam(tid, uid, fileInfoList);
+        teamService.uploadFileListToTeam(tid, uid, fileInfoList);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 

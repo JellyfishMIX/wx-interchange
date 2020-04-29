@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.converter;
 
+import com.jellyfishmix.wxinterchange.entity.CollectionFile;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,5 +42,18 @@ public class JSONArrayToListConverter {
             fileInfoList.add(fileInfo);
         }
         return fileInfoList;
+    }
+
+    public static List<CollectionFile> convertToCollectionFileList(JSONArray jsonArray) {
+        List<CollectionFile> collectionFileList = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonArrayElement = jsonArray.getJSONObject(i);
+            CollectionFile collectionFile = new CollectionFile();
+            for (int j = 0; j < jsonArrayElement.length(); j++) {
+                collectionFile.setFileId(jsonArrayElement.getString("fileId"));
+            }
+            collectionFileList.add(collectionFile);
+        }
+        return collectionFileList;
     }
 }

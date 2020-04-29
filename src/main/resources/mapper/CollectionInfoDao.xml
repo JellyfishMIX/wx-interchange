@@ -20,6 +20,7 @@
         where collection_id = #{collectionId}
     </select>
 
+    <!--通过用户uid查询单个数据-->
     <select id="queryByUid" resultMap="CollectionInfoMap">
         select
             collection_id, collection_name, uid, file_count

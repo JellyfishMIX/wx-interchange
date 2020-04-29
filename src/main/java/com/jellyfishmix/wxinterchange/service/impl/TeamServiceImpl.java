@@ -164,7 +164,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional(rollbackFor = TeamException.class)
-    public void uploadFileToTeam(String tid, String uid, List<FileInfo> fileInfoList) {
+    public void uploadFileListToTeam(String tid, String uid, List<FileInfo> fileInfoList) {
         List<TeamFile>  teamFileList = new ArrayList<>();
         for (int i = 0; i < fileInfoList.size(); i++) {
             String fileId = UniqueKeyUtil.getUniqueKey();
@@ -186,7 +186,8 @@ public class TeamServiceImpl implements TeamService {
         int timeout = 20 * 1000;
         long time = System.currentTimeMillis() + timeout;
         // 加锁
-        while (!redisLockService.lock(tid, String.valueOf(time))) {
+        String tidForLock = tid.concat("-uploadFileToTeam");
+        while (!redisLockService.lock(tidForLock, String.valueOf(time))) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -199,7 +200,7 @@ public class TeamServiceImpl implements TeamService {
         this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, fileInfoList.size());
 
         // 解锁
-        redisLockService.unlock(tid, String.valueOf(time));
+        redisLockService.unlock(tidForLock, String.valueOf(time));
     }
 
     /**
