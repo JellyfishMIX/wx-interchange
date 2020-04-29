@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.dao;
 
+import com.jellyfishmix.wxinterchange.dto.CollectionFileDTO;
 import com.jellyfishmix.wxinterchange.entity.CollectionFile;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
@@ -28,7 +29,7 @@ public interface CollectionFileDao {
      * @param limit 查询条数
      * @return 收藏集文件列表
      */
-    List<CollectionFile> queryListByCollectionId(@Param("collection_id") String collectionId, @Param("offset") int offset, @Param("limit") int limit);
+    List<CollectionFileDTO> queryListByCollectionId(@Param("collection_id") String collectionId, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
      * 新增数据（单个）
@@ -54,4 +55,11 @@ public interface CollectionFileDao {
      * @return 影响行数
      */
     int deleteByCollectionIdAndFileId(String collectionId, String fileId);
+
+    /**
+     * 删除数据（多个）
+     *
+     * @param collectionFileList 收藏集文件列表
+     */
+    void deleteList(List<CollectionFile> collectionFileList);
 }

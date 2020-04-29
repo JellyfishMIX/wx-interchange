@@ -50,12 +50,21 @@
         insert into wx_interchange.collection_file(collection_id, file_id)
         values
         <foreach collection="list" item="collectionFile" index="index" separator=",">
-            (#{collectionId}, #{fileId})
+            (#{collectionFile.collectionId}, #{collectionFile.fileId})
         </foreach>
     </insert>
 
     <!--通过collection_id和file_id删除-->
     <delete id="deleteByCollectionIdAndFileId">
         delete from wx_interchange.collection_file where collection_id = #{collectionId} and file_id = #{fileId}
+    </delete>
+
+    <!--删除数据（多个）-->
+    <delete id="deleteList">
+        delete from wx_interchange.collection_file
+        where (collection_id, file_id) in
+        <foreach collection="list" item="collectionFile" index="index" open="(" separator="," close=")">
+            (#{collectionFile.collectionId}, #{collectionFile.fileId})
+        </foreach>
     </delete>
 </mapper>
