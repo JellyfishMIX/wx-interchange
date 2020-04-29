@@ -67,28 +67,25 @@ public class CollectionServiceImpl implements CollectionService {
             }
         }
 
-        int i = 0, j = 0;
-        int len = collectionFileList.size();
-        for (i = 0; i < len; i ++) {
-            String fileId = collectionFileList.get(j).getFileId();
+        int countRepeatedNum = 0;
+        for (int i = 0; i < collectionFileList.size(); i ++) {
+            String fileId = collectionFileList.get(i).getFileId();
             // 防止出现收藏重叠（即收藏已存在）。出现重复的收藏文件，先删除已有的，再添加新选中的
             CollectionFile collectionFileForCheck = collectionFileDao.queryByCollectionIdAndFileId(collectionId, fileId);
             if (collectionFileForCheck != null) {
                 collectionFileDao.deleteByCollectionIdAndFileId(collectionId, fileId);
-                collectionFileList.remove(j);
-                continue;
+                countRepeatedNum ++;
             }
 
             CollectionFile collectionFile = new CollectionFile();
             collectionFile.setCollectionId(collectionId);
             collectionFile.setFileId(fileId);
-            collectionFileList.set(j, collectionFile);
-            j++;
+            collectionFileList.set(i, collectionFile);
         }
 
         collectionFileDao.insertList(collectionFileList);
         // 修改项目组文件计数
-        updateCollectionCountProperty(collectionId, CollectionEnum.UPDATE_FILE_COUNT, collectionFileList.size());
+        updateCollectionCountProperty(collectionId, CollectionEnum.UPDATE_FILE_COUNT, (collectionFileList.size() - countRepeatedNum));
 
         // 解锁
         redisLockService.unlock(collectionIdForLock, String.valueOf(time));
