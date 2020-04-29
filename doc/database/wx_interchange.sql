@@ -107,3 +107,27 @@ create table `team_avatar` (
    unique key `uk_team_avatar_avatar_id`(`avatar_id`),
    foreign key `fk_team_avatar_tid`(`tid`) references wx_interchange.team_info(`tid`)
 ) comment '项目组头像表';
+
+create table `file_collection` (
+    `id` int not null auto_increment comment '代理主键',
+    `collection_id` varchar(32) not null comment '收藏集collection_id',
+    `collection_name` varchar(64) not null default '收藏集' comment '收藏集名称',
+    `uid` varchar(32) not null comment '创建者uid',
+    `file_count` int not null default 0 comment '收藏集文件计数',
+    `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+    `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+    primary key (`id`),
+    unique key `file_collection_collection_id`(`collection_id`),
+    foreign key `file_collection_uid`(`uid`) references wx_interchange.user_info(`uid`)
+) comment '文件收藏集表';
+
+create table `collection_file` (
+    `id` int not null auto_increment comment '代理主键',
+    `collection_id` varchar(32) not null comment '收藏集collection_id',
+    `file_id` varchar(128) not null comment '文件fileId',
+    `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+    `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+    primary key (`id`),
+    foreign key `collection_file_collection_id`(`collection_id`) references wx_interchange.file_collection(`collection_id`),
+    foreign key `collection_file_file`(`file_id`) references wx_interchange.file_info(`file_id`)
+) comment '文件收藏集的文件关联表';
