@@ -46,7 +46,7 @@
     </insert>
 
     <!--新增数据（多个）-->
-    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+    <insert id="insertList" keyProperty="id" useGeneratedKeys="true">
         insert into wx_interchange.collection_file(collection_id, file_id)
         values
         <foreach collection="list" item="collectionFile" index="index" separator=",">

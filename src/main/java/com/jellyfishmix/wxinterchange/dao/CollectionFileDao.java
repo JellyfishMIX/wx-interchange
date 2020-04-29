@@ -29,7 +29,7 @@ public interface CollectionFileDao {
      * @param limit 查询条数
      * @return 收藏集文件列表
      */
-    List<CollectionFileDTO> queryListByCollectionId(@Param("collection_id") String collectionId, @Param("offset") int offset, @Param("limit") int limit);
+    List<CollectionFileDTO> queryListByCollectionId(@Param("collectionId") String collectionId, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
      * 新增数据（单个）
