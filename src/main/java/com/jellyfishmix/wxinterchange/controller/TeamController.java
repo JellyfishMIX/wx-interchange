@@ -174,8 +174,8 @@ public class TeamController {
     @PostMapping("/upload_team_avatar")
     public ResultVO uploadTeamAvatar(@RequestParam("tid") String tid,
                                      @RequestParam("uid") String uid,
-                                     @RequestParam("key") String fileKey,
-                                     @RequestParam("hash") String fileHash,
+                                     @RequestParam("fileKey") String fileKey,
+                                     @RequestParam("fileHash") String fileHash,
                                      @RequestParam("fileName") String fileName,
                                      @RequestParam("fileUrl") String fileUrl,
                                      @RequestParam("fileSize") Integer fileSize,
