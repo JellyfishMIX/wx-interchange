@@ -51,31 +51,31 @@
     <update id="update">
         update wx_interchange.team_avatar
         <set>
-            <if test="avatarId != null and avatarId != ''">
+            <if test="avatarId != null">
                 avatar_id = #{avatarId},
             </if>
-            <if test="tid != null and tid != ''">
+            <if test="tid != null">
                 tid = #{tid},
             </if>
-            <if test="fileKey != null and fileKey != ''">
+            <if test="fileKey != null">
                 file_key = #{fileKey},
             </if>
-            <if test="fileHash != null and fileHash != ''">
+            <if test="fileHash != null">
                 file_hash = #{fileHash},
             </if>
-            <if test="fileName != null and fileName != ''">
+            <if test="fileName != null">
                 file_name = #{fileName},
             </if>
-            <if test="fileUrl != null and fileUrl != ''">
+            <if test="fileUrl != null">
                 file_url = #{fileUrl},
             </if>
             <if test="fileSize != null">
                 file_size = #{fileSize},
             </if>
-            <if test="mimeType != null and mimeType != ''">
+            <if test="mimeType != null">
                 mime_type = #{mimeType},
             </if>
-            <if test="uid != null and uid != ''">
+            <if test="uid != null">
                 uid = #{uid},
             </if>
         </set>

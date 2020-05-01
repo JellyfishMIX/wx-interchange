@@ -46,7 +46,7 @@
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="createdTeamCount != null">created_team_count = #{createdTeamCount},</if>
             <if test="managedTeamCount != null">managed_team_count = #{managedTeamCount},</if>
-            <if test="joinedTeamCount != null">joined_team_count = #{joinedTeamCount}</if>
+            <if test="joinedTeamCount != null">joined_team_count = #{joinedTeamCount},</if>
         </set>
         where uid = #{uid}
     </update>

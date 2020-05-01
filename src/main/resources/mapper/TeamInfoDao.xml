@@ -49,29 +49,29 @@
     <update id="updateByTid">
         update wx_interchange.team_info
         <set>
-            <if test="teamName != null and teamName != ''">
+            <if test="teamName != null">
                 team_name = #{teamName},
             </if>
-            <if test="avatarUrl != null and avatarUrl != ''">
+            <if test="avatarUrl != null">
                 avatar_url = #{avatarUrl},
             </if>
-            <if test="grade != null and grade != ''">
+            <if test="grade != null">
                 grade = #{grade},
             </if>
-            <if test="numberCount != null and numberCount != ''">
+            <if test="numberCount != null">
                 number_count = #{numberCount},
             </if>
-            <if test="createdNumberCount != null and createdNumberCount != ''">
+            <if test="createdNumberCount != null">
                 created_number_count = #{createdNumberCount},
             </if>
-            <if test="managedNumberCount != null and managedNumberCount != ''">
+            <if test="managedNumberCount != null">
                 managed_number_count = #{managedNumberCount},
             </if>
-            <if test="joinedNumberCount != null and joinedNumberCount != ''">
+            <if test="joinedNumberCount != null">
                 joined_number_count = #{joinedNumberCount},
             </if>
-            <if test="fileCount != null and fileCount != ''">
-                file_count = #{fileCount}
+            <if test="fileCount != null">
+                file_count = #{fileCount},
             </if>
         </set>
         where tid = #{tid}

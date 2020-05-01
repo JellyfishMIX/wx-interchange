@@ -74,22 +74,22 @@
     <update id="update">
         update wx_interchange.file_info
         <set>
-            <if test="fileKey != null and fileKey != ''">
+            <if test="fileKey != null">
                 file_key = #{fileKey},
             </if>
-            <if test="fileHash != null and fileHash != ''">
+            <if test="fileHash != null">
                 file_hash = #{fileHash},
             </if>
-            <if test="fileName != null and fileName != ''">
+            <if test="fileName != null">
                 file_name = #{fileName},
             </if>
-            <if test="fileUrl != null and fileUrl != ''">
+            <if test="fileUrl != null">
                 file_url = #{fileUrl},
             </if>
             <if test="fileSize != null">
                 file_size = #{fileSize},
             </if>
-            <if test="mimeType != null and mimeType != ''">
+            <if test="mimeType != null">
                 mime_type = #{mimeType},
             </if>
         </set>
