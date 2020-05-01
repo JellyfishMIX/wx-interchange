@@ -33,9 +33,9 @@ public interface FileInfoDao {
      * 通过fileHash查询单个文件信息
      *
      * @param fileHash 文件hash值
-     * @return
+     * @return 文件信息列表
      */
-    FileInfoDTO queryByFileHash(String fileHash);
+    List<FileInfoDTO> queryByFileHash(String fileHash);
 
     /**
      * 新增数据（多个）

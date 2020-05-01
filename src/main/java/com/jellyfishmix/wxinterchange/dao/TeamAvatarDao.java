@@ -2,6 +2,8 @@ package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.TeamAvatar;
 
+import java.util.List;
+
 /**
  * 项目组头像表(TeamAvatar)表数据库访问层
  *
@@ -31,7 +33,7 @@ public interface TeamAvatarDao {
      * @param fileHash 全局唯一的文件Hash值
      * @return
      */
-    TeamAvatar queryByFileHash(String fileHash);
+    List<TeamAvatar> queryByFileHash(String fileHash);
 
     /**
      * 新增数据

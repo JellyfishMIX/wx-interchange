@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 文件信息表(FileInfo)表服务实现类
@@ -51,9 +52,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public void deleteFromQiniuBucket(String fileHash, String fileKey) {
         // 查询fileHash是否在file_info表和team_avatar表中还存在，还存在则不能删。因为同样的hash对应七牛云的同一个文件。
-        FileInfoDTO fileInfoDTOForCheck = fileInfoDao.queryByFileHash(fileHash);
-        TeamAvatar teamAvatarForCheck = teamAvatarDao.queryByFileHash(fileHash);
-        if (fileInfoDTOForCheck != null || teamAvatarForCheck != null) {
+        List<FileInfoDTO> fileInfoDTOListForCheck = fileInfoDao.queryByFileHash(fileHash);
+        List<TeamAvatar> teamAvatarListForCheck = teamAvatarDao.queryByFileHash(fileHash);
+        if (fileInfoDTOListForCheck.size() > 0 || teamAvatarListForCheck.size() > 0) {
             return;
         }
 
