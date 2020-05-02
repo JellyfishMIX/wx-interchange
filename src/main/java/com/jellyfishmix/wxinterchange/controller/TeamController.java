@@ -259,4 +259,18 @@ public class TeamController {
         teamService.deleteFileListFromTeam(tid, fileInfoList);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
+
+    /**
+     * 删除项目组成员
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    @PostMapping("/delete_team_user")
+    public ResultVO deleteTeamUser(@RequestParam("tid") String tid,
+                                   @RequestParam("uid") String uid) {
+        teamService.deleteTeamUser(tid, uid);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
+    }
 }

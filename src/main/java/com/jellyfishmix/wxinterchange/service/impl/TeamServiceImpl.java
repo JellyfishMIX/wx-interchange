@@ -7,6 +7,7 @@ import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.entity.*;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
+import com.jellyfishmix.wxinterchange.enums.TeamUserEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
 import com.jellyfishmix.wxinterchange.service.FileService;
@@ -359,5 +360,39 @@ public class TeamServiceImpl implements TeamService {
         for (int i = 0; i < fileInfoListFromQuery.size(); i++) {
             fileService.deleteFromQiniuBucket(fileInfoListFromQuery.get(i).getFileHash(), fileInfoListFromQuery.get(i).getFileKey());
         }
+    }
+
+    /**
+     * 删除项目组成员
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     */
+    @Override
+    @Transactional(rollbackFor = TeamException.class)
+    public void deleteTeamUser(String tid, String uid) {
+        TeamUser teamUserFromQuery = teamUserDao.queryTeamUserByTidAndUid(tid, uid);
+
+        // 加redis分布式锁，避免检索唯一键tid（读操作）、写操作时出现S锁和X锁循环等待造成死锁
+        // 分布式锁过期时间
+        int timeout = 10 * 1000;
+        String tidForLock = tid.concat("-deleteTeamUser");
+        redisLockService.lock(tidForLock, String.valueOf(timeout));
+
+        if (teamUserFromQuery.getUserGrade().equals(TeamUserEnum.CREATED_NUMBER.getStateCode())) {
+            throw new TeamException(TeamEnum.CREATED_NUMBER_DELETED_FAIL);
+        } else if (teamUserFromQuery.getUserGrade().equals(TeamUserEnum.MANAGED_NUMBER.getStateCode())) {
+            this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_MANAGED_NUMBER_COUNT, -1);
+            userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_MANAGED_TEAM_COUNT, -1);
+        } else if (teamUserFromQuery.getUserGrade().equals(TeamUserEnum.JOINED_NUMBER.getStateCode())) {
+            this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_JOINED_NUMBER_COUNT, -1);
+            userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, -1);
+        }
+        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_NUMBER_COUNT, -1);
+
+        teamUserDao.delete(tid, uid);
+
+        // 解锁
+        redisLockService.unlock(tidForLock, String.valueOf(timeout));
     }
 }

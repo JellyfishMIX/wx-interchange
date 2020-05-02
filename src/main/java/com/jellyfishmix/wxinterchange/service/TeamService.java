@@ -136,4 +136,12 @@ public interface TeamService {
      * @return
      */
     void deleteFileListFromTeam(String tid, List<FileInfo> fileInfoList);
+
+    /**
+     * 删除项目组成员
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     */
+    void deleteTeamUser(String tid, String uid);
 }

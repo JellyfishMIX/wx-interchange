@@ -45,4 +45,13 @@ public interface TeamUserDao {
      * @return 影响行数
      */
     int insert(TeamUser teamUser);
+
+    /**
+     * 删除数据
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    int delete(@Param("tid") String tid, @Param("uid") String uid);
 }
