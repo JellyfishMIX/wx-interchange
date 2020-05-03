@@ -54,11 +54,12 @@
         </foreach>
     </insert>
 
+    <!--收藏集中将被删除的fileId替换成404，对应404文件-->
     <update id="updateFileIdTo404">
         update wx_interchange.collection_file
         <set>
             <if test="fileId != null and fileId != ''">
-                file_id = 404,
+                file_id = "404",
             </if>
         </set>
         where file_id = #{fileId}

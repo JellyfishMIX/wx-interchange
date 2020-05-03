@@ -48,12 +48,12 @@ public interface CollectionFileDao {
     int insertList(List<CollectionFile> collectionFileList);
 
     /**
-     * 修改数据
+     * 收藏集中将被删除的fileId替换成404，对应404文件
      *
      * @param fileId 文件fileId
      * @return 影响行数
      */
-    int updateFileIdTo404(String fileId);
+    int updateFileIdTo404(@Param("fileId") String fileId);
 
     /**
      * 通过collectionId和fileId删除数据

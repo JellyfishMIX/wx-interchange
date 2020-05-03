@@ -434,8 +434,6 @@ public class TeamServiceImpl implements TeamService {
         List<TeamFileDTO> teamFileDTOList = teamFileDao.queryAllByTid(tid);
         // 删除全部的team_file
         teamFileDao.deleteAllByTid(tid);
-        // 删除相关的file_info
-        fileInfoDao.deleteListByFileIdOfTeamFile(teamFileDTOList);
         // 删除team_info
         teamInfoDao.deleteByTid(tid);
 
@@ -449,6 +447,12 @@ public class TeamServiceImpl implements TeamService {
 
             // 从七牛云bucket删除资源
             fileService.deleteFromQiniuBucket(teamFileDTOList.get(i).getFileHash(), teamFileDTOList.get(i).getFileKey());
+        }
+
+        // 删除相关的file_info
+        // 不可调换顺序，否则会造成collectionFileDao.updateFileIdTo404(fileId)报错
+        if (teamFileDTOList.size() > 0) {
+            fileInfoDao.deleteListByFileIdOfTeamFile(teamFileDTOList);
         }
 
         return new TeamDTO(TeamEnum.SUCCESS);
