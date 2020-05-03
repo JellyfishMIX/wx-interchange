@@ -1,5 +1,6 @@
 package com.jellyfishmix.wxinterchange.service;
 
+import com.jellyfishmix.wxinterchange.dto.TeamDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
@@ -129,10 +130,10 @@ public interface TeamService {
     void deleteFileFromTeam(String tid, String fileId);
 
     /**
-     * 删除项目组内的文件
+     * 删除项目组内的文件（多个）
      *
      * @param tid 项目组tid
-     * @param fileInfoList 文件信息List
+     * @param fileInfoList 文件信息list
      * @return
      */
     void deleteFileListFromTeam(String tid, List<FileInfo> fileInfoList);
@@ -142,6 +143,16 @@ public interface TeamService {
      *
      * @param tid 项目组tid
      * @param uid 用户uid
+     * @return 包含stateCode和stateMsg的TeamDTO
      */
-    void deleteTeamUser(String tid, String uid);
+    TeamDTO deleteTeamUser(String tid, String uid);
+
+    /**
+     * 解散项目组
+     *
+     * @param uid 用户uid
+     * @param tid 项目组tid
+     * @return 包含stateCode和stateMsg的TeamDTO
+     */
+    TeamDTO disbandGroup(String uid, String tid);
 }

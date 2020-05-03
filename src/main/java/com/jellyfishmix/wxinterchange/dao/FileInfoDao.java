@@ -1,7 +1,9 @@
 package com.jellyfishmix.wxinterchange.dao;
 
+import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.TeamFile;
 
 import java.util.List;
 
@@ -67,5 +69,13 @@ public interface FileInfoDao {
      * @param fileInfoList 文件fileInfoList
      * @return 影响行数
      */
-    int deleteListByFileId(List<FileInfo> fileInfoList);
+    int deleteListByFileIdOfFileInfo(List<FileInfo> fileInfoList);
+
+    /**
+     * 通过teamFile中的fileId进行批量删除
+     *
+     * @param teamFileDTOList 包含有fileId的列表
+     * @return
+     */
+    int deleteListByFileIdOfTeamFile(List<TeamFileDTO> teamFileDTOList);
 }

@@ -54,4 +54,12 @@ public interface TeamUserDao {
      * @return
      */
     int delete(@Param("tid") String tid, @Param("uid") String uid);
+
+    /**
+     * 删除tid相关的所有行
+     *
+     * @param tid 项目组tid
+     * @return
+     */
+    int deleteAllByTid(String tid);
 }

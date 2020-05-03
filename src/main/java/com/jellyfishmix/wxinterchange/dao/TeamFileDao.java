@@ -34,6 +34,14 @@ public interface TeamFileDao {
     List<TeamFileDTO> queryTeamFileListOrderByCreationTime(@Param("tid") String tid, @Param("offset") int offset, @Param("limit") int limit);
 
     /**
+     * 通过tid查询所有的teamFile
+     *
+     * @param tid 项目组tid
+     * @return
+     */
+    List<TeamFileDTO> queryAllByTid(String tid);
+
+    /**
      * 通过关键词搜索项目组内的文件
      *
      * @param tid 项目组tid
@@ -67,4 +75,11 @@ public interface TeamFileDao {
      * @return
      */
     void deleteListByFileId(List<FileInfo> fileInfoList);
+
+    /**
+     * 删除tid相关的所有行
+     *
+     * @param tid 项目组tid
+     */
+    void deleteAllByTid(String tid);
 }

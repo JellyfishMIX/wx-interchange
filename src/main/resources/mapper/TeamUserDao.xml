@@ -57,7 +57,13 @@
         values (#{tid}, #{uid}, #{userGrade})
     </insert>
 
+    <!--删除数据-->
     <delete id="delete">
         delete from wx_interchange.team_user where tid = #{tid} and uid = #{uid}
+    </delete>
+
+    <!--删除tid相关的所有行-->
+    <delete id="deleteAllByTid">
+        delete from wx_interchange.team_user where tid = #{tid}
     </delete>
 </mapper>

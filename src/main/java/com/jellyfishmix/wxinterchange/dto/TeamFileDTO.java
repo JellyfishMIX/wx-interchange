@@ -43,6 +43,14 @@ public class TeamFileDTO {
      */
     private String username;
     /**
+     * 文件资源fileKey
+     */
+    private String fileKey;
+    /**
+     * 全局唯一的文件fileHash值
+     */
+    private String fileHash;
+    /**
      * 创建时间，自动写入
      */
     private Date creationTime;

@@ -23,6 +23,7 @@ public class RedisLockServiceImpl implements RedisLockService {
      * @param value 当前时间 + 超时时间
      * @return true拿到锁，false未拿到锁
      */
+    @Override
     public boolean lock(String key, String value) {
         // 此处redisTemplate.opsForValue().setIfAbsent(key, value)使用了redis官方文档的SETNX方法
         // 将key设置值为value，如果key不存在，这种情况下等同SET命令。 当key存在时，什么也不做。SETNX是"SET if Not eXists"的简写。
@@ -51,6 +52,7 @@ public class RedisLockServiceImpl implements RedisLockService {
      * @param key key值
      * @param value 当前时间 + 超时时间。此处用来做校验，key和value对应再删除。
      */
+    @Override
     public void unlock(String key, String value) {
         try {
             String currentValue = redisTemplate.opsForValue().get(key);
@@ -60,5 +62,26 @@ public class RedisLockServiceImpl implements RedisLockService {
         } catch (Exception e) {
             log.error("[redis分布式锁]解锁异常，errMsg = {}", e.getMessage());
         }
+    }
+
+    /**
+     * 快捷加锁
+     *
+     * @param identifierForLock 要加锁的事务标识符
+     * @param timeout 分布式锁生存时间
+     */
+    @Override
+    public long lockConvenient(String identifierForLock, int timeout) {
+        // 分布式锁过期时间
+        long time = System.currentTimeMillis() + timeout;
+        // 加锁
+        while (!this.lock(identifierForLock, String.valueOf(time))) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return time;
     }
 }

@@ -48,13 +48,21 @@ public interface CollectionFileDao {
     int insertList(List<CollectionFile> collectionFileList);
 
     /**
+     * 修改数据
+     *
+     * @param fileId 文件fileId
+     * @return 影响行数
+     */
+    int updateFileIdTo404(String fileId);
+
+    /**
      * 通过collectionId和fileId删除数据
      *
      * @param collectionId 收藏集collectionId
      * @param fileId 文件fileId
      * @return 影响行数
      */
-    int deleteByCollectionIdAndFileId(String collectionId, String fileId);
+    int deleteByCollectionIdAndFileId(@Param("collectionId") String collectionId, @Param("fileId") String fileId);
 
     /**
      * 删除数据（多个）

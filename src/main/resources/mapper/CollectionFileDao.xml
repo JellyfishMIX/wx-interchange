@@ -54,6 +54,16 @@
         </foreach>
     </insert>
 
+    <update id="updateFileIdTo404">
+        update wx_interchange.collection_file
+        <set>
+            <if test="fileId != null and fileId != ''">
+                file_id = 404,
+            </if>
+        </set>
+        where file_id = #{fileId}
+    </update>
+
     <!--通过collection_id和file_id删除-->
     <delete id="deleteByCollectionIdAndFileId">
         delete from wx_interchange.collection_file where collection_id = #{collectionId} and file_id = #{fileId}

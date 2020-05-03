@@ -270,12 +270,27 @@ public class TeamController {
     @PostMapping("/delete_team_user")
     public ResultVO deleteTeamUser(@RequestParam("tid") String tid,
                                    @RequestParam("uid") String uid) {
-        teamService.deleteTeamUser(tid, uid);
+        TeamDTO teamDTO = teamService.deleteTeamUser(tid, uid);
+        if (teamDTO.getStateCode().equals(TeamEnum.CREATED_NUMBER_DELETED_FAIL.getStateCode())) {
+            return ResultVOUtil.fail(TeamEnum.CREATED_NUMBER_DELETED_FAIL.getStateCode(), TeamEnum.CREATED_NUMBER_DELETED_FAIL.getStateMsg());
+        }
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 
-    // public ResultVO disbandGroup(@RequestParam("uid") String uid,
-    //                              @RequestParam("tid") String tid) {
-    //
-    // }
+    /**
+     * 解散项目组
+     *
+     * @param uid 操作用户uid，必须是tid的creator
+     * @param tid 项目组tid
+     * @return
+     */
+    @PostMapping("/disband_group")
+    public ResultVO disbandGroup(@RequestParam("uid") String uid,
+                                 @RequestParam("tid") String tid) {
+        TeamDTO teamDTO = teamService.disbandGroup(uid, tid);
+        if (teamDTO.getStateCode().equals(TeamEnum.PERMISSION_DENIED.getStateCode())) {
+            return ResultVOUtil.fail(TeamEnum.PERMISSION_DENIED.getStateCode(), TeamEnum.PERMISSION_DENIED.getStateMsg());
+        }
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
+    }
 }

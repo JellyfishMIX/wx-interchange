@@ -1,13 +1,9 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
 import com.jellyfishmix.wxinterchange.dao.*;
-import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
-import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
-import com.jellyfishmix.wxinterchange.dto.TeamInfoDTO;
-import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
+import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.*;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
-import com.jellyfishmix.wxinterchange.enums.TeamUserEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
 import com.jellyfishmix.wxinterchange.service.FileService;
@@ -44,6 +40,8 @@ public class TeamServiceImpl implements TeamService {
     private FileService fileService;
     @Resource
     private TeamAvatarDao teamAvatarDao;
+    @Resource
+    private CollectionFileDao collectionFileDao;
     @Autowired
     private RedisLockService redisLockService;
 
@@ -182,26 +180,17 @@ public class TeamServiceImpl implements TeamService {
         }
         this.fileInfoDao.insertList(fileInfoList);
 
-        // 加分布式锁，避免出现S锁和X锁循环等待死锁
-        // 分布式锁过期时间
+        // 加redis分布式锁，避免检索唯一键tid在读操作、写操作时出现S锁和X锁循环等待造成死锁
+        String identifierForLock = tid.concat("-uploadFileListToTeam");
         int timeout = 20 * 1000;
-        long time = System.currentTimeMillis() + timeout;
-        // 加锁
-        String tidForLock = tid.concat("-uploadFileToTeam");
-        while (!redisLockService.lock(tidForLock, String.valueOf(time))) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
 
         this.teamFileDao.insertList(teamFileList);
         // 修改项目组文件计数
         this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, fileInfoList.size());
 
-        // 解锁
-        redisLockService.unlock(tidForLock, String.valueOf(time));
+        // 分布式锁解锁
+        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
     }
 
     /**
@@ -307,31 +296,33 @@ public class TeamServiceImpl implements TeamService {
         // 此处查询需要在fileInfoDao.deleteByFileId()的前面，从七牛云bucket删除资源需要使用查出的数据
         FileInfoDTO fileInfoDTO = fileInfoDao.queryByFileId(fileId);
 
-        // 加redis分布式锁，避免检索唯一键tid（读操作）、写操作时出现S锁和X锁循环等待造成死锁
+        // 加redis分布式锁，避免检索唯一键tid在读操作、写操作时出现S锁和X锁循环等待造成死锁
         // 分布式锁过期时间
+        String identifierForLock = tid.concat("-deleteFileFromTeam");
         int timeout = 10 * 1000;
-        String tidForLock = tid.concat("-deleteFileFromTeam");
-        redisLockService.lock(tidForLock, String.valueOf(timeout));
+        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
 
         teamFileDao.deleteByFileId(fileId);
         // 修改项目组文件计数
         this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -1);
 
-        // 解锁
-        redisLockService.unlock(tidForLock, String.valueOf(timeout));
+        // 分布式锁解锁
+        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
 
         // 不可调换顺序，否则会造成teamFileDao.deleteListByFileId()时tid外键报错
         fileInfoDao.deleteByFileId(fileId);
 
+        // 收藏集中将被删除的fileId替换成404，对应404文件
+        collectionFileDao.updateFileIdTo404(fileId);
         // 从七牛云bucket删除资源
         fileService.deleteFromQiniuBucket(fileInfoDTO.getFileHash(), fileInfoDTO.getFileKey());
     }
 
     /**
-     * 删除项目组内的文件
+     * 删除项目组内的文件（多个）
      *
      * @param tid 项目组tid
-     * @param fileInfoList 文件信息List
+     * @param fileInfoList 文件信息list
      * @return
      */
     @Override
@@ -340,24 +331,28 @@ public class TeamServiceImpl implements TeamService {
         // 此处查询需要在fileInfoDao.deleteByFileId()的前面，从七牛云bucket删除资源需要使用查出的数据
         List<FileInfo> fileInfoListFromQuery = fileInfoDao.queryListByFileId(fileInfoList);
 
-        // 加redis分布式锁，避免检索唯一键tid（读操作）、写操作时出现S锁和X锁循环等待造成死锁
+        // 加redis分布式锁，避免检索唯一键tid在读操作、写操作时出现S锁和X锁循环等待造成死锁
         // 分布式锁过期时间
+        String identifierForLock = tid.concat("-deleteFileListFromTeam");
         int timeout = 20 * 1000;
-        String tidForLock = tid.concat("-deleteFileListFromTeam");
-        redisLockService.lock(tidForLock, String.valueOf(timeout));
+        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
 
         teamFileDao.deleteListByFileId(fileInfoList);
         // 修改项目组文件计数
         this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -fileInfoList.size());
 
-        // 解锁
-        redisLockService.unlock(tidForLock, String.valueOf(timeout));
+        // 分布式锁解锁
+        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
 
         // 不可调换顺序，否则会造成teamFileDao.deleteListByFileId()时tid外键报错
-        fileInfoDao.deleteListByFileId(fileInfoList);
+        fileInfoDao.deleteListByFileIdOfFileInfo(fileInfoList);
 
-        // 从七牛云bucket删除资源
         for (int i = 0; i < fileInfoListFromQuery.size(); i++) {
+            // 收藏集中将被删除的fileId替换成404，对应404文件
+            String fileId = fileInfoListFromQuery.get(i).getFileId();
+            collectionFileDao.updateFileIdTo404(fileId);
+
+            // 从七牛云bucket删除资源
             fileService.deleteFromQiniuBucket(fileInfoListFromQuery.get(i).getFileHash(), fileInfoListFromQuery.get(i).getFileKey());
         }
     }
@@ -367,24 +362,25 @@ public class TeamServiceImpl implements TeamService {
      *
      * @param tid 项目组tid
      * @param uid 用户uid
+     * @return 包含stateCode和stateMsg的TeamDTO
      */
     @Override
     @Transactional(rollbackFor = TeamException.class)
-    public void deleteTeamUser(String tid, String uid) {
+    public TeamDTO deleteTeamUser(String tid, String uid) {
         TeamUser teamUserFromQuery = teamUserDao.queryTeamUserByTidAndUid(tid, uid);
 
-        // 加redis分布式锁，避免检索唯一键tid（读操作）、写操作时出现S锁和X锁循环等待造成死锁
+        // 加redis分布式锁，避免检索唯一键tid在读操作、写操作时出现S锁和X锁循环等待造成死锁
         // 分布式锁过期时间
+        String identifierForLock = tid.concat("-deleteTeamUser");
         int timeout = 10 * 1000;
-        String tidForLock = tid.concat("-deleteTeamUser");
-        redisLockService.lock(tidForLock, String.valueOf(timeout));
+        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
 
-        if (teamUserFromQuery.getUserGrade().equals(TeamUserEnum.CREATED_NUMBER.getStateCode())) {
-            throw new TeamException(TeamEnum.CREATED_NUMBER_DELETED_FAIL);
-        } else if (teamUserFromQuery.getUserGrade().equals(TeamUserEnum.MANAGED_NUMBER.getStateCode())) {
+        if (teamUserFromQuery.getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
+            return new TeamDTO(TeamEnum.CREATED_NUMBER_DELETED_FAIL);
+        } else if (teamUserFromQuery.getUserGrade().equals(TeamEnum.MANAGER.getStateCode())) {
             this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_MANAGED_NUMBER_COUNT, -1);
             userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_MANAGED_TEAM_COUNT, -1);
-        } else if (teamUserFromQuery.getUserGrade().equals(TeamUserEnum.JOINED_NUMBER.getStateCode())) {
+        } else if (teamUserFromQuery.getUserGrade().equals(TeamEnum.JOINER.getStateCode())) {
             this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_JOINED_NUMBER_COUNT, -1);
             userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, -1);
         }
@@ -392,7 +388,69 @@ public class TeamServiceImpl implements TeamService {
 
         teamUserDao.delete(tid, uid);
 
-        // 解锁
-        redisLockService.unlock(tidForLock, String.valueOf(timeout));
+        // 分布式锁解锁
+        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+
+        return new TeamDTO(TeamEnum.SUCCESS);
+    }
+
+    /**
+     * 解散项目组
+     *
+     * @param uid 用户uid
+     * @param tid 项目组tid
+     * @return 包含stateCode和stateMsg的TeamDTO
+     */
+    @Override
+    @Transactional(rollbackFor = TeamException.class)
+    public TeamDTO disbandGroup(String uid, String tid) {
+        // 校验uid是否为tid的creator
+        TeamUser teamUser = teamUserDao.queryTeamUserByTidAndUid(tid, uid);
+        if (!teamUser.getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
+            return new TeamDTO(TeamEnum.PERMISSION_DENIED);
+        }
+
+        // 加redis分布式锁，避免检索唯一键tid, uid 在读操作、写操作时出现S锁和X锁循环等待造成死锁
+        // 分布式锁过期时间
+        String identifierForLock = tid.concat("-disbandGroup");
+        int timeout = 100 * 1000;
+        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
+
+        // 修改user_info中的count
+        List<TeamUserDTO> teamUserDTOList = teamUserDao.queryTeamUserListByTid(tid);
+        for (int i = 0; i < teamUserDTOList.size(); i++) {
+            if (teamUserDTOList.get(i).getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
+                userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_CREATED_TEAM_COUNT, -1);
+            } else if (teamUserDTOList.get(i).getUserGrade().equals(TeamEnum.MANAGER.getStateCode())) {
+                userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_MANAGED_TEAM_COUNT, -1);
+            } else if (teamUserDTOList.get(i).getUserGrade().equals(TeamEnum.JOINER.getStateCode())) {
+                userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, -1);
+            }
+        }
+
+        // 删除全部的team_user
+        teamUserDao.deleteAllByTid(tid);
+        // 查询全部的team_file
+        List<TeamFileDTO> teamFileDTOList = teamFileDao.queryAllByTid(tid);
+        // 删除全部的team_file
+        teamFileDao.deleteAllByTid(tid);
+        // 删除相关的file_info
+        fileInfoDao.deleteListByFileIdOfTeamFile(teamFileDTOList);
+        // 删除team_info
+        teamInfoDao.deleteByTid(tid);
+
+        // 分布式锁解锁
+        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+
+        for (int i = 0; i < teamFileDTOList.size(); i++) {
+            // 收藏集中将被删除的fileId替换成404，对应404文件
+            String fileId = teamFileDTOList.get(i).getFileId();
+            collectionFileDao.updateFileIdTo404(fileId);
+
+            // 从七牛云bucket删除资源
+            fileService.deleteFromQiniuBucket(teamFileDTOList.get(i).getFileHash(), teamFileDTOList.get(i).getFileKey());
+        }
+
+        return new TeamDTO(TeamEnum.SUCCESS);
     }
 }

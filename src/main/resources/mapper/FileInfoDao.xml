@@ -101,13 +101,21 @@
         delete from wx_interchange.file_info where file_id = #{fileId}
     </delete>
 
-    <!--通过fileId批量删除-->
-    <delete id="deleteListByFileId">
+    <!--通过fileInfo中的fileId批量删除-->
+    <delete id="deleteListByFileIdOfFileInfo">
         delete from wx_interchange.file_info
-        where
-        file_id in
+        where file_id in
         <foreach collection="list" item="fileInfo" index="index" open="(" separator="," close=")">
             #{fileInfo.fileId}
+        </foreach>
+    </delete>
+
+    <!--通过teamFile中的fileId批量删除-->
+    <delete id="deleteListByFileIdOfTeamFile">
+        delete from wx_interchange.file_info
+        where file_id in
+        <foreach collection="list" item="teamFile" index="index" open="(" separator="," close=")">
+            #{teamFile.fileId}
         </foreach>
     </delete>
 </mapper>
