@@ -44,14 +44,6 @@ public interface TeamAvatarDao {
     int insert(TeamAvatar teamAvatar);
 
     /**
-     * 修改数据
-     *
-     * @param teamAvatar 实例对象
-     * @return 影响行数
-     */
-    int update(TeamAvatar teamAvatar);
-
-    /**
      * 通过avatarId删除
      *
      * @param avatarId 项目组头像avatarId

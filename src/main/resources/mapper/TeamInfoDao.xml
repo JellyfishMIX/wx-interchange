@@ -49,13 +49,13 @@
     <update id="updateByTid">
         update wx_interchange.team_info
         <set>
-            <if test="teamName != null">
+            <if test="teamName != null and teamName != ''">
                 team_name = #{teamName},
             </if>
-            <if test="avatarUrl != null">
+            <if test="avatarUrl != null and avatarUrl != ''">
                 avatar_url = #{avatarUrl},
             </if>
-            <if test="grade != null">
+            <if test="grade != null and grade != ''">
                 grade = #{grade},
             </if>
             <if test="numberCount != null">

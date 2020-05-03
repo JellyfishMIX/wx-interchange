@@ -53,14 +53,6 @@ public interface TeamFileDao {
     void insertList(List<TeamFile> teamFileList);
 
     /**
-     * 通过tid和fileId修改数据
-     *
-     * @param teamFile 实例对象
-     * @return 影响行数
-     */
-    int updateByTidAndFileId(TeamFile teamFile);
-
-    /**
      * 通过fileId删除数据
      *
      * @param fileId 文件fileId

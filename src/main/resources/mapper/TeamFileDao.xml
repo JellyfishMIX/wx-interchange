@@ -68,23 +68,6 @@
         </foreach>
     </insert>
 
-    <!--通过tid和fileId修改数据-->
-    <update id="update">
-        update wx_interchange.team_file
-        <set>
-            <if test="tid != null">
-                tid = #{tid},
-            </if>
-            <if test="fileId != null">
-                file_id = #{fileId},
-            </if>
-            <if test="uid != null">
-                uid = #{uid},
-            </if>
-        </set>
-        where file_id = #{fileId} and tid = #{tid}
-    </update>
-
     <!--通过fileId删除数据-->
     <delete id="deleteByFileId">
         delete from wx_interchange.team_file where file_id = #{fileId}

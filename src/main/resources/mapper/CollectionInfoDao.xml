@@ -38,10 +38,10 @@
     <update id="update">
         update wx_interchange.collection_info
         <set>
-            <if test="collectionName != null">
+            <if test="collectionName != null and collectionName != ''">
                 collection_name = #{collectionName},
             </if>
-            <if test="uid != null">
+            <if test="uid != null and uid != ''">
                 uid = #{uid},
             </if>
             <if test="fileCount != null">

@@ -273,4 +273,9 @@ public class TeamController {
         teamService.deleteTeamUser(tid, uid);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
+
+    // public ResultVO disbandGroup(@RequestParam("uid") String uid,
+    //                              @RequestParam("tid") String tid) {
+    //
+    // }
 }
