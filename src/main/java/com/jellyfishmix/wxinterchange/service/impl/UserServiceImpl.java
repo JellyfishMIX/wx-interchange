@@ -98,6 +98,7 @@ public class UserServiceImpl implements UserService {
         // 每个新用户默认拥有一个默认收藏集
         CollectionInfo collectionInfo = new CollectionInfo();
         collectionInfo.setUid(userInfo.getUid());
+        collectionInfo.setCollectionName("默认收藏集");
         collectionService.createCollection(collectionInfo);
         return userInfoDTO;
     }

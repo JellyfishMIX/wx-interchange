@@ -111,7 +111,7 @@ create table `team_avatar` (
 create table `collection_info` (
     `id` int not null auto_increment comment '代理主键',
     `collection_id` varchar(32) not null comment '收藏集collection_id',
-    `collection_name` varchar(64) not null default '收藏集' comment '收藏集名称',
+    `collection_name` varchar(64) not null default '默认收藏集' comment '收藏集名称',
     `uid` varchar(32) not null comment '创建者uid',
     `file_count` int not null default 0 comment '收藏集文件计数',
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',

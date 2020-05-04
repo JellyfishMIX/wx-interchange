@@ -309,11 +309,12 @@ public class TeamServiceImpl implements TeamService {
         // 分布式锁解锁
         redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
 
+        // 收藏集中将被删除的fileId替换成404，对应404文件
+        collectionFileDao.updateFileIdTo404(fileId);
+
         // 不可调换顺序，否则会造成teamFileDao.deleteListByFileId()时tid外键报错
         fileInfoDao.deleteByFileId(fileId);
 
-        // 收藏集中将被删除的fileId替换成404，对应404文件
-        collectionFileDao.updateFileIdTo404(fileId);
         // 从七牛云bucket删除资源
         fileService.deleteFromQiniuBucket(fileInfoDTO.getFileHash(), fileInfoDTO.getFileKey());
     }
@@ -344,15 +345,17 @@ public class TeamServiceImpl implements TeamService {
         // 分布式锁解锁
         redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
 
+        // 收藏集中将被删除的fileId替换成404，对应404文件
+        for (int i = 0; i < fileInfoListFromQuery.size(); i++) {
+            String fileId = fileInfoListFromQuery.get(i).getFileId();
+            collectionFileDao.updateFileIdTo404(fileId);
+        }
+
         // 不可调换顺序，否则会造成teamFileDao.deleteListByFileId()时tid外键报错
         fileInfoDao.deleteListByFileIdOfFileInfo(fileInfoList);
 
+        // 从七牛云bucket删除资源
         for (int i = 0; i < fileInfoListFromQuery.size(); i++) {
-            // 收藏集中将被删除的fileId替换成404，对应404文件
-            String fileId = fileInfoListFromQuery.get(i).getFileId();
-            collectionFileDao.updateFileIdTo404(fileId);
-
-            // 从七牛云bucket删除资源
             fileService.deleteFromQiniuBucket(fileInfoListFromQuery.get(i).getFileHash(), fileInfoListFromQuery.get(i).getFileKey());
         }
     }
