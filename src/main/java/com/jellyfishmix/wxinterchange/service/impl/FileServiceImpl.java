@@ -4,6 +4,7 @@ import com.jellyfishmix.wxinterchange.config.QiniuConfig;
 import com.jellyfishmix.wxinterchange.dao.TeamAvatarDao;
 import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
 import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
+import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamAvatar;
 import com.jellyfishmix.wxinterchange.service.FileService;
 import com.qiniu.common.QiniuException;
@@ -40,7 +41,18 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public FileInfoDTO queryByFileId(String fileId) {
-        return this.fileInfoDao.queryByFileId(fileId);
+        return fileInfoDao.queryByFileId(fileId);
+    }
+
+    /**
+     * 通过fileId列表查询文件信息列表
+     *
+     * @param fileInfoList 列表
+     * @return
+     */
+    @Override
+    public List<FileInfoDTO> queryListByFileIdList(List<FileInfo> fileInfoList) {
+        return fileInfoDao.queryDTOListByFileId(fileInfoList);
     }
 
     /**

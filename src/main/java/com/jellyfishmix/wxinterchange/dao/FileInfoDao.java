@@ -3,7 +3,6 @@ package com.jellyfishmix.wxinterchange.dao;
 import com.jellyfishmix.wxinterchange.dto.TeamFileDTO;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
-import com.jellyfishmix.wxinterchange.entity.TeamFile;
 
 import java.util.List;
 
@@ -24,12 +23,20 @@ public interface FileInfoDao {
     FileInfoDTO queryByFileId(String fileId);
 
     /**
-     * 通过一组tid查询对应的
+     * 通过fileId查询多个文件信息
      *
      * @param fileInfoList 包含tid的一组List
      * @return
      */
     List<FileInfo> queryListByFileId(List<FileInfo> fileInfoList);
+
+    /**
+     * 通过fileId查询多个文件信息DTO
+     *
+     * @param fileInfoList 列表
+     * @return
+     */
+    List<FileInfoDTO> queryDTOListByFileId(List<FileInfo> fileInfoList);
 
     /**
      * 通过fileHash查询单个文件信息

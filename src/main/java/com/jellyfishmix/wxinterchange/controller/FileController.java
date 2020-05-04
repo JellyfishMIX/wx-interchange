@@ -1,17 +1,22 @@
 package com.jellyfishmix.wxinterchange.controller;
 
 import com.jellyfishmix.wxinterchange.config.QiniuConfig;
+import com.jellyfishmix.wxinterchange.converter.JSONArrayToListConverter;
 import com.jellyfishmix.wxinterchange.dto.FileInfoDTO;
+import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
 import com.jellyfishmix.wxinterchange.service.FileService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,5 +63,20 @@ public class FileController {
     public ResultVO queryFileInfoByFileId(@RequestParam("fileId") String fileId) {
         FileInfoDTO fileInfoDTO = fileService.queryByFileId(fileId);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTO);
+    }
+
+    /**
+     * 通过fileId列表查询文件信息列表
+     *
+     * @param jsonStr jsonStr
+     * @return
+     */
+    @GetMapping("/query_file_info_list_by_file_id_list")
+    public ResultVO queryFileInfoListByFileIdList(@RequestBody String jsonStr) {
+        JSONObject jsonObject = new JSONObject(jsonStr);
+        JSONArray fileInfoJSONArray = jsonObject.getJSONArray("fileInfoList");
+        List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToFileIdList(fileInfoJSONArray);
+        List<FileInfoDTO> fileInfoDTOList = fileService.queryListByFileIdList(fileInfoList);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTOList);
     }
 }

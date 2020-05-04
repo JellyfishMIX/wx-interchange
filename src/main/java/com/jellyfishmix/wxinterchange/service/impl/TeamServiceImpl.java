@@ -163,7 +163,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional(rollbackFor = TeamException.class)
-    public void uploadFileToTeam(String tid, String uid, List<FileInfo> fileInfoList) {
+    public void uploadFileListToTeam(String tid, String uid, List<FileInfo> fileInfoList) {
         List<TeamFile>  teamFileList = new ArrayList<>();
         for (int i = 0; i < fileInfoList.size(); i++) {
             String fileId = UniqueKeyUtil.getUniqueKey();
@@ -201,9 +201,9 @@ public class TeamServiceImpl implements TeamService {
      * @param fileInfoList 列表
      */
     @Override
-    public void addFileToTeamByFileId(String tid, String uid, List<FileInfo> fileInfoList) {
+    public void addFileListToTeamByFileIdList(String tid, String uid, List<FileInfo> fileInfoList) {
         List<FileInfo> fileInfoListFromQuery = fileInfoDao.queryListByFileId(fileInfoList);
-        this.uploadFileToTeam(tid, uid, fileInfoListFromQuery);
+        this.uploadFileListToTeam(tid, uid, fileInfoListFromQuery);
     }
 
     /**
