@@ -154,7 +154,24 @@ public class TeamController {
         List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToFileInfoList(fileInfoJsonArray);
         String tid = jsonObject.getString("tid");
         String uid = jsonObject.getString("uid");
-        teamService.uploadFileListToTeam(tid, uid, fileInfoList);
+        teamService.uploadFileToTeam(tid, uid, fileInfoList);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
+    }
+
+    /**
+     * 将fileId文件添加至项目组
+     *
+     * @param jsonStr jsonStr
+     * @return
+     */
+    @RequestMapping("/add_file_to_team_by_file_id")
+    public ResultVO addFileToTeamByFileId(@RequestBody String jsonStr) {
+        JSONObject jsonObject = new JSONObject(jsonStr);
+        JSONArray fileInfoJsonArray = jsonObject.getJSONArray("fileInfoList");
+        List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToFileIdList(fileInfoJsonArray);
+        String tid = jsonObject.getString("tid");
+        String uid = jsonObject.getString("uid");
+        teamService.addFileToTeamByFileId(tid, uid, fileInfoList);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 
@@ -254,7 +271,7 @@ public class TeamController {
     public ResultVO deleteFileFromTeam(@RequestBody String jsonStr) {
         JSONObject jsonObject = new JSONObject(jsonStr);
         JSONArray fileInfoJsonArray = jsonObject.getJSONArray("fileInfoList");
-        List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToTidList(fileInfoJsonArray);
+        List<FileInfo> fileInfoList = JSONArrayToListConverter.convertToFileIdList(fileInfoJsonArray);
         String tid = jsonObject.getString("tid");
         teamService.deleteFileListFromTeam(tid, fileInfoList);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());

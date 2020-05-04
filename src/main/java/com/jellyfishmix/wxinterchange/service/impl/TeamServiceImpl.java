@@ -163,7 +163,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional(rollbackFor = TeamException.class)
-    public void uploadFileListToTeam(String tid, String uid, List<FileInfo> fileInfoList) {
+    public void uploadFileToTeam(String tid, String uid, List<FileInfo> fileInfoList) {
         List<TeamFile>  teamFileList = new ArrayList<>();
         for (int i = 0; i < fileInfoList.size(); i++) {
             String fileId = UniqueKeyUtil.getUniqueKey();
@@ -191,6 +191,19 @@ public class TeamServiceImpl implements TeamService {
 
         // 分布式锁解锁
         redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+    }
+
+    /**
+     * 将fileId文件添加至项目组
+     *
+     * @param tid          项目组tid
+     * @param uid          操作者uid
+     * @param fileInfoList 列表
+     */
+    @Override
+    public void addFileToTeamByFileId(String tid, String uid, List<FileInfo> fileInfoList) {
+        List<FileInfo> fileInfoListFromQuery = fileInfoDao.queryListByFileId(fileInfoList);
+        this.uploadFileToTeam(tid, uid, fileInfoListFromQuery);
     }
 
     /**

@@ -83,7 +83,16 @@ public interface TeamService {
      * @param uid 上传者uid
      * @param fileInfoList 文件信息List
      */
-    void uploadFileListToTeam(String tid, String uid, List<FileInfo> fileInfoList);
+    void uploadFileToTeam(String tid, String uid, List<FileInfo> fileInfoList);
+
+    /**
+     * 将fileId文件添加至项目组
+     *
+     * @param tid 项目组tid
+     * @param uid 操作者uid
+     * @param fileInfoList 列表
+     */
+    void addFileToTeamByFileId(String tid, String uid, List<FileInfo> fileInfoList);
 
     /**
      * 向项目组上传项目组头像文件

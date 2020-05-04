@@ -31,7 +31,7 @@ public class JSONArrayToListConverter {
         return fileInfoList;
     }
 
-    public static List<FileInfo> convertToTidList(JSONArray jsonArray) {
+    public static List<FileInfo> convertToFileIdList(JSONArray jsonArray) {
         List<FileInfo> fileInfoList = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonArrayElement = jsonArray.getJSONObject(i);
