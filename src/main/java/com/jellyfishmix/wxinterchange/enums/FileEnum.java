@@ -7,9 +7,10 @@ import lombok.Getter;
  * @date 2020/4/17 10:43 上午
  */
 @Getter
-public enum  FileEnum implements StateCodeEnum {
+public enum FileEnum implements StateCodeEnum {
     // 操作处理结果Enum
-    SUCCESS(0, "操作成功");
+    SUCCESS(0, "操作成功"),
+    PERMISSION_DENIED(1, "权限不足");
 
     private Integer stateCode;
     private String stateMsg;

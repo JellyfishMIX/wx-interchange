@@ -29,6 +29,14 @@ public interface FileService {
     List<FileInfoDTO> queryListByFileIdList(List<FileInfo> fileInfoList);
 
     /**
+     * 更新文件信息
+     *
+     * @param fileInfo 文件信息
+     * @return 更新后的文件信息
+     */
+    FileInfoDTO updateFileInfo(FileInfo fileInfo);
+
+    /**
      * 从七牛云bucket中删除文件
      *
      * @param fileHash 全局唯一的文件Hash值，用来检查是否可以从七牛云bucket中删除

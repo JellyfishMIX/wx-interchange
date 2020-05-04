@@ -56,6 +56,18 @@ public class FileServiceImpl implements FileService {
     }
 
     /**
+     * 更新文件信息
+     *
+     * @param fileInfo 文件信息
+     */
+    @Override
+    public FileInfoDTO updateFileInfo(FileInfo fileInfo) {
+        fileInfoDao.update(fileInfo);
+        FileInfoDTO fileInfoDTO = fileInfoDao.queryByFileId(fileInfo.getFileId());
+        return fileInfoDTO;
+    }
+
+    /**
      * 从七牛云bucket中删除文件
      *
      * @param fileHash 全局唯一的文件Hash值，用来检查是否可以从七牛云bucket中删除

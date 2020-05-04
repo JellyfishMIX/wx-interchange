@@ -79,4 +79,27 @@ public class FileController {
         List<FileInfoDTO> fileInfoDTOList = fileService.queryListByFileIdList(fileInfoList);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTOList);
     }
+
+    /**
+     * 更新文件信息
+     *
+     * @param fileId 文件fileId
+     * @param newFileName 新文件名
+     * @param uid 操作者uid
+     * @return
+     */
+    @PostMapping("/update_file_info")
+    public ResultVO updateFileInfo(@RequestParam("fileId") String fileId,
+                                   @RequestParam("newFileName") String newFileName,
+                                   @RequestParam("uid") String uid) {
+        FileInfoDTO fileInfoDTO = fileService.queryByFileId(fileId);
+        if (!fileInfoDTO.getUid().equals(uid)) {
+            return ResultVOUtil.fail(FileEnum.PERMISSION_DENIED.getStateCode(), FileEnum.PERMISSION_DENIED.getStateMsg());
+        }
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFileId(fileId);
+        fileInfo.setFileName(newFileName);
+        FileInfoDTO fileInfoDTOAfterUpdate = fileService.updateFileInfo(fileInfo);
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTOAfterUpdate);
+    }
 }
