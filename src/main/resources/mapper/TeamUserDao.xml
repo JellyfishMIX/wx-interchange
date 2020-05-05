@@ -15,7 +15,7 @@
         <result property="tid" column="tid" jdbcType="VARCHAR"/>
         <result property="uid" column="uid" jdbcType="VARCHAR"/>
         <result property="teamName" column="team_name" jdbcType="VARCHAR"/>
-        <result property="username" column="username" jdbcType="VARCHAR" />
+        <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="teamAvatarUrl" column="team_avatar_url" jdbcType="VARCHAR"/>
         <result property="userAvatarUrl" column="user_avatar_url" jdbcType="VARCHAR"/>
         <result property="teamGrade" column="team_grade" jdbcType="INTEGER"/>
@@ -31,7 +31,7 @@
         from wx_interchange.team_user
         left join wx_interchange.team_info
         on team_user.tid = team_info.tid
-#         where uid = #{uid} and user_grade = #{userGrade} and team_info.grade != 1
+        <!--where uid = #{uid} and user_grade = #{userGrade} and team_info.grade != 1-->
         where uid = #{uid} and user_grade = #{userGrade}
     </select>
 
