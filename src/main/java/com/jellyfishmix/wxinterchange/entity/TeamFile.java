@@ -3,7 +3,6 @@ package com.jellyfishmix.wxinterchange.entity;
 import lombok.Data;
 
 import java.util.Date;
-import java.io.Serializable;
 
 /**
  * 项目组文件表(TeamFile)实体类

@@ -71,7 +71,7 @@ public class FileController {
      * @param jsonStr jsonStr
      * @return
      */
-    @GetMapping("/query_file_info_list_by_file_id_list")
+    @PostMapping("/query_file_info_list_by_file_id_list")
     public ResultVO queryFileInfoListByFileIdList(@RequestBody String jsonStr) {
         JSONObject jsonObject = new JSONObject(jsonStr);
         JSONArray fileInfoJSONArray = jsonObject.getJSONArray("fileInfoList");

@@ -35,10 +35,10 @@ public class TeamController {
     /**
      * 创建项目组
      *
-     * @param uid 创建者uid
-     * @param teamName 项目组名称
+     * @param uid           创建者uid
+     * @param teamName      项目组名称
      * @param teamAvatarUrl 项目组头像URL
-     * @param teamGrade 项目组等级，官方项目组为1，普通项目组为2，保留0
+     * @param teamGrade     项目组等级，官方项目组为1，普通项目组为2，保留0
      * @return
      */
     @PostMapping("/create_team")
@@ -111,9 +111,9 @@ public class TeamController {
     /**
      * 通过tid查询项目组内的文件列表，分页
      *
-     * @param tid 项目组tid
+     * @param tid       项目组tid
      * @param pageIndex 页码，从1开始
-     * @param pageSize 每页的行数
+     * @param pageSize  每页的行数
      * @return
      */
     @GetMapping("/query_team_file_list_order_by_creation_time")
@@ -127,10 +127,10 @@ public class TeamController {
     /**
      * 通过关键词搜索项目组内的文件
      *
-     * @param tid 项目组tid
-     * @param keyword 关键词
+     * @param tid       项目组tid
+     * @param keyword   关键词
      * @param pageIndex 页码，从1开始
-     * @param pageSize 每页行数
+     * @param pageSize  每页行数
      * @return
      */
     @GetMapping("/search_team_file_list_by_keyword")
@@ -141,6 +141,7 @@ public class TeamController {
         List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tid, keyword, pageIndex, pageSize);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }
+
     /**
      * 向项目组上传文件（.pdf, .docx, .xlsx, .pptx等任意格式的文件），支持多文件
      *
@@ -178,12 +179,12 @@ public class TeamController {
     /**
      * 向项目组上传项目组头像文件（和“修改项目组信息”组合使用）
      *
-     * @param tid tid项目组tid
-     * @param uid 上传者uid
-     * @param fileKey 文件fileKey
+     * @param tid      tid项目组tid
+     * @param uid      上传者uid
+     * @param fileKey  文件fileKey
      * @param fileHash 文件fileHash
      * @param fileName 文件fileName
-     * @param fileUrl 文件URL
+     * @param fileUrl  文件URL
      * @param fileSize 文件大小（以b为单位）
      * @param mimeType 文件类型
      * @return
@@ -213,8 +214,8 @@ public class TeamController {
     /**
      * 修改项目组信息
      *
-     * @param tid 将要修改的项目组的tid
-     * @param newTeamName 新项目组名称，非必须
+     * @param tid              将要修改的项目组的tid
+     * @param newTeamName      新项目组名称，非必须
      * @param newTeamAvatarUrl 新项目组头像URL，非必须
      * @return
      */
@@ -311,3 +312,17 @@ public class TeamController {
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
