@@ -43,6 +43,14 @@ public class TeamUserDTO {
      */
     private Integer userGrade;
     /**
+     * 项目组成员数量
+     */
+    private Integer numberCount;
+    /**
+     * 项目组文件数量
+     */
+    private Integer fileCount;
+    /**
      * 创建时间，自动写入（加入项目组的时间）
      */
     private Date creationTime;

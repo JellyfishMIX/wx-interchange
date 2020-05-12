@@ -26,17 +26,9 @@
     </select>
 
     <select id="queryOfficialTeamList" resultMap="TeamInfoMap">
-        select tid, team_name, avatar_url
+        select tid, team_name, avatar_url, file_count
         from wx_interchange.team_info
         where grade = 1
-    </select>
-
-    <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="TeamInfoMap">
-        select
-          tid, team_name, avatar_url, grade, number_count, created_number_count, managed_number_count, joined_number_count, file_count, creation_time
-        from wx_interchange.team_info
-        limit #{offset}, #{limit}
     </select>
 
     <!--新增所有列-->

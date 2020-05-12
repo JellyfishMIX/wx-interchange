@@ -21,15 +21,6 @@ public interface TeamInfoDao {
     TeamInfo queryByTid(String tid);
 
     /**
-     * 查询指定行数据
-     *
-     * @param offset 查询起始位置
-     * @param limit 查询条数
-     * @return 对象列表
-     */
-    List<TeamInfo> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
-
-    /**
      * 获取官方项目组列表
      *
      * @return

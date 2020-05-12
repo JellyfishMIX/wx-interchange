@@ -84,4 +84,18 @@ public class UserController {
         List<TeamUserDTO> teamUserDTOList = userService.queryTeamListByUidAndUserGrade(uid, userGrade);
         return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
+
+    /**
+     * 获取user相关的项目组列表
+     *
+     * @param uid 用户uid
+     * @param userGrade 查询的官方项目组（1: 我创建的项目组列表，2: 我管理的项目组列表，3: 我加入的项目组列表）
+     * @return
+     */
+    @GetMapping("/query_user_related_team")
+    public ResultVO queryUserRelatedTeam(@RequestParam("uid") String uid,
+                                         @RequestParam("userGrade") Integer userGrade) {
+        List<TeamUserDTO> teamUserDTOList = userService.queryTeamListByUidAndUserGrade(uid, userGrade);
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
+    }
 }
