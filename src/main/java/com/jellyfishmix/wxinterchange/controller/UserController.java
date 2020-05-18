@@ -2,10 +2,8 @@ package com.jellyfishmix.wxinterchange.controller;
 
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
-import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
-import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
 import com.jellyfishmix.wxinterchange.vo.ResultVO;
@@ -26,8 +24,6 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private TeamService teamService;
 
     /**
      * 通过uid查询userInfo
@@ -47,6 +43,7 @@ public class UserController {
     }
 
     /**
+     * @Deprecated 已被合并，新API：com.jellyfishmix.wxinterchange.controller.UserController.queryUserRelatedTeam
      * 获取我创建的项目组列表（非官方项目组，暂时返回官方组）
      *
      * @param uid 用户uid
@@ -60,11 +57,13 @@ public class UserController {
     }
 
     /**
+     * @Deprecated 已被合并，新API：com.jellyfishmix.wxinterchange.controller.UserController.queryUserRelatedTeam
      * 获取我管理的项目组列表（非官方项目组，暂时返回官方组）
      *
      * @param uid 用户uid
      * @return
      */
+    @Deprecated
     @GetMapping("/query_managed_team_list_by_uid")
     public ResultVO queryManagedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 2;
@@ -73,11 +72,13 @@ public class UserController {
     }
 
     /**
+     * @Deprecated 已被合并，新API：com.jellyfishmix.wxinterchange.controller.UserController.queryUserRelatedTeam
      * 获取我加入的项目组列表（非官方项目组，暂时返回官方组）
      *
      * @param uid 用户uid
      * @return
      */
+    @Deprecated
     @GetMapping("/query_joined_team_list_by_uid")
     public ResultVO queryJoinedTeamListByUid(@RequestParam("uid") String uid) {
         Integer userGrade = 3;
