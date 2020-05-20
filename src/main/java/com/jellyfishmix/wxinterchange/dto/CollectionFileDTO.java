@@ -10,10 +10,11 @@ import java.util.Date;
  */
 @Data
 public class CollectionFileDTO {
-    /**
-     * 代理主键
-     */
-    private Integer id;
+    // 无特殊情况不开放id
+    // /**
+    //  * 代理主键
+    //  */
+    // private Integer id;
     /**
      * 收藏集collection_id
      */
@@ -39,11 +40,16 @@ public class CollectionFileDTO {
      */
     private String mimeType;
     /**
+     * 上传者名称
+     */
+    private String username;
+    /**
      * 创建时间，自动写入
      */
     private Date creationTime;
-    /**
-     * 修改时间，自动写入
-     */
-    private Date modifiedTime;
+    // 无特殊情况不开放modifiedTime
+    // /**
+    //  * 修改时间，自动写入
+    //  */
+    // private Date modifiedTime;
 }

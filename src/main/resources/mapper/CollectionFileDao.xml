@@ -16,6 +16,7 @@
         <result property="fileName" column="file_name" jdbcType="VARCHAR"/>
         <result property="fileUrl" column="file_url" jdbcType="VARCHAR"/>
         <result property="fileSize" column="file_size" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="mimeType" column="mime_type" jdbcType="VARCHAR"/>
         <!--无特殊情况不开放modifiedTime-->
         <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
@@ -30,10 +31,12 @@
     <!--查询收藏集文件列表-->
     <select id="queryListByCollectionId" resultMap="CollectionFileDTOMap">
         select
-          collection_id, collection_file.file_id, file_info.file_name, file_info.file_url, file_info.file_size, file_info.mime_type, collection_file.creation_time
+          collection_id, collection_file.file_id, file_info.file_name, file_info.file_url, file_info.file_size, file_info.mime_type, file_info.uid, user_info.username, collection_file.creation_time
         from wx_interchange.collection_file
         join wx_interchange.file_info
-            on collection_file.file_id = file_info.file_id
+        on collection_file.file_id = file_info.file_id
+        join wx_interchange.user_info
+        on file_info.uid = user_info.uid
         where collection_id = #{collectionId}
         order by creation_time desc
         limit #{offset}, #{limit}

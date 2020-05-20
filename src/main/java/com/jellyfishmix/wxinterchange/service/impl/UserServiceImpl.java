@@ -1,14 +1,17 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.dao.TeamInfoDao;
 import com.jellyfishmix.wxinterchange.dao.TeamUserDao;
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.CollectionInfo;
+import com.jellyfishmix.wxinterchange.entity.TeamInfo;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.UserException;
 import com.jellyfishmix.wxinterchange.dao.UserInfoDao;
 import com.jellyfishmix.wxinterchange.service.CollectionService;
+import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,10 @@ public class UserServiceImpl implements UserService {
     private UserInfoDao userInfoDao;
     @Resource
     private TeamUserDao teamUserDao;
+    @Resource
+    private TeamInfoDao teamInfoDao;
+    @Autowired
+    private TeamService teamService;
     @Autowired
     private CollectionService collectionService;
 
@@ -89,6 +96,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = UserException.class)
     public UserInfoDTO insertUserInfo(UserInfo userInfo) {
+        String uid = userInfo.getUid();
         int effectedNum = userInfoDao.insertUserInfo(userInfo);
         if (effectedNum <= 0) {
             throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
@@ -97,9 +105,15 @@ public class UserServiceImpl implements UserService {
 
         // 每个新用户默认拥有一个默认收藏集
         CollectionInfo collectionInfo = new CollectionInfo();
-        collectionInfo.setUid(userInfo.getUid());
+        collectionInfo.setUid(uid);
         collectionInfo.setCollectionName("默认收藏集");
         collectionService.createCollection(collectionInfo);
+
+        // 每个新用户默认加入所有官方项目组
+        List<TeamInfo> officialTeamInfoList = teamInfoDao.queryOfficialTeamList();
+        for (TeamInfo officialTeamInfo : officialTeamInfoList) {
+            teamService.joinTeam(officialTeamInfo.getTid(), uid);
+        }
         return userInfoDTO;
     }
 
