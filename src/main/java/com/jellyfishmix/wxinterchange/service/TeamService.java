@@ -59,6 +59,15 @@ public interface TeamService {
     List<TeamFileDTO> queryTeamFileListOrderByCreationTime(String tid, int pageIndex, int pageSize);
 
     /**
+     * 查询单个项目组成员等级
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    TeamUser queryOneTeamUser(String tid, String uid);
+
+    /**
      * 通过关键词搜索项目组内的文件
      *
      * @param tid 项目组tid

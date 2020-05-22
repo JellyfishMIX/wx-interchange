@@ -118,6 +118,19 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
+     * 查询单个项目组成员等级
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    @Override
+    public TeamUser queryOneTeamUser(String tid, String uid) {
+        TeamUser teamUser = teamUserDao.queryTeamUserByTidAndUid(tid, uid);
+        return teamUser;
+    }
+
+    /**
      * 通过关键词搜索项目组内的文件
      *
      * @param tid       项目组tid

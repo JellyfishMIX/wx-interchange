@@ -55,7 +55,7 @@
         where tid = #{tid}
     </select>
 
-    <!--通过tid和uid查询单条teamUser，用于检验当前uid用户是否已加入当前tid项目组-->
+    <!--通过tid和uid查询单条teamUser-->
     <select id="queryTeamUserByTidAndUid" resultMap="TeamUserMap">
         select tid, uid, user_grade
         from wx_interchange.team_user

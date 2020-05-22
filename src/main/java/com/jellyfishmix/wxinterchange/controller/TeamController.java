@@ -129,6 +129,20 @@ public class TeamController {
     }
 
     /**
+     * 查询单个项目组成员等级
+     *
+     * @param tid 项目组tid
+     * @param uid 用户uid
+     * @return
+     */
+    @GetMapping("/query_user_grade")
+    public ResultVO queryUserGrade(@RequestParam("tid") String tid,
+                                   @RequestParam("uid") String uid) {
+        TeamUser teamUser = teamService.queryOneTeamUser(tid, uid);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamUser);
+    }
+
+    /**
      * 通过关键词搜索项目组内的文件
      *
      * @param tid       项目组tid
