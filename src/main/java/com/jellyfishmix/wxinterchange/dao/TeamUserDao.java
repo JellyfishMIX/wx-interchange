@@ -22,12 +22,22 @@ public interface TeamUserDao {
     List<TeamUserDTO> queryTeamListByUidAndUserGrade(@Param("uid") String uid, @Param("userGrade") Integer userGrade);
 
     /**
-     * 通过tid查询项目组成员列表
+     * 通过tid查询项目组成员列表（分页）
+     *
+     * @param tid 项目组tid
+     * @param offset 查询起始位置
+     * @param limit 查询条数
+     * @return
+     */
+    List<TeamUserDTO> queryTeamUserListByTid(@Param("tid") String tid, @Param("offset") int offset, @Param("limit") int limit);
+
+    /**
+     * 通过tid查询项目组成员列表（所有）
      *
      * @param tid 项目组tid
      * @return
      */
-    List<TeamUserDTO> queryTeamUserListByTid(String tid);
+    List<TeamUserDTO> queryAllTeamUserListByTid(String tid);
 
     /**
      * 通过tid和uid查询单条teamUser

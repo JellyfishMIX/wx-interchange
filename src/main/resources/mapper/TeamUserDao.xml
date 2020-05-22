@@ -36,8 +36,18 @@
         where uid = #{uid} and user_grade = #{userGrade} and team_info.grade != 1
     </select>
 
-    <!--通过tid查询项目组成员列表-->
+    <!--通过tid查询项目组成员列表（分页）-->
     <select id="queryTeamUserListByTid" resultMap="TeamUserDTOMap">
+        select team_user.uid, user_info.username, user_info.avatar_url `user_avatar_url`, user_grade, team_user.creation_time
+        from wx_interchange.team_user
+        left join wx_interchange.user_info
+        on team_user.uid = user_info.uid
+        where tid = #{tid}
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过tid查询项目组成员列表（所有）-->
+    <select id="queryAllTeamUserListByTid" resultMap="TeamUserDTOMap">
         select team_user.uid, user_info.username, user_info.avatar_url `user_avatar_url`, user_grade, team_user.creation_time
         from wx_interchange.team_user
         left join wx_interchange.user_info

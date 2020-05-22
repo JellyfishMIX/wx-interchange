@@ -79,11 +79,14 @@ public class TeamServiceImpl implements TeamService {
      * 通过tid查询项目组成员列表
      *
      * @param tid 项目组tid
+     * @param pageIndex 页码，从1开始
+     * @param pageSize 每页容量
      * @return
      */
     @Override
-    public List<TeamUserDTO> queryTeamUserListByTid(String tid) {
-        List<TeamUserDTO> teamUserList = teamUserDao.queryTeamUserListByTid(tid);
+    public List<TeamUserDTO> queryTeamUserListByTid(String tid, int pageIndex, int pageSize) {
+        int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
+        List<TeamUserDTO> teamUserList = teamUserDao.queryTeamUserListByTid(tid, rowIndex, pageSize);
         return teamUserList;
     }
 
@@ -433,7 +436,7 @@ public class TeamServiceImpl implements TeamService {
         long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
 
         // 修改user_info中的count
-        List<TeamUserDTO> teamUserDTOList = teamUserDao.queryTeamUserListByTid(tid);
+        List<TeamUserDTO> teamUserDTOList = teamUserDao.queryAllTeamUserListByTid(tid);
         for (int i = 0; i < teamUserDTOList.size(); i++) {
             if (teamUserDTOList.get(i).getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
                 userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_CREATED_TEAM_COUNT, -1);

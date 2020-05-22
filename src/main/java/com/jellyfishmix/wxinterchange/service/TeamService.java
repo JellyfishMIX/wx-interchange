@@ -33,9 +33,11 @@ public interface TeamService {
      * 通过tid查询项目组成员列表
      *
      * @param tid 项目组tid
+     * @param pageIndex 页码，从1开始
+     * @param pageSize 每页容量
      * @return
      */
-    List<TeamUserDTO> queryTeamUserListByTid(String tid);
+    List<TeamUserDTO> queryTeamUserListByTid(String tid, int pageIndex, int pageSize);
 
     /**
      * 通过tid和uid查询单条teamUser

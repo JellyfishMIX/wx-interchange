@@ -89,11 +89,15 @@ public class TeamController {
      * 通过tid查询项目组成员列表
      *
      * @param tid 项目组tid
+     * @param pageIndex 页码，从1开始
+     * @param pageSize  每页行数
      * @return
      */
     @GetMapping("/query_team_user_list_by_tid")
-    public ResultVO queryTeamUserListByTid(@RequestParam("tid") String tid) {
-        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamUserListByTid(tid);
+    public ResultVO queryTeamUserListByTid(@RequestParam("tid") String tid,
+                                           @RequestParam("pageIndex") Integer pageIndex,
+                                           @RequestParam("pageSize") Integer pageSize) {
+        List<TeamUserDTO> teamUserDTOList = teamService.queryTeamUserListByTid(tid, pageIndex, pageSize);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
 
