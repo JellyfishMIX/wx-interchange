@@ -27,13 +27,22 @@
         <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
     </resultMap>
 
-    <!--通过uid和userGrade查询我所在的项目组（非官方组）-->
+    <!--通过uid和userGrade查询我所在的项目组（非官方项目组）-->
     <select id="queryTeamListByUidAndUserGrade" resultMap="TeamUserDTOMap">
         select team_user.tid, team_info.team_name, team_info.avatar_url `team_avatar_url`, team_info.grade `team_grade`, user_grade, team_info.number_count, team_info.file_count
         from wx_interchange.team_user
         left join wx_interchange.team_info
         on team_user.tid = team_info.tid
         where uid = #{uid} and user_grade = #{userGrade} and team_info.grade != 1
+    </select>
+
+    <!--通过uid查询我所在的项目组（官方项目组）-->
+    <select id="queryOfficialTeamListByUid" resultMap="TeamUserDTOMap">
+        select team_user.tid, team_info.team_name, team_info.avatar_url `team_avatar_url`, team_info.grade `team_grade`, team_info.file_count
+        from wx_interchange.team_user
+        left join wx_interchange.team_info
+        on team_user.tid = team_info.tid
+        where uid = #{uid} and team_info.grade = 1
     </select>
 
     <!--通过tid查询项目组成员列表（分页）-->
@@ -52,6 +61,13 @@
         from wx_interchange.team_user
         left join wx_interchange.user_info
         on team_user.uid = user_info.uid
+        where tid = #{tid}
+    </select>
+
+    <!--查询一个项目组中所有成员的uid-->
+    <select id="queryTeamAllUid" resultType="String">
+        select uid
+        from wx_interchange.team_user
         where tid = #{tid}
     </select>
 

@@ -141,6 +141,13 @@ public interface TeamService {
     void updateTeamInfoCountProperty(String tid, TeamEnum teamEnum, Integer countChangeNum);
 
     /**
+     * 修改tid为官方项目组
+     *
+     * @param tid 项目组tid
+     */
+    void changeToOfficialTeam(String tid);
+
+    /**
      * 删除项目组内的文件（单个）
      *
      * @param tid 项目组tid

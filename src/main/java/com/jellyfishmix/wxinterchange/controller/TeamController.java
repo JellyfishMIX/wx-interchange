@@ -103,6 +103,7 @@ public class TeamController {
 
     /**
      * 获取官方项目组列表
+     * 内部API
      *
      * @return
      */
@@ -281,6 +282,19 @@ public class TeamController {
     }
 
     /**
+     * 修改tid为官方项目组
+     * 内部API
+     *
+     * @param tid 项目组tid
+     * @return
+     */
+    @PostMapping("/change_to_official_team")
+    public ResultVO changeToOfficialTeam(@RequestParam("tid") String tid) {
+        teamService.changeToOfficialTeam(tid);
+        return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
+    }
+
+    /**
      * 批量删除项目组内的文件
      *
      * @param jsonStr jsonStr
@@ -330,17 +344,3 @@ public class TeamController {
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

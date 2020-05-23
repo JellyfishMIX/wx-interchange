@@ -42,6 +42,8 @@ public class TeamServiceImpl implements TeamService {
     private TeamAvatarDao teamAvatarDao;
     @Resource
     private CollectionFileDao collectionFileDao;
+    @Resource
+    private UserInfoDao userInfoDao;
     @Autowired
     private RedisLockService redisLockService;
 
@@ -310,6 +312,30 @@ public class TeamServiceImpl implements TeamService {
             teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + countChangeNum);
         }
         teamInfoDao.updateByTid(teamInfoForUpdate);
+    }
+
+    /**
+     * 修改tid为官方项目组
+     *
+     * @param tid 项目组tid
+     */
+    @Override
+    @Transactional(rollbackFor = TeamException.class)
+    public void changeToOfficialTeam(String tid) {
+        // 查询全体用户的uid
+        List<String> uidList = userInfoDao.queryAllUid();
+        // 查询已经存在项目组中的用户uid
+        List<String> existUid = teamUserDao.queryTeamAllUid(tid);
+        for (String uid : uidList) {
+            if (!existUid.contains(uid)) {
+                this.joinTeam(tid, uid);
+            }
+        }
+        TeamInfo teamInfo = new TeamInfo();
+        teamInfo.setTid(tid);
+        // 项目组等级，官方项目组为1，普通项目组为2，保留0
+        teamInfo.setGrade(1);
+        teamInfoDao.updateByTid(teamInfo);
     }
 
     /**

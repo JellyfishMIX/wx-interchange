@@ -2,6 +2,8 @@ package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
 
+import java.util.List;
+
 /**
  * @author JellyfishMIX
  * @date 2020/4/7 6:58 下午
@@ -22,6 +24,13 @@ public interface UserInfoDao {
      * @return
      */
     UserInfo queryByOpenid(String openid);
+
+    /**
+     * 查询所有用户的uid
+     *
+     * @return
+     */
+    List<String> queryAllUid();
 
     /**
      * 新增用户信息

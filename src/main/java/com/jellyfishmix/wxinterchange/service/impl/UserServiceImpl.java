@@ -88,6 +88,18 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 通过uid查询我所在的项目组（官方项目组）
+     *
+     * @param uid 用户uid
+     * @return
+     */
+    @Override
+    public List<TeamUserDTO> queryOfficialTeamListByUid(String uid) {
+        List<TeamUserDTO> teamUserDTOList = teamUserDao.queryOfficialTeamListByUid(uid);
+        return teamUserDTOList;
+    }
+
+    /**
      * 新增用户信息
      *
      * @param userInfo

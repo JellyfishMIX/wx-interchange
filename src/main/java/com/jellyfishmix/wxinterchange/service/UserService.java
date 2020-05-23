@@ -36,6 +36,14 @@ public interface UserService {
     List<TeamUserDTO> queryTeamListByUidAndUserGrade(String uid, Integer userGrade);
 
     /**
+     * 通过uid查询我所在的项目组（官方项目组）
+     *
+     * @param uid 用户uid
+     * @return
+     */
+    List<TeamUserDTO> queryOfficialTeamListByUid(String uid);
+
+    /**
      * 新增用户信息
      *
      * @param userInfo 用户信息

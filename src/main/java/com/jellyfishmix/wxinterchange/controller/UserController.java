@@ -99,4 +99,16 @@ public class UserController {
         List<TeamUserDTO> teamUserDTOList = userService.queryTeamListByUidAndUserGrade(uid, userGrade);
         return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
     }
+
+    /**
+     * 通过uid查询我所在的项目组（官方项目组）
+     *
+     * @param uid 用户uid
+     * @return
+     */
+    @GetMapping("/query_official_team_list_by_uid")
+    public ResultVO queryOfficialTeamListByUid(@RequestParam("uid") String uid) {
+        List<TeamUserDTO> teamUserDTOList = userService.queryOfficialTeamListByUid(uid);
+        return ResultVOUtil.success(UserEnum.SUCCESS.getStateCode(), UserEnum.SUCCESS.getStateMsg(), teamUserDTOList);
+    }
 }
