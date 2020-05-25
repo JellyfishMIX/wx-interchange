@@ -157,4 +157,4 @@ create table `file_statistics` (
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),
     unique key `file_statistics_statistics_id`(`statistics_id`)
-) comment '埋点文件统计表，以天为单位';
+) comment '埋点系统文件统计表，以天为单位';
