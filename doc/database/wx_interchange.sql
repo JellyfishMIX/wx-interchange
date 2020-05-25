@@ -1,3 +1,4 @@
+# user_info表，建表时需要添加一行默认数据，uid=1
 create table `user_info` (
     `id` int not null auto_increment comment '代理主键',
     `uid` varchar(32) not null comment '用户uid，随机生成，唯一键',
@@ -37,13 +38,13 @@ create table `team_info` (
 ) comment '项目组表';
 
 create table `team_user` (
-     `id` int not null auto_increment comment '代理主键',
-     `tid` varchar(32) not null comment '项目组tid，外键',
-     `uid` varchar(32) not null comment '用户uid，外键',
-     `user_grade` int not null default 3 comment '项目组成员等级，1为创建者，2为管理员，3为普通成员',
-     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
-     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
-     primary key (`id`),
+    `id` int not null auto_increment comment '代理主键',
+    `tid` varchar(32) not null comment '项目组tid，外键',
+    `uid` varchar(32) not null comment '用户uid，外键',
+    `user_grade` int not null default 3 comment '项目组成员等级，1为创建者，2为管理员，3为普通成员',
+    `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+    `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+    primary key (`id`),
     foreign key `fk_team_user_tid` (`tid`) references wx_interchange.team_info(`tid`),
     foreign key `fk_team_user_uid` (`uid`) references wx_interchange.user_info(`uid`)
 ) comment '项目组成员表';
@@ -60,6 +61,7 @@ create table `team_user` (
 #     unique key `uk_wx_group_info_opengid`(`opengid`)
 # ) comment '微信群信息表';
 
+# file_info表，建表时需要添加一行默认数据，fileId=404
 create table `file_info` (
     `id` int not null auto_increment comment '代理主键',
     `file_id` varchar(128) not null comment '文件fileId',
@@ -110,7 +112,7 @@ create table `team_avatar` (
 
 create table `collection_info` (
     `id` int not null auto_increment comment '代理主键',
-    `collection_id` varchar(32) not null comment '收藏集collection_id',
+    `collection_id` varchar(32) not null comment '收藏集collectionId',
     `collection_name` varchar(64) not null default '默认收藏集' comment '收藏集名称',
     `uid` varchar(32) not null comment '创建者uid',
     `file_count` int not null default 0 comment '收藏集文件计数',
@@ -123,7 +125,7 @@ create table `collection_info` (
 
 create table `collection_file` (
     `id` int not null auto_increment comment '代理主键',
-    `collection_id` varchar(32) not null comment '收藏集collection_id',
+    `collection_id` varchar(32) not null comment '收藏集collectionId',
     `file_id` varchar(128) not null comment '文件fileId',
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
@@ -131,3 +133,28 @@ create table `collection_file` (
     foreign key `fk_collection_file_collection_id`(`collection_id`) references wx_interchange.collection_info(`collection_id`),
     foreign key `fk_collection_file_file_id`(`file_id`) references wx_interchange.file_info(`file_id`)
 ) comment '文件收藏集的文件关联表';
+
+# create table `file_browsing_history` (
+#     `id` int not null auto_increment comment '代理主键',
+#     `uid` varchar(32) not null comment '浏览者uid',
+#     `file_id` varchar(128) not null comment '文件fileId',
+#     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+#     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+#     primary key (`id`),
+#     foreign key `fk_browsing_history_uid`(`uid`) references wx_interchange.user_info(`uid`),
+#     foreign key `fk_browsing_history_file_id`(`file_id`) references wx_interchange.file_info(`file_id`)
+# ) comment '文件浏览历史表';
+
+# 埋点
+
+create table `file_statistics` (
+    `id` int not null auto_increment comment '代理主键',
+    `statistics_id` varchar(32) not null comment '文件统计statisticsId',
+    `quantity` int not null  default 0 comment '当日文件数量',
+    `changed_quantity` int not null default 0 comment '当日结算文件数量变化，每24小时统计一次。统计方法：当日减前一日文件数量。有正负',
+    `instant_changed_quantity` int not null default 0 comment '当日实时文件数量变化。有正负',
+    `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
+    `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+    primary key (`id`),
+    unique key `file_statistics_statistics_id`(`statistics_id`)
+) comment '埋点文件统计表，以天为单位';
