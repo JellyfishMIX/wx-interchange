@@ -1,5 +1,7 @@
 package com.jellyfishmix.wxinterchange.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -8,6 +10,7 @@ import java.util.Date;
  * @author makejava
  * @since 2020-05-25 09:29:35
  */
+@Data
 public class FileStatistics {
     /**
     * 文件统计statisticsId

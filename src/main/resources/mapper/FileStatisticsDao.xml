@@ -10,12 +10,19 @@
         <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <!--查询单个-->
+    <!--通过ByStatisticsId查询单个-->
     <select id="queryByStatisticsId" resultMap="FileStatisticsMap">
         select
           statistics_id, quantity, changed_quantity, instant_changed_quantity, creation_time
         from wx_interchange.file_statistics
         where statistics_id = #{statisticsId}
+    </select>
+
+    <!--查询指定日期的数据-->
+    <select id="queryByDesignatedTimestamp" resultMap="FileStatisticsMap">
+        select statistics_id, instant_changed_quantity
+        from wx_interchange.file_statistics
+        where creation_time >= #{firstTimestamp} and creation_time &lt; #{lastTimestamp}
     </select>
 
     <!--新增数据-->

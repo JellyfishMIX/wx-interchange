@@ -2,6 +2,8 @@ package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.FileStatistics;
 
+import java.sql.Timestamp;
+
 /**
  * 埋点文件统计表，以天为单位(FileStatistics)表数据库访问层
  *
@@ -17,6 +19,15 @@ public interface FileStatisticsDao {
      * @return 实例对象
      */
     FileStatistics queryByStatisticsId(String statisticsId);
+
+    /**
+     * 查询指定日期的数据
+     *
+     * @param firstTimestamp 起始timestamp
+     * @param lastTimestamp 终止timestamp
+     * @return
+     */
+    FileStatistics queryByDesignatedTimestamp(Timestamp firstTimestamp, Timestamp lastTimestamp);
 
     /**
      * 新增数据

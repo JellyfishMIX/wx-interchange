@@ -9,6 +9,7 @@ import com.jellyfishmix.wxinterchange.entity.TeamUser;
 import com.jellyfishmix.wxinterchange.enums.FileEnum;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.enums.UserEnum;
+import com.jellyfishmix.wxinterchange.service.FileStatisticsService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.ResultVOUtil;
@@ -31,6 +32,8 @@ public class TeamController {
     private TeamService teamService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FileStatisticsService fileStatisticsService;
 
     /**
      * 创建项目组
@@ -175,6 +178,9 @@ public class TeamController {
         String tid = jsonObject.getString("tid");
         String uid = jsonObject.getString("uid");
         teamService.uploadFileListToTeam(tid, uid, fileInfoList);
+
+        // 埋点系统文件统计
+        fileStatisticsService.updateInstantChangedQuantity(fileInfoList.size());
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg());
     }
 

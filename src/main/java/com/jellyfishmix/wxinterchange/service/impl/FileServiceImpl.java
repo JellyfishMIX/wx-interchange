@@ -7,6 +7,7 @@ import com.jellyfishmix.wxinterchange.dao.FileInfoDao;
 import com.jellyfishmix.wxinterchange.entity.FileInfo;
 import com.jellyfishmix.wxinterchange.entity.TeamAvatar;
 import com.jellyfishmix.wxinterchange.service.FileService;
+import com.jellyfishmix.wxinterchange.service.FileStatisticsService;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
@@ -32,6 +33,8 @@ public class FileServiceImpl implements FileService {
     private TeamAvatarDao teamAvatarDao;
     @Autowired
     private QiniuConfig qiniuConfig;
+    @Autowired
+    private FileStatisticsService fileStatisticsService;
 
     /**
      * 通过fileId查询单条数据
@@ -91,5 +94,8 @@ public class FileServiceImpl implements FileService {
             System.err.println(e.code());
             System.err.println(e.response.toString());
         }
+
+        // 埋点系统文件统计
+        fileStatisticsService.updateInstantChangedQuantity(-1);
     }
 }

@@ -66,7 +66,7 @@ create table `file_info` (
     `id` int not null auto_increment comment '代理主键',
     `file_id` varchar(128) not null comment '文件fileId',
     `file_key` varchar(128) not null comment '文件资源fileKey',
-    `hash` varchar(128) not null comment '全局唯一的文件fileHash值',
+    `file_hash` varchar(128) not null comment '全局唯一的文件fileHash值',
     `file_name` varchar(64) not null comment '文件名',
     `file_url` varchar(1024) not null comment '文件资源URL',
     `file_size` int not null comment '文件大小, 单位为b',
