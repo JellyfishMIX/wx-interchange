@@ -2,6 +2,8 @@ package com.jellyfishmix.wxinterchange.service.impl;
 
 import com.jellyfishmix.wxinterchange.dao.FileStatisticsDao;
 import com.jellyfishmix.wxinterchange.entity.FileStatistics;
+import com.jellyfishmix.wxinterchange.enums.FileStatisticsEnum;
+import com.jellyfishmix.wxinterchange.exception.FileStatisticsException;
 import com.jellyfishmix.wxinterchange.service.FileStatisticsService;
 import com.jellyfishmix.wxinterchange.utils.DateUtil;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ public class FileStatisticsServiceImpl implements FileStatisticsService {
         Timestamp todayFirstTimestamp = DateUtil.todayFirstTimestamp();
         Timestamp todayLastTimestamp = DateUtil.todayLastTimestamp();
         FileStatistics fileStatisticsFromQuery = fileStatisticsDao.queryByDesignatedTimestamp(todayFirstTimestamp, todayLastTimestamp);
+        if (fileStatisticsFromQuery == null) {
+            throw new FileStatisticsException(FileStatisticsEnum.FILE_STATISTICS_NULL);
+        }
 
         FileStatistics fileStatisticsForUpdate = new FileStatistics();
         fileStatisticsForUpdate.setStatisticsId(fileStatisticsFromQuery.getStatisticsId());

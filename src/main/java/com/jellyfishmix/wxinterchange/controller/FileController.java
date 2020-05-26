@@ -102,4 +102,17 @@ public class FileController {
         FileInfoDTO fileInfoDTOAfterUpdate = fileService.updateFileInfo(fileInfo);
         return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg(), fileInfoDTOAfterUpdate);
     }
+
+    /**
+     * 触发事件-在线查看文件
+     *
+     * @param fileId 文件fileId
+     * @param uid 操作者uid
+     * @return
+     */
+    @PostMapping("/trigger_view_file_online")
+    public ResultVO triggerViewFileOnline(@RequestParam("fileId") String fileId,
+                                          @RequestParam("uid") String uid) {
+        return ResultVOUtil.success(FileEnum.SUCCESS.getStateCode(), FileEnum.SUCCESS.getStateMsg());
+    }
 }

@@ -78,6 +78,8 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public void deleteFromQiniuBucket(String fileHash, String fileKey) {
+        // TODO 思考引用处的逻辑是否允许使用七牛云java sdk进行批量删除
+
         // 查询fileHash是否在file_info表和team_avatar表中还存在，还存在则不能删。因为同样的hash对应七牛云的同一个文件。
         List<FileInfoDTO> fileInfoDTOListForCheck = fileInfoDao.queryByFileHash(fileHash);
         List<TeamAvatar> teamAvatarListForCheck = teamAvatarDao.queryByFileHash(fileHash);
