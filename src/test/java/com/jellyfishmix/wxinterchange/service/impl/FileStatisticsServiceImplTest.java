@@ -1,6 +1,6 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
-import com.jellyfishmix.wxinterchange.service.FileStatisticsService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileStatisticsServiceImplTest {
     @Autowired
     FileStatisticsServiceImpl fileStatisticsServiceImpl;
+
     @Test
+    @Disabled
     void updateInstantChangedQuantity() {
         fileStatisticsServiceImpl.updateInstantChangedQuantity(15);
     }

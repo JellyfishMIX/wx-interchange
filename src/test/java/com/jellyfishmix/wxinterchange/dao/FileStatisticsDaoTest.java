@@ -2,6 +2,7 @@ package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.FileStatistics;
 import com.jellyfishmix.wxinterchange.utils.DateUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,7 @@ class FileStatisticsDaoTest {
     private FileStatisticsDao fileStatisticsDao;
 
     @Test
+    @Disabled
     void queryByDesignatedTimestamp() {
         Timestamp todayFirstTimestamp = DateUtil.todayFirstTimestamp();
         Timestamp todayLastTimestamp = DateUtil.todayLastTimestamp();
