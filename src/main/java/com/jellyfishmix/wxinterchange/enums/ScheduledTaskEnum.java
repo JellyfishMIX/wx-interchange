@@ -4,19 +4,19 @@ import lombok.Getter;
 
 /**
  * @author JellyfishMIX
- * @date 2020/5/26 8:59 上午
+ * @date 2020/5/28 12:12 上午
  */
 @Getter
-public enum FileStatisticsEnum implements StateCodeEnum {
+public enum ScheduledTaskEnum implements StateCodeEnum {
     // 操作处理结果Enum
     SUCCESS(0, "操作成功"),
-    FILE_STATISTICS_NULL(1, "FileStatistics为空"),
-    DAILY_PROCESSING_ERROR(2, "FileStatistics日常统计处理出错");
+    START_EXCEPTION(1, "在scheduler.start()处出错"),
+    SHUTDOWN_EXCEPTION(2, "在scheduler.shutdown()处出错");
 
     private Integer stateCode;
     private String stateMsg;
 
-    FileStatisticsEnum(Integer stateCode, String stateMsg) {
+    ScheduledTaskEnum(Integer stateCode, String stateMsg) {
         this.stateCode = stateCode;
         this.stateMsg = stateMsg;
     }

@@ -29,7 +29,11 @@ public class FileStatistics {
     */
     private Integer instantChangedQuantity;
     /**
-    * 创建时间，自动写入
+    * 创建时间
     */
     private Date creationTime;
+    /**
+     * 修改时间
+     */
+    private Date modifiedTime;
 }

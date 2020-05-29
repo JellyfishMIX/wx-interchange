@@ -19,4 +19,10 @@ public class FileStatisticsException extends RuntimeException {
         this.stateCode = fileStatisticsEnum.getStateCode();
         this.stateMsg = fileStatisticsEnum.getStateMsg();
     }
+
+    public FileStatisticsException(FileStatisticsEnum fileStatisticsEnum, String exceptionMessage) {
+        super(exceptionMessage);
+        this.stateCode = fileStatisticsEnum.getStateCode();
+        this.stateMsg = fileStatisticsEnum.getStateMsg();
+    }
 }

@@ -1,5 +1,8 @@
 package com.jellyfishmix.wxinterchange.service;
 
+import com.jellyfishmix.wxinterchange.enums.CronScheduleEnum;
+import org.quartz.Scheduler;
+
 /**
  * @author JellyfishMIX
  * @date 2020/5/25 4:50 下午
@@ -11,4 +14,12 @@ public interface FileStatisticsService {
      * @param changedQuantityNum 改变的数量
      */
     void updateInstantChangedQuantity(int changedQuantityNum);
+
+    /**
+     * 每日计划处理
+     *
+     * @param scheduler 调度程序的实例
+     * @param cronScheduleEnum cron时间表Enum
+     */
+    void dailyProcessing(Scheduler scheduler, CronScheduleEnum cronScheduleEnum);
 }

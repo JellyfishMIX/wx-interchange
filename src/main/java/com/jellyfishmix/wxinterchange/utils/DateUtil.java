@@ -1,6 +1,7 @@
 package com.jellyfishmix.wxinterchange.utils;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -58,5 +59,31 @@ public class DateUtil {
     public static Timestamp todayLastTimestamp() {
         Date todayLastDate =  DateUtil.todayLastDate();
         return new Timestamp(todayLastDate.getTime());
+    }
+
+    /**
+     * 获取当前时间的前n天(-n天)或后n天(+n天)的日期
+     *
+     * @param n 前n天或后n天
+     * @return
+     */
+    public static Date differenceDayFromCurrentDate(int n) {
+        Date date=new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, n);
+        date = calendar.getTime();
+        return date;
+    }
+
+    /**
+     * 获取当前时间的前n天(-n天)或后n天(+n天)的时间戳
+     *
+     * @param n 前n天或后n天
+     * @return
+     */
+    public static Timestamp differenceDayFromCurrentTimestamp(int n) {
+        Date targetDate = DateUtil.differenceDayFromCurrentDate(n);
+        return new Timestamp(targetDate.getTime());
     }
 }
