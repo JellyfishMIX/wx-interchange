@@ -11,8 +11,7 @@ import lombok.Getter;
 @Getter
 public enum CronScheduleEnum {
     // 每天凌晨一点
-    // DAILY_ONE_O_CLOCK("0 0 1 * * ?");
-    DAILY_ONE_O_CLOCK("0 11 3 * * ?");
+    DAILY_ONE_O_CLOCK("0 0 1 * * ?");
 
     /**
      * cron表达式，用于配制CronTrigger实例，指示何时触发Trigger
