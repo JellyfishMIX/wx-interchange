@@ -55,6 +55,7 @@
         where tid = #{tid}
     </select>
 
+    <!--where tid = #{tid} and locate(#{keyword}, file_info.file_name) > 0-->
     <!--通过关键词搜索项目组内的文件-->
     <select id="queryTeamFileListByKeyword" resultMap="TeamFileDTOMap">
         select tid, team_file.file_id, team_file.uid, file_info.file_name, file_info.file_url, file_info.file_size, file_info.mime_type, user_info.username, team_file.creation_time
@@ -63,7 +64,11 @@
             on team_file.file_id = file_info.file_id
         left join wx_interchange.user_info
             on file_info.uid = user_info.uid
-        where tid = #{tid} and locate(#{keyword}, file_info.file_name) > 0
+        where tid in
+        <foreach collection="tidList" item="tid" index="index" open="(" separator="," close=")">
+            #{tid}
+        </foreach>
+        and locate(#{keyword}, file_info.file_name) > 0
         order by creation_time desc
         limit #{offset}, #{limit}
     </select>

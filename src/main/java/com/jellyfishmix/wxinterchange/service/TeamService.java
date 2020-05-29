@@ -70,13 +70,13 @@ public interface TeamService {
     /**
      * 通过关键词搜索项目组内的文件
      *
-     * @param tid 项目组tid
+     * @param tidList 项目组tidList
      * @param keyword 关键词
      * @param pageIndex 页码，从1开始
      * @param pageSize 每页行数
      * @return
      */
-    List<TeamFileDTO> searchTeamFileListByKeyword(String tid, String keyword, int pageIndex, int pageSize);
+    List<TeamFileDTO> searchTeamFileListByKeyword(List<String> tidList, String keyword, int pageIndex, int pageSize);
 
     /**
      * 创建项目组

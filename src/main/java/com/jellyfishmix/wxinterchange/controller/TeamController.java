@@ -149,18 +149,18 @@ public class TeamController {
     /**
      * 通过关键词搜索项目组内的文件
      *
-     * @param tid       项目组tid
-     * @param keyword   关键词
-     * @param pageIndex 页码，从1开始
-     * @param pageSize  每页行数
+     * @param jsonStr jsonStr
      * @return
      */
-    @GetMapping("/search_team_file_list_by_keyword")
-    public ResultVO searchTeamFileListByKeyword(@RequestParam("tid") String tid,
-                                                @RequestParam("keyword") String keyword,
-                                                @RequestParam("pageIndex") int pageIndex,
-                                                @RequestParam("pageSize") int pageSize) {
-        List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tid, keyword, pageIndex, pageSize);
+    @PostMapping("/search_team_file_list_by_keyword")
+    public ResultVO searchTeamFileListByKeyword(@RequestBody String jsonStr) {
+        JSONObject jsonObject = new JSONObject(jsonStr);
+        JSONArray jsonArray = jsonObject.getJSONArray("tidList");
+        List<String> tidList = JSONArrayToListConverter.convertToStringList(jsonArray);
+        String keyword = jsonObject.getString("keyword");
+        int pageIndex = jsonObject.getInt("pageIndex");
+        int pageSize = jsonObject.getInt("pageSize");
+        List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tidList, keyword, pageIndex, pageSize);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }
 
