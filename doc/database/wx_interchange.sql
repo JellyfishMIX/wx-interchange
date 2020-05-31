@@ -29,7 +29,7 @@ create table `team_info` (
     `managed_number_count` int not null default 0 comment '项目组管理者数量',
     `joined_number_count` int not null default 0 comment '项目组加入者数量',
     `file_count` int not null default 0 comment '项目组文件数量',
-#     `last_file_upload_time` timestamp not null default current_timestamp comment '最近一次文件上传时间',
+    `last_file_upload_time` timestamp not null default current_timestamp comment '最后一次文件上传时间',
     `creation_time` timestamp not null default current_timestamp comment '创建时间，自动写入',
     `modified_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
     primary key (`id`),

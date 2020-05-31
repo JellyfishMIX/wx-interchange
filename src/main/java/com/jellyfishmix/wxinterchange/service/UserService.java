@@ -3,7 +3,6 @@ package com.jellyfishmix.wxinterchange.service;
 import com.jellyfishmix.wxinterchange.dto.TeamUserDTO;
 import com.jellyfishmix.wxinterchange.dto.UserInfoDTO;
 import com.jellyfishmix.wxinterchange.entity.UserInfo;
-import com.jellyfishmix.wxinterchange.enums.UserEnum;
 
 import java.util.List;
 

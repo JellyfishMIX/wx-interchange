@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -211,6 +212,7 @@ public class TeamServiceImpl implements TeamService {
         TeamInfo teamInfoWithChange = new TeamInfo();
         teamInfoWithChange.setTid(tid);
         teamInfoWithChange.setFileCount(fileInfoList.size());
+        teamInfoWithChange.setLastFileUploadTime(new Date());
         this.updateTeamInfoWithQuery(teamInfoWithChange);
 
         // 分布式锁解锁
@@ -331,6 +333,9 @@ public class TeamServiceImpl implements TeamService {
         }
         if (teamInfoWithChange.getFileCount() != null) {
             teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + teamInfoWithChange.getFileCount());
+        }
+        if (teamInfoWithChange.getLastFileUploadTime() != null) {
+            teamInfoForUpdate.setLastFileUploadTime(teamInfoWithChange.getLastFileUploadTime());
         }
         teamInfoDao.updateByTid(teamInfoForUpdate);
     }

@@ -3,7 +3,6 @@ package com.jellyfishmix.wxinterchange.entity;
 import lombok.Data;
 
 import java.util.Date;
-import java.io.Serializable;
 
 /**
  * 项目组表(TeamInfo)实体类
@@ -53,6 +52,10 @@ public class TeamInfo {
     * 项目组文件数量
     */
     private Integer fileCount;
+    /**
+     * 最后一次文件上传时间
+     */
+    private Date lastFileUploadTime;
     /**
     * 创建时间，自动写入
     */

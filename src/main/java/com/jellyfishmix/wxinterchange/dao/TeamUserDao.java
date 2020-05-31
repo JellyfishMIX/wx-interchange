@@ -22,7 +22,7 @@ public interface TeamUserDao {
     List<TeamUserDTO> queryTeamListByUidAndUserGrade(@Param("uid") String uid, @Param("userGrade") Integer userGrade);
 
     /**
-     * 通过tid查询项目组成员列表（分页）
+     * 通过tid查询项目组成员列表
      *
      * @param tid 项目组tid
      * @param offset 查询起始位置

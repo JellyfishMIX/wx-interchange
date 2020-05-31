@@ -33,6 +33,7 @@
         left join wx_interchange.team_info
         on team_user.tid = team_info.tid
         where uid = #{uid} and user_grade = #{userGrade} and team_info.grade != 1
+        order by team_info.last_file_upload_time desc
     </select>
 
     <!--通过uid查询我所在的项目组（官方项目组）-->
@@ -42,6 +43,7 @@
         left join wx_interchange.team_info
         on team_user.tid = team_info.tid
         where uid = #{uid} and team_info.grade = 1
+        order by team_info.last_file_upload_time desc
     </select>
 
     <!--通过tid查询项目组成员列表（分页）-->
@@ -51,6 +53,7 @@
         left join wx_interchange.user_info
         on team_user.uid = user_info.uid
         where tid = #{tid}
+        order by team_user.creation_time desc
         limit #{offset}, #{limit}
     </select>
 
