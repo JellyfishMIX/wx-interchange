@@ -245,7 +245,7 @@ public class TeamController {
      * @return
      */
     @PostMapping("/update_team_info")
-    public ResultVO updateTeamName(@RequestParam("tid") String tid,
+    public ResultVO updateTeamInfo(@RequestParam("tid") String tid,
                                    @RequestParam(value = "newTeamName", required = false) String newTeamName,
                                    @RequestParam(value = "newTeamAvatarUrl", required = false) String newTeamAvatarUrl) {
         TeamInfo teamInfo = new TeamInfo();
@@ -259,7 +259,7 @@ public class TeamController {
         if (newTeamName == null && newTeamAvatarUrl == null) {
             return ResultVOUtil.fail(TeamEnum.TEAM_INFO_PARAM_NULL.getStateCode(), TeamEnum.TEAM_INFO_PARAM_NULL.getStateMsg());
         }
-        TeamInfo teamInfoFromQuery = teamService.updateTeamInfo(teamInfo);
+        TeamInfo teamInfoFromQuery = teamService.updateTeamInfoWithoutQuery(teamInfo);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamInfoFromQuery);
     }
 

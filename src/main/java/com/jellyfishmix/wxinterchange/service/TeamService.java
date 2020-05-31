@@ -124,30 +124,22 @@ public interface TeamService {
     TeamInfoDTO joinTeam(String tid, String uid);
 
     /**
-     * 修改数据
+     * 修改teamInfo的属性
+     * 此方法不会先通过tid查询teamInfo
      *
      * @param teamInfo 实例对象
      * @return 实例对象
      */
-    TeamInfo updateTeamInfo(TeamInfo teamInfo);
+    TeamInfo updateTeamInfoWithoutQuery(TeamInfo teamInfo);
 
     /**
-     * 更新项目组的计数属性
-     *
-     * @param tid 项目组tid
-     * @param teamEnum 操作标志Enum
-     * @param countChangeNum 计数更改的数量，有正负
-     */
-    void updateTeamInfoCountProperty(String tid, TeamEnum teamEnum, Integer countChangeNum);
-
-    /**
-     * 工具服务方法，修改项目组的属性
+     * 工具服务方法，修改teamInfo的属性
      * 此方法会先查询一次tid对应的teamInfo对象，根据teamInfoWithChange，在tid查询出来的teamInfo对象基础上做更新
      *
      * @param tid 项目组tid
      * @param teamInfoWithChange 记录teamInfo发生的变更的对象
      */
-    void updateTeamInfoProperty(String tid, TeamInfo teamInfoWithChange);
+    void updateTeamInfoWithQuery(String tid, TeamInfo teamInfoWithChange);
 
     /**
      * 修改tid为官方项目组

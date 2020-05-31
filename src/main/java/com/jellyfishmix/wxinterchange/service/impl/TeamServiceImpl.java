@@ -205,7 +205,9 @@ public class TeamServiceImpl implements TeamService {
 
         this.teamFileDao.insertList(teamFileList);
         // 修改项目组文件计数
-        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, fileInfoList.size());
+        TeamInfo teamInfoWithChange = new TeamInfo();
+        teamInfoWithChange.setFileCount(fileInfoList.size());
+        this.updateTeamInfoWithQuery(tid, teamInfoWithChange);
 
         // 分布式锁解锁
         redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
@@ -250,8 +252,10 @@ public class TeamServiceImpl implements TeamService {
     @Transactional(rollbackFor = TeamException.class)
     public TeamInfoDTO joinTeam(String tid, String uid) {
         // 新成员加入，项目组成员++
-        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_NUMBER_COUNT, 1);
-        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_JOINED_NUMBER_COUNT, 1);
+        TeamInfo teamInfoWithChange = new TeamInfo();
+        teamInfoWithChange.setNumberCount(1);
+        teamInfoWithChange.setJoinedNumberCount(1);
+        this.updateTeamInfoWithQuery(tid, teamInfoWithChange);
 
         // teamUser表中添加记录
         TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
@@ -275,7 +279,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional(rollbackFor = TeamException.class)
-    public TeamInfo updateTeamInfo(TeamInfo teamInfo) {
+    public TeamInfo updateTeamInfoWithoutQuery(TeamInfo teamInfo) {
         teamInfoDao.updateByTid(teamInfo);
         // 删除原头像文件
         if (teamInfo.getAvatarUrl() != null) {
@@ -291,30 +295,6 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
-     * 更新项目组的计数属性
-     *
-     * @param tid            项目组tid
-     * @param teamEnum       操作标志Enum
-     * @param countChangeNum 计数更改的数量，有正负
-     */
-    @Override
-    public void updateTeamInfoCountProperty(String tid, TeamEnum teamEnum, Integer countChangeNum) {
-        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
-        TeamInfo teamInfoForUpdate = new TeamInfo();
-        teamInfoForUpdate.setTid(tid);
-        if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_NUMBER_COUNT.getStateCode())) {
-            teamInfoForUpdate.setNumberCount(teamInfoFromQuery.getNumberCount() + countChangeNum);
-        } else if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_MANAGED_NUMBER_COUNT.getStateCode())) {
-            teamInfoForUpdate.setManagedNumberCount(teamInfoFromQuery.getManagedNumberCount() + countChangeNum);
-        } else if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_JOINED_NUMBER_COUNT.getStateCode())) {
-            teamInfoForUpdate.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount() + countChangeNum);
-        } else if (teamEnum.getStateCode().equals(TeamEnum.UPDATE_FILE_COUNT.getStateCode())) {
-            teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + countChangeNum);
-        }
-        teamInfoDao.updateByTid(teamInfoForUpdate);
-    }
-
-    /**
      * 工具服务方法，修改项目组的属性
      * 此方法会先查询一次tid对应的teamInfo对象，根据teamInfoWithChange，在tid查询出来的teamInfo对象基础上做更新
      *
@@ -322,7 +302,7 @@ public class TeamServiceImpl implements TeamService {
      * @param teamInfoWithChange 记录teamInfo发生的变更的对象
      */
     @Override
-    public void updateTeamInfoProperty(String tid, TeamInfo teamInfoWithChange) {
+    public void updateTeamInfoWithQuery(String tid, TeamInfo teamInfoWithChange) {
         TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
         TeamInfo teamInfoForUpdate = new TeamInfo();
         teamInfoForUpdate.setTid(tid);
@@ -386,7 +366,9 @@ public class TeamServiceImpl implements TeamService {
 
         teamFileDao.deleteByFileId(fileId);
         // 修改项目组文件计数
-        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -1);
+        TeamInfo teamInfoWithChange = new TeamInfo();
+        teamInfoWithChange.setFileCount(-1);
+        this.updateTeamInfoWithQuery(tid, teamInfoWithChange);
 
         // 分布式锁解锁
         redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
@@ -422,7 +404,9 @@ public class TeamServiceImpl implements TeamService {
 
         teamFileDao.deleteListByFileId(fileInfoList);
         // 修改项目组文件计数
-        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_FILE_COUNT, -fileInfoList.size());
+        TeamInfo teamInfoWithChange = new TeamInfo();
+        teamInfoWithChange.setFileCount(-fileInfoList.size());
+        this.updateTeamInfoWithQuery(tid, teamInfoWithChange);
 
         // 分布式锁解锁
         redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
@@ -460,16 +444,18 @@ public class TeamServiceImpl implements TeamService {
         int timeout = 10 * 1000;
         long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
 
+        TeamInfo teamInfoWithChange = new TeamInfo();
         if (teamUserFromQuery.getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
             return new TeamDTO(TeamEnum.CREATED_NUMBER_DELETED_FAIL);
         } else if (teamUserFromQuery.getUserGrade().equals(TeamEnum.MANAGER.getStateCode())) {
-            this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_MANAGED_NUMBER_COUNT, -1);
+            teamInfoWithChange.setManagedNumberCount(-1);
             userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_MANAGED_TEAM_COUNT, -1);
         } else if (teamUserFromQuery.getUserGrade().equals(TeamEnum.JOINER.getStateCode())) {
-            this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_JOINED_NUMBER_COUNT, -1);
+            teamInfoWithChange.setJoinedNumberCount(-1);
             userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, -1);
         }
-        this.updateTeamInfoCountProperty(tid, TeamEnum.UPDATE_NUMBER_COUNT, -1);
+        teamInfoWithChange.setNumberCount(-1);
+        this.updateTeamInfoWithQuery(tid, teamInfoWithChange);
 
         teamUserDao.delete(tid, uid);
 

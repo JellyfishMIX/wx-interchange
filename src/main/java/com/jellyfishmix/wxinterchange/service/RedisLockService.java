@@ -7,8 +7,10 @@ package com.jellyfishmix.wxinterchange.service;
 public interface RedisLockService {
     /**
      * 加锁
+     * 此方法不能使当前Thread sleep，如果需要使当前Thread sleep，请使用RedisLockService.lockConvenient
+     *
      * @param key key值
-     * @param value 当前时间 + 超时时间
+     * @param value 分布式锁过期时间。当前时间 + 超时时间
      * @return true拿到锁，false未拿到锁
      */
     boolean lock(String key, String value);
@@ -17,7 +19,7 @@ public interface RedisLockService {
      * 解锁，即删除key
      *
      * @param key key值
-     * @param value 当前时间 + 超时时间。此处用来做校验，key和value对应再删除。
+     * @param value 分布式锁过期时间。当前时间 + 超时时间。此处用来做校验，key和value对应再删除。
      */
     void unlock(String key, String value);
 
