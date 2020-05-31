@@ -142,10 +142,9 @@ public interface TeamService {
      * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateTeamInfoWithoutQuery()
      * - 如果更新的数据需要在已有teamInfo的属性上做更新，则可以使用updateTeamInfoWithQuery()
      *
-     * @param tid 项目组tid
      * @param teamInfoWithChange 记录teamInfo发生的变更的对象
      */
-    void updateTeamInfoWithQuery(String tid, TeamInfo teamInfoWithChange);
+    void updateTeamInfoWithQuery(TeamInfo teamInfoWithChange);
 
     /**
      * 修改tid为官方项目组
