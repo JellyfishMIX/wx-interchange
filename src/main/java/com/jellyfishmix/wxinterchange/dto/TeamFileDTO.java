@@ -15,6 +15,10 @@ public class TeamFileDTO {
      */
     private String tid;
     /**
+     * 项目组名称
+     */
+    private String teamName;
+    /**
      * 文件fileId，外键
      */
     private String fileId;
@@ -54,8 +58,4 @@ public class TeamFileDTO {
      * 创建时间，自动写入
      */
     private Date creationTime;
-    /**
-     * 修改时间，自动写入
-     */
-    private Date modifiedTime;
 }

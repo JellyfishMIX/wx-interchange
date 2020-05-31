@@ -24,7 +24,6 @@
         <result property="fileCount" column="file_count" jdbcType="INTEGER"/>
         <!--加入时间-->
         <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
-        <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
     </resultMap>
 
     <!--通过uid和userGrade查询我所在的项目组（非官方项目组）-->

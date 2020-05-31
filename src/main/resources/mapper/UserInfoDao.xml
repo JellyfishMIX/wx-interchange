@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jellyfishmix.wxinterchange.dao.UserInfoDao">
-    <!--userInfoMap-->
     <resultMap id="userInfoMap" type="com.jellyfishmix.wxinterchange.entity.UserInfo">
         <id column="uid" property="uid" jdbcType="VARCHAR" />
         <id column="username" property="username" jdbcType="VARCHAR" />

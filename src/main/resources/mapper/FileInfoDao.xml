@@ -27,8 +27,6 @@
         <result property="uid" column="uid" jdbcType="VARCHAR"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
-        <!--无特殊情况不开放modifiedTime-->
-        <!--<result property="modifiedTime" column="modified_time" jdbcType="TIMESTAMP"/>-->
     </resultMap>
 
     <!--通过fileId查询单个文件信息-->

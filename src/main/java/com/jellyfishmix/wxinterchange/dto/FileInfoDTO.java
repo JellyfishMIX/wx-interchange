@@ -50,8 +50,4 @@ public class FileInfoDTO {
      * 创建时间，自动写入
      */
     private Date creationTime;
-    /**
-     * 修改时间，自动写入
-     */
-    private Date modifiedTime;
 }
