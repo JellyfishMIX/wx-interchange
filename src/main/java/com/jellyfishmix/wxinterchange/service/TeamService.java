@@ -126,6 +126,9 @@ public interface TeamService {
     /**
      * 修改teamInfo的属性
      * 此方法不会先通过tid查询teamInfo
+     * 如何判断使用哪个teamService.updateTeamInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateTeamInfoWithoutQuery()
+     * - 如果更新的数据需要在已有teamInfo的属性上做更新，则可以使用updateTeamInfoWithQuery()
      *
      * @param teamInfo 实例对象
      * @return 实例对象
@@ -135,6 +138,9 @@ public interface TeamService {
     /**
      * 工具服务方法，修改teamInfo的属性
      * 此方法会先查询一次tid对应的teamInfo对象，根据teamInfoWithChange，在tid查询出来的teamInfo对象基础上做更新
+     * 如何判断使用哪个teamService.updateTeamInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateTeamInfoWithoutQuery()
+     * - 如果更新的数据需要在已有teamInfo的属性上做更新，则可以使用updateTeamInfoWithQuery()
      *
      * @param tid 项目组tid
      * @param teamInfoWithChange 记录teamInfo发生的变更的对象
