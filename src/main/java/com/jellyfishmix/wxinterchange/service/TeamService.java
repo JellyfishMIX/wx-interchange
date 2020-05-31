@@ -141,6 +141,15 @@ public interface TeamService {
     void updateTeamInfoCountProperty(String tid, TeamEnum teamEnum, Integer countChangeNum);
 
     /**
+     * 工具服务方法，修改项目组的属性
+     * 此方法会先查询一次tid对应的teamInfo对象，根据teamInfoWithChange，在tid查询出来的teamInfo对象基础上做更新
+     *
+     * @param tid 项目组tid
+     * @param teamInfoWithChange 记录teamInfo发生的变更的对象
+     */
+    void updateTeamInfoProperty(String tid, TeamInfo teamInfoWithChange);
+
+    /**
      * 修改tid为官方项目组
      *
      * @param tid 项目组tid

@@ -315,6 +315,33 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
+     * 工具服务方法，修改项目组的属性
+     * 此方法会先查询一次tid对应的teamInfo对象，根据teamInfoWithChange，在tid查询出来的teamInfo对象基础上做更新
+     *
+     * @param tid 项目组tid
+     * @param teamInfoWithChange 记录teamInfo发生的变更的对象
+     */
+    @Override
+    public void updateTeamInfoProperty(String tid, TeamInfo teamInfoWithChange) {
+        TeamInfo teamInfoFromQuery = teamInfoDao.queryByTid(tid);
+        TeamInfo teamInfoForUpdate = new TeamInfo();
+        teamInfoForUpdate.setTid(tid);
+        if (teamInfoWithChange.getNumberCount() != null) {
+            teamInfoForUpdate.setNumberCount(teamInfoFromQuery.getNumberCount() + teamInfoWithChange.getNumberCount());
+        }
+        if (teamInfoWithChange.getManagedNumberCount() != null) {
+            teamInfoForUpdate.setManagedNumberCount(teamInfoFromQuery.getManagedNumberCount() + teamInfoWithChange.getManagedNumberCount());
+        }
+        if (teamInfoWithChange.getJoinedNumberCount() != null) {
+            teamInfoForUpdate.setJoinedNumberCount(teamInfoFromQuery.getJoinedNumberCount() + teamInfoWithChange.getJoinedNumberCount());
+        }
+        if (teamInfoWithChange.getFileCount() != null) {
+            teamInfoForUpdate.setFileCount(teamInfoFromQuery.getFileCount() + teamInfoWithChange.getFileCount());
+        }
+        teamInfoDao.updateByTid(teamInfoForUpdate);
+    }
+
+    /**
      * 修改tid为官方项目组
      *
      * @param tid 项目组tid
