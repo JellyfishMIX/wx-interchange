@@ -165,7 +165,10 @@ public class TeamServiceImpl implements TeamService {
         this.teamUserDao.insert(teamUser);
 
         // uid用户，createdTeamCount ++
-        userService.updateUserInfoCountProperty(teamUser.getUid(), UserEnum.UPDATE_CREATED_TEAM_COUNT, 1);
+        UserInfo userInfoWithChange = new UserInfo();
+        userInfoWithChange.setUid(teamUser.getUid());
+        userInfoWithChange.setCreatedTeamCount(1);
+        userService.updateUserInfoWithQuery(userInfoWithChange);
 
         // 查询新insert的teamInfo信息
         teamInfo = teamInfoDao.queryByTid(tid);
@@ -269,12 +272,19 @@ public class TeamServiceImpl implements TeamService {
         teamUserDao.insert(teamUser);
 
         // 修改uid用户加入的项目组数量
-        userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, 1);
+        UserInfo userInfoWithChange = new UserInfo();
+        userInfoWithChange.setUid(uid);
+        userInfoWithChange.setJoinedTeamCount(1);
+        userService.updateUserInfoWithQuery(userInfoWithChange);
         return new TeamInfoDTO(TeamEnum.SUCCESS, teamInfoFromQuery);
     }
 
     /**
-     * 修改数据
+     * 修改teamInfo的属性
+     * 此方法不会先通过tid查询teamInfo
+     * 如何判断使用哪个teamService.updateTeamInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateTeamInfoWithoutQuery()
+     * - 如果更新的数据需要在已有teamInfo的属性上做更新，则可以使用updateTeamInfoWithQuery()
      *
      * @param teamInfo 实例对象
      * @return 实例对象
@@ -297,8 +307,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
-     * 工具服务方法，修改项目组的属性
+     * 工具服务方法，修改teamInfo的属性
      * 此方法会先查询一次tid对应的teamInfo对象，根据teamInfoWithChange，在tid查询出来的teamInfo对象基础上做更新
+     * 如何判断使用哪个teamService.updateTeamInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateTeamInfoWithoutQuery()
+     * - 如果更新的数据需要在已有teamInfo的属性上做更新，则可以使用updateTeamInfoWithQuery()
      *
      * @param teamInfoWithChange 记录teamInfo发生的变更的对象
      */
@@ -449,17 +462,20 @@ public class TeamServiceImpl implements TeamService {
 
         TeamInfo teamInfoWithChange = new TeamInfo();
         teamInfoWithChange.setTid(tid);
+        UserInfo userInfoWithChange = new UserInfo();
+        userInfoWithChange.setUid(uid);
         if (teamUserFromQuery.getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
             return new TeamDTO(TeamEnum.CREATED_NUMBER_DELETED_FAIL);
         } else if (teamUserFromQuery.getUserGrade().equals(TeamEnum.MANAGER.getStateCode())) {
             teamInfoWithChange.setManagedNumberCount(-1);
-            userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_MANAGED_TEAM_COUNT, -1);
+            userInfoWithChange.setManagedTeamCount(-1);
         } else if (teamUserFromQuery.getUserGrade().equals(TeamEnum.JOINER.getStateCode())) {
             teamInfoWithChange.setJoinedNumberCount(-1);
-            userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, -1);
+            userInfoWithChange.setJoinedTeamCount(-1);
         }
         teamInfoWithChange.setNumberCount(-1);
         this.updateTeamInfoWithQuery(teamInfoWithChange);
+        userService.updateUserInfoWithQuery(userInfoWithChange);
 
         teamUserDao.delete(tid, uid);
 
@@ -493,14 +509,17 @@ public class TeamServiceImpl implements TeamService {
 
         // 修改user_info中的count
         List<TeamUserDTO> teamUserDTOList = teamUserDao.queryAllTeamUserListByTid(tid);
-        for (int i = 0; i < teamUserDTOList.size(); i++) {
-            if (teamUserDTOList.get(i).getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
-                userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_CREATED_TEAM_COUNT, -1);
-            } else if (teamUserDTOList.get(i).getUserGrade().equals(TeamEnum.MANAGER.getStateCode())) {
-                userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_MANAGED_TEAM_COUNT, -1);
-            } else if (teamUserDTOList.get(i).getUserGrade().equals(TeamEnum.JOINER.getStateCode())) {
-                userService.updateUserInfoCountProperty(uid, UserEnum.UPDATE_JOINED_TEAM_COUNT, -1);
+        for (TeamUserDTO teamUserDTO : teamUserDTOList) {
+            UserInfo userInfoWithChange = new UserInfo();
+            userInfoWithChange.setUid(teamUserDTO.getUid());
+            if (teamUserDTO.getUserGrade().equals(TeamEnum.CREATOR.getStateCode())) {
+                userInfoWithChange.setCreatedTeamCount(-1);
+            } else if (teamUserDTO.getUserGrade().equals(TeamEnum.MANAGER.getStateCode())) {
+                userInfoWithChange.setManagedTeamCount(-1);
+            } else if (teamUserDTO.getUserGrade().equals(TeamEnum.JOINER.getStateCode())) {
+                userInfoWithChange.setJoinedTeamCount(-1);
             }
+            userService.updateUserInfoWithQuery(userInfoWithChange);
         }
 
         // 删除全部的team_user

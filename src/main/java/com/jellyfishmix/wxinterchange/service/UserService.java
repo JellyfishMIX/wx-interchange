@@ -52,21 +52,25 @@ public interface UserService {
     UserInfoDTO insertUserInfo(UserInfo userInfo);
 
     /**
-     * 修改用户信息
+     * 修改userInfo信息
+     * 此方法不会先通过uid查询userInfo
+     * 如何判断使用哪个userService.updateUserInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateUserInfoWithoutQuery()
+     * - 如果更新的数据需要在已有userInfo的属性上做更新，则可以使用updateUserInfoWithQuery()
      * 
      * @param userInfo 用户信息实例对象
      * @return
      */
-    UserInfoDTO updateUserInfo(UserInfo userInfo);
+    UserInfo updateUserInfoWithoutQuery(UserInfo userInfo);
 
     /**
-     * 更新用户的计数属性
+     * 工具服务方法，修改userInfo的属性
+     * 此方法会先查询一次uid对应的userInfo对象，根据userInfoWithChange，在uid查询出来的userInfo对象基础上做更新
+     * 如何判断使用哪个userService.updateUserInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateUserInfoWithoutQuery()
+     * - 如果更新的数据需要在已有teamInfo的属性上做更新，则可以使用updateUserInfoWithQuery()
      *
-     * @param uid 用户uid
-     * @param userEnum 操作标志Enum
-     * @param countChangeNum 计数更改的数量，有正负
+     * @param userInfoWithChange 记录userInfo发生的变更的对象
      */
-    void updateUserInfoCountProperty(String uid, UserEnum userEnum, Integer countChangeNum);
-
-    // delete暂时不做
+    void updateUserInfoWithQuery(UserInfo userInfoWithChange);
 }

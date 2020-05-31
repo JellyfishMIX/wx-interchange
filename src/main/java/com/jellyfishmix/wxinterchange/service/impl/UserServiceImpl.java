@@ -130,42 +130,48 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 修改用户信息
+     * 修改userInfo信息
+     * 此方法不会先通过uid查询userInfo
+     * 如何判断使用哪个userService.updateUserInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateUserInfoWithoutQuery()
+     * - 如果更新的数据需要在已有userInfo的属性上做更新，则可以使用updateUserInfoWithQuery()
      *
-     * @param userInfo
+     * @param userInfo 用户信息实例对象
      * @return
      */
     @Override
-    public UserInfoDTO updateUserInfo(UserInfo userInfo) {
+    public UserInfo updateUserInfoWithoutQuery(UserInfo userInfo) {
         int effectedNum = userInfoDao.updateUserInfoByUid(userInfo);
         if (effectedNum <= 0) {
             throw new UserException(UserEnum.INSERT_USER_INFO_ERROR);
         }
-        UserInfoDTO userInfoDTO = new UserInfoDTO(UserEnum.SUCCESS);
-        return userInfoDTO;
+        UserInfo userInfoFromQuery = userInfoDao.queryByUid(userInfo.getUid());
+        return userInfoFromQuery;
     }
 
     /**
-     * 更新用户的计数属性
+     * 工具服务方法，修改userInfo的属性
+     * 此方法会先查询一次uid对应的userInfo对象，根据userInfoWithChange，在uid查询出来的userInfo对象基础上做更新
+     * 如何判断使用哪个userService.updateUserInfo() ?
+     * - 如果更新的属性可以直接覆盖已有属性，则可以使用updateUserInfoWithoutQuery()
+     * - 如果更新的数据需要在已有teamInfo的属性上做更新，则可以使用updateUserInfoWithQuery()
      *
-     * @param uid            用户uid
-     * @param userEnum       操作标志Enum
-     * @param countChangeNum 计数更改的数量，有正负
+     * @param userInfoWithChange 记录userInfo发生的变更的对象
      */
     @Override
-    public void updateUserInfoCountProperty(String uid, UserEnum userEnum, Integer countChangeNum) {
-        UserInfo userInfoFromQuery = userInfoDao.queryByUid(uid);
+    public void updateUserInfoWithQuery(UserInfo userInfoWithChange) {
+        UserInfo userInfoFromQuery = userInfoDao.queryByUid(userInfoWithChange.getUid());
         UserInfo userInfoForUpdate = new UserInfo();
-        userInfoForUpdate.setUid(uid);
-        if (userEnum.getStateCode().equals(UserEnum.UPDATE_CREATED_TEAM_COUNT.getStateCode())) {
-            userInfoForUpdate.setCreatedTeamCount(userInfoFromQuery.getCreatedTeamCount() + countChangeNum);
-        } else if (userEnum.getStateCode().equals(UserEnum.UPDATE_MANAGED_TEAM_COUNT.getStateCode())) {
-            userInfoForUpdate.setManagedTeamCount(userInfoFromQuery.getManagedTeamCount() + countChangeNum);
-        } else if (userEnum.getStateCode().equals(UserEnum.UPDATE_JOINED_TEAM_COUNT.getStateCode())) {
-            userInfoForUpdate.setJoinedTeamCount(userInfoFromQuery.getJoinedTeamCount() + countChangeNum);
+        userInfoForUpdate.setUid(userInfoWithChange.getUid());
+        if (userInfoWithChange.getCreatedTeamCount() != null) {
+            userInfoForUpdate.setCreatedTeamCount(userInfoFromQuery.getCreatedTeamCount() + userInfoWithChange.getCreatedTeamCount());
+        }
+        if (userInfoWithChange.getManagedTeamCount() != null) {
+            userInfoForUpdate.setManagedTeamCount(userInfoFromQuery.getManagedTeamCount() + userInfoWithChange.getManagedTeamCount());
+        }
+        if (userInfoWithChange.getJoinedTeamCount() != null) {
+            userInfoForUpdate.setJoinedTeamCount(userInfoFromQuery.getJoinedTeamCount() + userInfoWithChange.getJoinedTeamCount());
         }
         userInfoDao.updateUserInfoByUid(userInfoForUpdate);
     }
-
-    // delete暂时不做
 }
