@@ -8,7 +8,7 @@ import com.jellyfishmix.wxinterchange.entity.CollectionInfo;
 import com.jellyfishmix.wxinterchange.enums.CollectionEnum;
 import com.jellyfishmix.wxinterchange.exception.CollectionException;
 import com.jellyfishmix.wxinterchange.service.CollectionService;
-import com.jellyfishmix.wxinterchange.service.RedisLockService;
+import com.jellyfishmix.wxinterchange.service.RedisService;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class CollectionServiceImpl implements CollectionService {
     @Resource
     private CollectionFileDao collectionFileDao;
     @Autowired
-    private RedisLockService redisLockService;
+    private RedisService redisService;
 
     /**
      * 通过uid获取收藏集文件列表
@@ -77,7 +77,7 @@ public class CollectionServiceImpl implements CollectionService {
         long time = System.currentTimeMillis() + timeout;
         // 加锁
         String collectionIdForLock = collectionId.concat("-addedFileList");
-        while (!redisLockService.lock(collectionIdForLock, String.valueOf(time))) {
+        while (!redisService.lock(collectionIdForLock, String.valueOf(time))) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -107,7 +107,7 @@ public class CollectionServiceImpl implements CollectionService {
         updateCollectionCountProperty(collectionId, CollectionEnum.UPDATE_FILE_COUNT, (collectionFileList.size() - countRepeatedNum));
 
         // 解锁
-        redisLockService.unlock(collectionIdForLock, String.valueOf(time));
+        redisService.unlock(collectionIdForLock, String.valueOf(time));
     }
 
     /**
@@ -152,7 +152,7 @@ public class CollectionServiceImpl implements CollectionService {
         long time = System.currentTimeMillis() + timeout;
         // 加锁
         String collectionIdForLock = collectionId.concat("-deleteFileListByCollectionIdAndFileId");
-        while (!redisLockService.lock(collectionIdForLock, String.valueOf(time))) {
+        while (!redisService.lock(collectionIdForLock, String.valueOf(time))) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -165,6 +165,6 @@ public class CollectionServiceImpl implements CollectionService {
         updateCollectionCountProperty(collectionId, CollectionEnum.UPDATE_FILE_COUNT, -collectionFileList.size());
 
         // 解锁
-        redisLockService.unlock(collectionIdForLock, String.valueOf(time));
+        redisService.unlock(collectionIdForLock, String.valueOf(time));
     }
 }

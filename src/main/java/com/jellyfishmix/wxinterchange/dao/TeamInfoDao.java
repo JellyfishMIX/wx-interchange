@@ -21,7 +21,7 @@ public interface TeamInfoDao {
     TeamInfo queryByTid(String tid);
 
     /**
-     * 获取官方项目组列表
+     * 获取所有官方项目组列表
      *
      * @return
      */

@@ -4,7 +4,7 @@ package com.jellyfishmix.wxinterchange.service;
  * @author JellyfishMIX
  * @date 2020/4/27 4:53 下午
  */
-public interface RedisLockService {
+public interface RedisService {
     /**
      * 加锁
      * 此方法不能使当前Thread sleep，如果需要使当前Thread sleep，请使用RedisLockService.lockConvenient

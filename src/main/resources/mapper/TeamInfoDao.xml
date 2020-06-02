@@ -25,6 +25,7 @@
         where tid = #{tid}
     </select>
 
+    <!--获取所有官方项目组列表-->
     <select id="queryOfficialTeamList" resultMap="TeamInfoMap">
         select tid, team_name, avatar_url, file_count
         from wx_interchange.team_info

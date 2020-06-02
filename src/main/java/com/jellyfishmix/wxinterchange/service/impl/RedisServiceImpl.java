@@ -1,6 +1,6 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
-import com.jellyfishmix.wxinterchange.service.RedisLockService;
+import com.jellyfishmix.wxinterchange.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
  */
 @Component
 @Slf4j
-public class RedisLockServiceImpl implements RedisLockService {
+public class RedisServiceImpl implements RedisService {
     @Autowired
     private StringRedisTemplate redisTemplate;
 

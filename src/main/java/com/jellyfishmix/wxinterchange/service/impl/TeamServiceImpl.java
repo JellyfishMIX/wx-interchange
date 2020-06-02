@@ -4,10 +4,9 @@ import com.jellyfishmix.wxinterchange.dao.*;
 import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.*;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
-import com.jellyfishmix.wxinterchange.enums.UserEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
 import com.jellyfishmix.wxinterchange.service.FileService;
-import com.jellyfishmix.wxinterchange.service.RedisLockService;
+import com.jellyfishmix.wxinterchange.service.RedisService;
 import com.jellyfishmix.wxinterchange.service.TeamService;
 import com.jellyfishmix.wxinterchange.service.UserService;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
@@ -46,7 +45,7 @@ public class TeamServiceImpl implements TeamService {
     @Resource
     private UserInfoDao userInfoDao;
     @Autowired
-    private RedisLockService redisLockService;
+    private RedisService redisService;
 
     /**
      * 通过tid查询单条数据
@@ -205,7 +204,7 @@ public class TeamServiceImpl implements TeamService {
         // 加redis分布式锁，避免检索唯一键tid在读操作、写操作时出现S锁和X锁循环等待造成死锁
         String identifierForLock = tid.concat("-uploadFileListToTeam");
         int timeout = 20 * 1000;
-        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
+        long expireTime = redisService.lockConvenient(identifierForLock, timeout);
 
         this.teamFileDao.insertList(teamFileList);
         // 修改项目组文件计数
@@ -216,7 +215,7 @@ public class TeamServiceImpl implements TeamService {
         this.updateTeamInfoWithQuery(teamInfoWithChange);
 
         // 分布式锁解锁
-        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+        redisService.unlock(identifierForLock, String.valueOf(expireTime));
     }
 
     /**
@@ -381,7 +380,7 @@ public class TeamServiceImpl implements TeamService {
         // 分布式锁过期时间
         String identifierForLock = tid.concat("-deleteFileFromTeam");
         int timeout = 10 * 1000;
-        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
+        long expireTime = redisService.lockConvenient(identifierForLock, timeout);
 
         teamFileDao.deleteByFileId(fileId);
         // 修改项目组文件计数
@@ -391,7 +390,7 @@ public class TeamServiceImpl implements TeamService {
         this.updateTeamInfoWithQuery(teamInfoWithChange);
 
         // 分布式锁解锁
-        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+        redisService.unlock(identifierForLock, String.valueOf(expireTime));
 
         // 收藏集中将被删除的fileId替换成404，对应404文件
         collectionFileDao.updateFileIdTo404(fileId);
@@ -420,7 +419,7 @@ public class TeamServiceImpl implements TeamService {
         // 分布式锁过期时间
         String identifierForLock = tid.concat("-deleteFileListFromTeam");
         int timeout = 20 * 1000;
-        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
+        long expireTime = redisService.lockConvenient(identifierForLock, timeout);
 
         teamFileDao.deleteListByFileId(fileInfoList);
         // 修改项目组文件计数
@@ -430,7 +429,7 @@ public class TeamServiceImpl implements TeamService {
         this.updateTeamInfoWithQuery(teamInfoWithChange);
 
         // 分布式锁解锁
-        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+        redisService.unlock(identifierForLock, String.valueOf(expireTime));
 
         // 收藏集中将被删除的fileId替换成404，对应404文件
         for (int i = 0; i < fileInfoListFromQuery.size(); i++) {
@@ -463,7 +462,7 @@ public class TeamServiceImpl implements TeamService {
         // 分布式锁过期时间
         String identifierForLock = tid.concat("-deleteTeamUser");
         int timeout = 10 * 1000;
-        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
+        long expireTime = redisService.lockConvenient(identifierForLock, timeout);
 
         TeamInfo teamInfoWithChange = new TeamInfo();
         teamInfoWithChange.setTid(tid);
@@ -485,7 +484,7 @@ public class TeamServiceImpl implements TeamService {
         teamUserDao.delete(tid, uid);
 
         // 分布式锁解锁
-        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+        redisService.unlock(identifierForLock, String.valueOf(expireTime));
 
         return new TeamDTO(TeamEnum.SUCCESS);
     }
@@ -510,7 +509,7 @@ public class TeamServiceImpl implements TeamService {
         // 分布式锁过期时间
         String identifierForLock = tid.concat("-disbandGroup");
         int timeout = 100 * 1000;
-        long expireTime = redisLockService.lockConvenient(identifierForLock, timeout);
+        long expireTime = redisService.lockConvenient(identifierForLock, timeout);
 
         // 修改user_info中的count
         List<TeamUserDTO> teamUserDTOList = teamUserDao.queryAllTeamUserListByTid(tid);
@@ -537,7 +536,7 @@ public class TeamServiceImpl implements TeamService {
         teamInfoDao.deleteByTid(tid);
 
         // 分布式锁解锁
-        redisLockService.unlock(identifierForLock, String.valueOf(expireTime));
+        redisService.unlock(identifierForLock, String.valueOf(expireTime));
 
         for (int i = 0; i < teamFileDTOList.size(); i++) {
             // 收藏集中将被删除的fileId替换成404，对应404文件
