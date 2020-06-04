@@ -1,10 +1,17 @@
 package com.jellyfishmix.wxinterchange.service;
 
+import org.springframework.data.redis.core.ZSetOperations;
+
+import java.util.Set;
+
 /**
  * @author JellyfishMIX
  * @date 2020/4/27 4:53 下午
  */
 public interface RedisService {
+
+    // Distributed Lock
+
     /**
      * 加锁
      * 此方法不能使当前Thread sleep，如果需要使当前Thread sleep，请使用RedisLockService.lockConvenient
@@ -31,4 +38,32 @@ public interface RedisService {
      * @return 分布式锁过期时间
      */
     long lockConvenient(String identifierForLock, int timeout);
+
+    // Sorted Set
+
+    /**
+     * 记录查询热词
+     * zincrby命令，对于一个Sorted Set，存在的就把分数加1，不存在就创建一个分数为1的成员
+     *
+     * @param keyword 关键词
+     */
+    void searchZincrby(String keyword);
+
+    /**
+     * zrevrange命令, 查询集合中指定顺序的值
+     * 返回有序的集合中，score大的在前面
+     *
+     * @param start 查询范围开始位置
+     * @param end 结束位置
+     * @return
+     */
+    Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(Integer start, Integer end);
+
+    /**
+     * 删除指定的key
+     *
+     * @param key key
+     */
+    void deleteKey(String key);
+
 }

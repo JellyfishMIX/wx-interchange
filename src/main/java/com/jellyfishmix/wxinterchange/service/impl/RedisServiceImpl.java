@@ -1,17 +1,22 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
+import com.jellyfishmix.wxinterchange.enums.RedisEnum;
 import com.jellyfishmix.wxinterchange.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Set;
 
 /**
  * @author JellyfishMIX
  * @date 2020/4/26 6:38 下午
  */
-@Component
+@Service("redisService")
 @Slf4j
 public class RedisServiceImpl implements RedisService {
     @Autowired
@@ -85,4 +90,43 @@ public class RedisServiceImpl implements RedisService {
         }
         return time;
     }
+
+    /**
+     * 记录查询keyword
+     * zincrby命令，对于一个Sorted Set，存在的就把分数加x(x可自行设定)，不存在就创建一个分数为1的成员
+     * 记录一个天数据，记录一个周数据，分开维护清晰明了。
+     *
+     * @param keyword 搜索关键词
+     */
+    @Override
+    public void searchZincrby(String keyword) {
+        redisTemplate.opsForZSet().incrementScore(RedisEnum.SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
+        redisTemplate.opsForZSet().incrementScore(RedisEnum.SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
+    }
+
+    /**
+     * zrevrange命令, 查询Sorted Set中指定范围的值
+     * 返回的有序集合中，score大的在前面
+     * zrevrange方法无需担心用于指定范围的start和end出现越界报错问题
+     *
+     * @param start 查询范围开始位置
+     * @param end 查询范围结束位置
+     * @return
+     */
+    @Override
+    public Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(Integer start, Integer end) {
+        Set<ZSetOperations.TypedTuple<String>> resultSet =  redisTemplate.opsForZSet().reverseRangeWithScores(RedisEnum.SEARCH_HOT_WORD_ZSET.getKey(), start, end);
+        return resultSet;
+    }
+
+    /**
+     * 删除指定的key
+     *
+     * @param key key
+     */
+    @Override
+    public void deleteKey(String key) {
+        redisTemplate.delete(key);
+    }
+
 }

@@ -5,16 +5,9 @@ import org.quartz.Scheduler;
 
 /**
  * @author JellyfishMIX
- * @date 2020/5/25 4:50 下午
+ * @date 2020/6/3 9:03 下午
  */
-public interface FileStatisticsService {
-    /**
-     * 更改当日实时文件数量变化
-     *
-     * @param changedQuantityNum 改变的数量
-     */
-    void updateInstantChangedQuantity(int changedQuantityNum);
-
+public interface SearchStatisticsService {
     /**
      * 每日计划处理
      *
@@ -22,9 +15,4 @@ public interface FileStatisticsService {
      * @param cronScheduleEnum cron时间表Enum
      */
     void dailyProcessing(Scheduler scheduler, CronScheduleEnum cronScheduleEnum);
-
-    /**
-     * 为当前时间的下一天创建一个新的`file_statistics`记录行
-     */
-    void insertTomorrowFileStatistics();
 }

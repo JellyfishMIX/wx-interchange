@@ -146,7 +146,7 @@ create table `collection_file` (
 #     foreign key `fk_browsing_history_file_id`(`file_id`) references wx_interchange.file_info(`file_id`)
 # ) comment '文件浏览历史表';
 
-# 埋点
+# 数据统计
 
 create table `file_statistics` (
     `id` int not null auto_increment comment '代理主键',
@@ -159,3 +159,14 @@ create table `file_statistics` (
     primary key (`id`),
     unique key `file_statistics_statistics_id`(`statistics_id`)
 ) comment '埋点系统文件统计表，以天为单位';
+
+create table `search_hot_word` (
+    `id` int not null auto_increment comment '代理主键',
+    `word_id` varchar(32) not null comment '热词wordId',
+    `word` varchar(32) not null comment '热词内容',
+    `frequency` int not null comment '搜索次数',
+    `grade` int not null comment '热词等级，1为天数据，2为周数据',
+    `creation_time` datetime not null default current_timestamp comment '创建时间，自动写入',
+    `modified_time` datetime not null default current_timestamp on update current_timestamp comment '修改时间，自动写入',
+    primary key (`id`)
+) comment '搜索热词统计表';

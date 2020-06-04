@@ -8,6 +8,7 @@ import com.jellyfishmix.wxinterchange.exception.FileStatisticsException;
 import com.jellyfishmix.wxinterchange.quartz.FileStatisticsDailyProcessingJob;
 import com.jellyfishmix.wxinterchange.service.FileStatisticsService;
 import com.jellyfishmix.wxinterchange.utils.DateUtil;
+import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.stereotype.Service;
@@ -74,5 +75,20 @@ public class FileStatisticsServiceImpl implements FileStatisticsService {
             log.error(e.getMessage());
             throw new FileStatisticsException(FileStatisticsEnum.DAILY_PROCESSING_ERROR, e.getMessage());
         }
+    }
+
+    /**
+     * 为当前时间的下一天创建一个新的`file_statistics`记录行
+     */
+    @Override
+    public void insertTomorrowFileStatistics() {
+        FileStatistics fileStatistics = new FileStatistics();
+        fileStatistics.setStatisticsId(UniqueKeyUtil.getUniqueKey());
+        // 当前时间的下一天
+        Timestamp targetTimestamp = DateUtil.differenceDayFromCurrentTimestamp(1);
+        fileStatistics.setCreationTime(targetTimestamp);
+        fileStatistics.setModifiedTime(targetTimestamp);
+        fileStatistics.setQuantity(0);
+        fileStatisticsDao.insert(fileStatistics);
     }
 }

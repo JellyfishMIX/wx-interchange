@@ -143,6 +143,8 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public List<TeamFileDTO> searchTeamFileListByKeyword(List<String> tidList, String keyword, int pageIndex, int pageSize) {
+        // redis记录keyword，用于搜索热词统计
+        redisService.searchZincrby(keyword);
         int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
         return teamFileDao.queryTeamFileListByKeyword(tidList, keyword, rowIndex, pageSize);
     }
