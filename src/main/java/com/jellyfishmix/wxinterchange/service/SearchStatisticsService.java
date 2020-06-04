@@ -23,4 +23,11 @@ public interface SearchStatisticsService {
      * @param cronScheduleEnum cron表达式Enum
      */
     void weeklyProcessing(Scheduler scheduler, CronScheduleEnum cronScheduleEnum);
+
+    /**
+     * 记录搜索keyword
+     *
+     * @param keyword 搜索keyword
+     */
+    void recordSearchKeyword(String keyword);
 }

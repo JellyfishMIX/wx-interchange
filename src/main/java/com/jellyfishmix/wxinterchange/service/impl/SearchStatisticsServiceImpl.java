@@ -1,11 +1,14 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
 import com.jellyfishmix.wxinterchange.enums.CronScheduleEnum;
+import com.jellyfishmix.wxinterchange.enums.RedisEnum;
 import com.jellyfishmix.wxinterchange.quartz.SearchStatisticsDailyJob;
 import com.jellyfishmix.wxinterchange.quartz.SearchStatisticsWeeklyJob;
+import com.jellyfishmix.wxinterchange.service.RedisService;
 import com.jellyfishmix.wxinterchange.service.SearchStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Service;
 @Service("searchStatisticsService")
 @Slf4j
 public class SearchStatisticsServiceImpl implements SearchStatisticsService {
+    @Autowired
+    private RedisService redisService;
+
     /**
      * 每日计划处理
      *
@@ -73,5 +79,17 @@ public class SearchStatisticsServiceImpl implements SearchStatisticsService {
         } catch (SchedulerException e) {
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     * 记录搜索keyword
+     *
+     * @param keyword 搜索keyword
+     */
+    @Override
+    public void recordSearchKeyword(String keyword) {
+        // 记录一个天数据，记录一个周数据，分开维护清晰明了
+        redisService.zincrby(RedisEnum.DAILY_SEARCH_HOT_WORD_ZSET.getKey(), keyword);
+        redisService.zincrby(RedisEnum.WEEKLY_SEARCH_HOT_WORD_ZSET.getKey(), keyword);
     }
 }

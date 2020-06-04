@@ -6,10 +6,7 @@ import com.jellyfishmix.wxinterchange.entity.*;
 import com.jellyfishmix.wxinterchange.enums.RedisEnum;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
-import com.jellyfishmix.wxinterchange.service.FileService;
-import com.jellyfishmix.wxinterchange.service.RedisService;
-import com.jellyfishmix.wxinterchange.service.TeamService;
-import com.jellyfishmix.wxinterchange.service.UserService;
+import com.jellyfishmix.wxinterchange.service.*;
 import com.jellyfishmix.wxinterchange.utils.PageCalculatorUtil;
 import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +44,8 @@ public class TeamServiceImpl implements TeamService {
     private UserInfoDao userInfoDao;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private SearchStatisticsService searchStatisticsService;
 
     /**
      * 通过tid查询单条数据
@@ -144,11 +143,8 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public List<TeamFileDTO> searchTeamFileListByKeyword(List<String> tidList, String keyword, int pageIndex, int pageSize) {
-        // redis记录keyword，用于搜索热词统计
-        // 记录一个天数据，记录一个周数据，分开维护清晰明了
-        redisService.zincrby(RedisEnum.DAILY_SEARCH_HOT_WORD_ZSET.getKey(), keyword);
-        redisService.zincrby(RedisEnum.WEEKLY_SEARCH_HOT_WORD_ZSET.getKey(), keyword);
-
+        // 记录keyword，用于搜索热词统计
+        searchStatisticsService.recordSearchKeyword(keyword);
         int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
         return teamFileDao.queryTeamFileListByKeyword(tidList, keyword, rowIndex, pageSize);
     }
