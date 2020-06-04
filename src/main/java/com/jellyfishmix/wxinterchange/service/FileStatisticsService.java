@@ -9,22 +9,17 @@ import org.quartz.Scheduler;
  */
 public interface FileStatisticsService {
     /**
+     * 每日计划处理
+     *
+     * @param scheduler 调度程序的实例
+     * @param cronScheduleEnum cron表达式Enum
+     */
+    void dailyProcessing(Scheduler scheduler, CronScheduleEnum cronScheduleEnum);
+
+    /**
      * 更改当日实时文件数量变化
      *
      * @param changedQuantityNum 改变的数量
      */
     void updateInstantChangedQuantity(int changedQuantityNum);
-
-    /**
-     * 每日计划处理
-     *
-     * @param scheduler 调度程序的实例
-     * @param cronScheduleEnum cron时间表Enum
-     */
-    void dailyProcessing(Scheduler scheduler, CronScheduleEnum cronScheduleEnum);
-
-    /**
-     * 为当前时间的下一天创建一个新的`file_statistics`记录行
-     */
-    void insertTomorrowFileStatistics();
 }

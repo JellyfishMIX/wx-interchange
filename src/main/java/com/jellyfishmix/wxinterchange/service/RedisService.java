@@ -53,11 +53,12 @@ public interface RedisService {
      * zrevrange命令, 查询集合中指定顺序的值
      * 返回有序的集合中，score大的在前面
      *
+     * @param sortedSetName 要操作的sortedSet名字
      * @param start 查询范围开始位置
      * @param end 结束位置
      * @return
      */
-    Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(Integer start, Integer end);
+    Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(String sortedSetName, Integer start, Integer end);
 
     /**
      * 删除指定的key

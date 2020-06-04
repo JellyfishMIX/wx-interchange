@@ -8,7 +8,8 @@ import lombok.Getter;
  */
 @Getter
 public enum RedisEnum {
-    SEARCH_HOT_WORD_ZSET("searchHotWord");
+    DAILY_SEARCH_HOT_WORD_ZSET("dailySearchHotWord"),
+    WEEKLY_SEARCH_HOT_WORD_ZSET("weeklySearchHotWord");
 
     private String key;
 

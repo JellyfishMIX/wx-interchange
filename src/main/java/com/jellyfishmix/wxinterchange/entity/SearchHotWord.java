@@ -14,10 +14,6 @@ import java.io.Serializable;
 @Data
 public class SearchHotWord {
     /**
-    * 代理主键
-    */
-    private Integer id;
-    /**
     * 热词wordId
     */
     private String wordId;

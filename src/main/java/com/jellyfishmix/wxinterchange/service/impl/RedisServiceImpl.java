@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -101,8 +100,8 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void searchZincrby(String keyword) {
-        redisTemplate.opsForZSet().incrementScore(RedisEnum.SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
-        redisTemplate.opsForZSet().incrementScore(RedisEnum.SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
+        redisTemplate.opsForZSet().incrementScore(RedisEnum.DAILY_SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
+        redisTemplate.opsForZSet().incrementScore(RedisEnum.WEEKLY_SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
     }
 
     /**
@@ -110,13 +109,14 @@ public class RedisServiceImpl implements RedisService {
      * 返回的有序集合中，score大的在前面
      * zrevrange方法无需担心用于指定范围的start和end出现越界报错问题
      *
+     * @param sortedSetName 要操作的sortedSet名字
      * @param start 查询范围开始位置
      * @param end 查询范围结束位置
      * @return
      */
     @Override
-    public Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(Integer start, Integer end) {
-        Set<ZSetOperations.TypedTuple<String>> resultSet =  redisTemplate.opsForZSet().reverseRangeWithScores(RedisEnum.SEARCH_HOT_WORD_ZSET.getKey(), start, end);
+    public Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(String sortedSetName, Integer start, Integer end) {
+        Set<ZSetOperations.TypedTuple<String>> resultSet =  redisTemplate.opsForZSet().reverseRangeWithScores(sortedSetName, start, end);
         return resultSet;
     }
 

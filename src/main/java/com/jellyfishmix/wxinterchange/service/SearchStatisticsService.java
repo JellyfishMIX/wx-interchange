@@ -12,7 +12,15 @@ public interface SearchStatisticsService {
      * 每日计划处理
      *
      * @param scheduler 调度程序的实例
-     * @param cronScheduleEnum cron时间表Enum
+     * @param cronScheduleEnum cron表达式Enum
      */
     void dailyProcessing(Scheduler scheduler, CronScheduleEnum cronScheduleEnum);
+
+    /**
+     * 每周计划处理
+     *
+     * @param scheduler 调度程序的实例
+     * @param cronScheduleEnum cron表达式Enum
+     */
+    void weeklyProcessing(Scheduler scheduler, CronScheduleEnum cronScheduleEnum);
 }

@@ -5,6 +5,7 @@ import com.jellyfishmix.wxinterchange.enums.ScheduledTaskEnum;
 import com.jellyfishmix.wxinterchange.exception.ScheduledTaskException;
 import com.jellyfishmix.wxinterchange.service.FileStatisticsService;
 import com.jellyfishmix.wxinterchange.service.ScheduledTaskService;
+import com.jellyfishmix.wxinterchange.service.SearchStatisticsService;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Service;
 @Service("scheduledTaskService")
 public class ScheduledTaskServiceImpl implements ScheduledTaskService {
     @Autowired
-    private FileStatisticsService fileStatisticsService;
-    @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
 
+    @Autowired
+    private FileStatisticsService fileStatisticsService;
+    @Autowired
+    private SearchStatisticsService searchStatisticsService;
     /**
      * 启动定时任务系统
      */
@@ -29,8 +32,12 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
     public void start() {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            // 每天凌晨一点执行
-            fileStatisticsService.dailyProcessing(scheduler, CronScheduleEnum.DAILY_ONE_O_CLOCK);
+            // 每天1:00执行
+            fileStatisticsService.dailyProcessing(scheduler, CronScheduleEnum.DAILY_01_00);
+            // 每天1:10执行
+            searchStatisticsService.dailyProcessing(scheduler, CronScheduleEnum.DAILY_01_10);
+            // 每周周日1:20执行
+            searchStatisticsService.weeklyProcessing(scheduler, CronScheduleEnum.WEEKLY_SUN_01_20);
             scheduler.start();
         } catch (SchedulerException e) {
             throw new ScheduledTaskException(ScheduledTaskEnum.START_EXCEPTION, e.getMessage());
