@@ -3,6 +3,7 @@ package com.jellyfishmix.wxinterchange.service.impl;
 import com.jellyfishmix.wxinterchange.dao.*;
 import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.*;
+import com.jellyfishmix.wxinterchange.enums.RedisEnum;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
 import com.jellyfishmix.wxinterchange.service.FileService;
@@ -144,7 +145,10 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<TeamFileDTO> searchTeamFileListByKeyword(List<String> tidList, String keyword, int pageIndex, int pageSize) {
         // redis记录keyword，用于搜索热词统计
-        redisService.searchZincrby(keyword);
+        // 记录一个天数据，记录一个周数据，分开维护清晰明了
+        redisService.zincrby(RedisEnum.DAILY_SEARCH_HOT_WORD_ZSET.getKey(), keyword);
+        redisService.zincrby(RedisEnum.WEEKLY_SEARCH_HOT_WORD_ZSET.getKey(), keyword);
+
         int rowIndex = PageCalculatorUtil.calculatorRowIndex(pageIndex, pageSize);
         return teamFileDao.queryTeamFileListByKeyword(tidList, keyword, rowIndex, pageSize);
     }

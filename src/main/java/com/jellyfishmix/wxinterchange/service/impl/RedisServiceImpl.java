@@ -22,6 +22,18 @@ public class RedisServiceImpl implements RedisService {
     private StringRedisTemplate redisTemplate;
 
     /**
+     * 删除指定的key
+     *
+     * @param key key
+     */
+    @Override
+    public void deleteKey(String key) {
+        redisTemplate.delete(key);
+    }
+
+    // Distributed Lock
+
+    /**
      * 加锁
      *
      * @param key key值
@@ -91,17 +103,17 @@ public class RedisServiceImpl implements RedisService {
         return time;
     }
 
+    // Sorted Set
+
     /**
-     * 记录查询keyword
-     * zincrby命令，对于一个Sorted Set，存在的就把分数加x(x可自行设定)，不存在就创建一个分数为1的成员
-     * 记录一个天数据，记录一个周数据，分开维护清晰明了。
+     * zincrby命令，对于一个Sorted Set，value存在的就把分数加x(x可自行设定)，不存在就创建一个分数为1的成员
      *
-     * @param keyword 搜索关键词
+     * @param sortedSetName 要操作的Sorted Set名字
+     * @param value value
      */
     @Override
-    public void searchZincrby(String keyword) {
-        redisTemplate.opsForZSet().incrementScore(RedisEnum.DAILY_SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
-        redisTemplate.opsForZSet().incrementScore(RedisEnum.WEEKLY_SEARCH_HOT_WORD_ZSET.getKey(), keyword, 1.0);
+    public void zincrby(String sortedSetName, String value) {
+        redisTemplate.opsForZSet().incrementScore(sortedSetName, value, 1.0);
     }
 
     /**
@@ -118,16 +130,6 @@ public class RedisServiceImpl implements RedisService {
     public Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(String sortedSetName, Integer start, Integer end) {
         Set<ZSetOperations.TypedTuple<String>> resultSet =  redisTemplate.opsForZSet().reverseRangeWithScores(sortedSetName, start, end);
         return resultSet;
-    }
-
-    /**
-     * 删除指定的key
-     *
-     * @param key key
-     */
-    @Override
-    public void deleteKey(String key) {
-        redisTemplate.delete(key);
     }
 
 }

@@ -9,6 +9,12 @@ import java.util.Set;
  * @date 2020/4/27 4:53 下午
  */
 public interface RedisService {
+    /**
+     * 删除指定的key
+     *
+     * @param key key
+     */
+    void deleteKey(String key);
 
     // Distributed Lock
 
@@ -42,12 +48,12 @@ public interface RedisService {
     // Sorted Set
 
     /**
-     * 记录查询热词
      * zincrby命令，对于一个Sorted Set，存在的就把分数加1，不存在就创建一个分数为1的成员
      *
-     * @param keyword 关键词
+     * @param sortedSetName 要操作的Sorted Set名字
+     * @param value value
      */
-    void searchZincrby(String keyword);
+    void zincrby(String sortedSetName, String value);
 
     /**
      * zrevrange命令, 查询集合中指定顺序的值
@@ -59,12 +65,5 @@ public interface RedisService {
      * @return
      */
     Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(String sortedSetName, Integer start, Integer end);
-
-    /**
-     * 删除指定的key
-     *
-     * @param key key
-     */
-    void deleteKey(String key);
 
 }
