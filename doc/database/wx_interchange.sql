@@ -1,7 +1,7 @@
 # user_info表，建表时需要添加一行默认数据，uid=1
 create table `user_info` (
     `id` int not null auto_increment comment '代理主键',
-    `uid` varchar(32) not null comment '用户uid，随机生成，唯一键',
+    `uid` varchar(32) not null comment '用户uid，唯一键',
     `username` varchar(64) not null comment '用户名',
     `openid` varchar(64) not null comment '微信用户openid，唯一键',
     `avatar_url` varchar(1024) null comment '用户头像URL，头像文件储存在微信服务器',

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jellyfishmix.wxinterchange.dao.SearchHotWordDao">
+
+    <resultMap type="com.jellyfishmix.wxinterchange.entity.SearchHotWord" id="SearchHotWordMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="wordId" column="word_id" jdbcType="VARCHAR"/>
+        <result property="word" column="word" jdbcType="VARCHAR"/>
+        <result property="frequency" column="frequency" jdbcType="INTEGER"/>
+        <result property="grade" column="grade" jdbcType="INTEGER"/>
+        <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into wx_interchange.search_hot_word(word_id, word, frequency, grade)
+        values (#{wordId}, #{word}, #{frequency}, #{grade})
+    </insert>
+
+</mapper>

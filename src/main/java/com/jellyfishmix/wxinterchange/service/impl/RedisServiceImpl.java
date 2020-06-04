@@ -24,6 +24,7 @@ public class RedisServiceImpl implements RedisService {
 
     /**
      * 加锁
+     *
      * @param key key值
      * @param value 分布式锁过期时间。当前时间 + 超时时间
      * @return true拿到锁，false未拿到锁
