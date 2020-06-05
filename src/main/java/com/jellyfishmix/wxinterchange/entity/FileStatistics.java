@@ -21,13 +21,13 @@ public class FileStatistics {
     */
     private Integer quantity;
     /**
-    * 当日结算文件数量变化，每24小时统计一次。统计方法：当日减前一日文件数量。有正负
+    * 当日实时文件数量变化。有正负
     */
     private Integer changedQuantity;
     /**
-    * 当日实时文件数量变化。有正负
-    */
-    private Integer instantChangedQuantity;
+     * 数据等级，1为天数据，2为周数据
+     */
+    private Integer grade;
     /**
     * 创建时间
     */

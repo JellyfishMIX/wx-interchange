@@ -29,7 +29,9 @@ class FileStatisticsDaoTest {
         Timestamp todayFirstTimestamp = DateUtil.todayFirstTimestamp();
         Timestamp todayLastTimestamp = DateUtil.todayLastTimestamp();
 
-        FileStatistics fileStatistics = fileStatisticsDao.queryByDesignatedTimestamp(todayFirstTimestamp, todayLastTimestamp);
+        // 数据等级，1为天数据，2为周数据
+        Integer grade = 1;
+        FileStatistics fileStatistics = fileStatisticsDao.queryByDesignatedTimestamp(grade, todayFirstTimestamp, todayLastTimestamp);
         assertEquals("12345", fileStatistics.getStatisticsId());
     }
 }

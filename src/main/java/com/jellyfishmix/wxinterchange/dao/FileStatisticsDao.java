@@ -1,6 +1,7 @@
 package com.jellyfishmix.wxinterchange.dao;
 
 import com.jellyfishmix.wxinterchange.entity.FileStatistics;
+import org.apache.ibatis.annotations.Param;
 
 import java.sql.Timestamp;
 
@@ -23,11 +24,12 @@ public interface FileStatisticsDao {
     /**
      * 查询指定日期的数据
      *
+     * @param grade 数据等级，1为天数据，2为周数据
      * @param firstTimestamp 起始timestamp
      * @param lastTimestamp 终止timestamp
      * @return
      */
-    FileStatistics queryByDesignatedTimestamp(Timestamp firstTimestamp, Timestamp lastTimestamp);
+    FileStatistics queryByDesignatedTimestamp(@Param("grade") Integer grade, @Param("firstTimestamp") Timestamp firstTimestamp, @Param("lastTimestamp") Timestamp lastTimestamp);
 
     /**
      * 新增数据

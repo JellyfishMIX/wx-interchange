@@ -14,6 +14,7 @@ public enum TeamEnum implements StateCodeEnum {
     TEAM_INFO_PARAM_NULL(2, "项目组信息传参为空"),
     CREATED_NUMBER_DELETED_FAIL(3, "创建者退出失败，创建者不可退出"),
     PERMISSION_DENIED(4, "权限不足"),
+    KEYWORD_OUT_LENGTH(5, "关键词超过规定的长度"),
 
     // 项目组成员等级
     CREATOR(1, "创建者"),

@@ -161,6 +161,10 @@ public class TeamController {
         String keyword = jsonObject.getString("keyword");
         int pageIndex = jsonObject.getInt("pageIndex");
         int pageSize = jsonObject.getInt("pageSize");
+        // 关键词限定长度最大为8
+        if (keyword.length() > 8) {
+            return ResultVOUtil.fail(TeamEnum.KEYWORD_OUT_LENGTH.getStateCode(), TeamEnum.KEYWORD_OUT_LENGTH.getStateMsg());
+        }
         List<TeamFileDTO> teamFileDTOList = teamService.searchTeamFileListByKeyword(tidList, keyword, pageIndex, pageSize);
         return ResultVOUtil.success(TeamEnum.SUCCESS.getStateCode(), TeamEnum.SUCCESS.getStateMsg(), teamFileDTOList);
     }

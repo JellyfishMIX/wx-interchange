@@ -38,6 +38,8 @@ public class FileStatisticsDailyJob implements Job, Serializable {
         fileStatistics.setCreationTime(targetTimestamp);
         fileStatistics.setModifiedTime(targetTimestamp);
         fileStatistics.setQuantity(0);
+        // 数据等级，1为天数据，2为周数据
+        fileStatistics.setGrade(1);
         fileStatisticsDao.insert(fileStatistics);
     }
 }

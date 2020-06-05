@@ -3,7 +3,6 @@ package com.jellyfishmix.wxinterchange.service.impl;
 import com.jellyfishmix.wxinterchange.dao.*;
 import com.jellyfishmix.wxinterchange.dto.*;
 import com.jellyfishmix.wxinterchange.entity.*;
-import com.jellyfishmix.wxinterchange.enums.RedisEnum;
 import com.jellyfishmix.wxinterchange.enums.TeamEnum;
 import com.jellyfishmix.wxinterchange.exception.TeamException;
 import com.jellyfishmix.wxinterchange.service.*;

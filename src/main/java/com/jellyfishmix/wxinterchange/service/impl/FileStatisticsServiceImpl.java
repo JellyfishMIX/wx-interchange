@@ -8,7 +8,6 @@ import com.jellyfishmix.wxinterchange.exception.FileStatisticsException;
 import com.jellyfishmix.wxinterchange.quartz.FileStatisticsDailyJob;
 import com.jellyfishmix.wxinterchange.service.FileStatisticsService;
 import com.jellyfishmix.wxinterchange.utils.DateUtil;
-import com.jellyfishmix.wxinterchange.utils.UniqueKeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.stereotype.Service;
@@ -63,16 +62,18 @@ public class FileStatisticsServiceImpl implements FileStatisticsService {
      */
     @Override
     public void updateInstantChangedQuantity(int changedQuantityNum) {
+        // 数据等级，1为天数据，2为周数据
+        Integer grade = 1;
         Timestamp todayFirstTimestamp = DateUtil.todayFirstTimestamp();
         Timestamp todayLastTimestamp = DateUtil.todayLastTimestamp();
-        FileStatistics fileStatisticsFromQuery = fileStatisticsDao.queryByDesignatedTimestamp(todayFirstTimestamp, todayLastTimestamp);
+        FileStatistics fileStatisticsFromQuery = fileStatisticsDao.queryByDesignatedTimestamp(grade, todayFirstTimestamp, todayLastTimestamp);
         if (fileStatisticsFromQuery == null) {
             throw new FileStatisticsException(FileStatisticsEnum.FILE_STATISTICS_NULL);
         }
 
         FileStatistics fileStatisticsForUpdate = new FileStatistics();
         fileStatisticsForUpdate.setStatisticsId(fileStatisticsFromQuery.getStatisticsId());
-        fileStatisticsForUpdate.setInstantChangedQuantity(fileStatisticsFromQuery.getInstantChangedQuantity() + changedQuantityNum);
+        fileStatisticsForUpdate.setChangedQuantity(fileStatisticsFromQuery.getChangedQuantity() + changedQuantityNum);
         fileStatisticsDao.update(fileStatisticsForUpdate);
     }
 }
