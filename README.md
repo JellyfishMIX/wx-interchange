@@ -22,3 +22,9 @@ This is a spring boot project that provides services for wechat group sharing.
 4. 引入作业调度框架quartz处理定时任务，每天定时进行统计数据
 
     package com.jellyfishmix.wxinterchange.quartz/SpringJobFactory;
+    
+5. 使用redis的Sorted Set进行搜索热词统计(解析: [redis 实现搜索热词统计](https://juejin.im/post/5ed736dce51d45784f800dda))
+    
+    package com.jellyfishmix.wxinterchange.service.impl/SearchStatisticsServiceImpl
+    
+    public void recordSearchKeyword(String keyword);
