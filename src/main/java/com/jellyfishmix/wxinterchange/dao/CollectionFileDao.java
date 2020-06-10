@@ -67,7 +67,7 @@ public interface CollectionFileDao {
     /**
      * 删除数据（多个）
      *
-     * @param collectionFileList 收藏集文件列表
+     * @param idList 收藏集文件id列表
      */
-    void deleteList(List<CollectionFile> collectionFileList);
+    void deleteList(List<Integer> idList);
 }

@@ -156,8 +156,7 @@ public class TeamController {
     @PostMapping("/search_team_file_list_by_keyword")
     public ResultVO searchTeamFileListByKeyword(@RequestBody String jsonStr) {
         JSONObject jsonObject = new JSONObject(jsonStr);
-        JSONArray jsonArray = jsonObject.getJSONArray("tidList");
-        List<String> tidList = JSONArrayToListConverter.convertToStringList(jsonArray);
+        List<String> tidList = (List<String>) (Object) jsonObject.getJSONArray("tidList").toList();
         String keyword = jsonObject.getString("keyword");
         int pageIndex = jsonObject.getInt("pageIndex");
         int pageSize = jsonObject.getInt("pageSize");

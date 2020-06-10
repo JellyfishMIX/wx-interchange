@@ -10,6 +10,7 @@
     </resultMap>
 
     <resultMap id="CollectionFileDTOMap" type="com.jellyfishmix.wxinterchange.dto.CollectionFileDTO">
+        <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="collectionId" column="collection_id" jdbcType="VARCHAR"/>
         <result property="fileId" column="file_id" jdbcType="VARCHAR"/>
         <result property="creationTime" column="creation_time" jdbcType="TIMESTAMP"/>
@@ -29,7 +30,7 @@
     <!--查询收藏集文件列表-->
     <select id="queryListByCollectionId" resultMap="CollectionFileDTOMap">
         select
-          collection_id, collection_file.file_id, file_info.file_name, file_info.file_url, file_info.file_size, file_info.mime_type, file_info.uid, user_info.username, collection_file.creation_time
+          collection_file.id, collection_id, collection_file.file_id, file_info.file_name, file_info.file_url, file_info.file_size, file_info.mime_type, file_info.uid, user_info.username, collection_file.creation_time
         from wx_interchange.collection_file
         join wx_interchange.file_info
         on collection_file.file_id = file_info.file_id
@@ -74,9 +75,9 @@
     <!--删除数据（多个）-->
     <delete id="deleteList">
         delete from wx_interchange.collection_file
-        where (collection_id, file_id) in
-        <foreach collection="list" item="collectionFile" index="index" open="(" separator="," close=")">
-            (#{collectionFile.collectionId}, #{collectionFile.fileId})
+        where (id) in
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+            (#{id})
         </foreach>
     </delete>
 </mapper>

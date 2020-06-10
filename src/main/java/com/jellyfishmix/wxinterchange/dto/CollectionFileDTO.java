@@ -11,6 +11,10 @@ import java.util.Date;
 @Data
 public class CollectionFileDTO {
     /**
+     * 代理主键
+     */
+    private Integer id;
+    /**
      * 收藏集collection_id
      */
     private String collectionId;

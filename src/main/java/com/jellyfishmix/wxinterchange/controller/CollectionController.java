@@ -66,9 +66,8 @@ public class CollectionController {
     public ResultVO deleteFileList(@RequestBody String jsonStr) {
         JSONObject jsonObject = new JSONObject(jsonStr);
         String collectionId = jsonObject.getString("collectionId");
-        JSONArray collectionFileJSONArray = jsonObject.getJSONArray("collectionFileList");
-        List<CollectionFile> collectionFileList = JSONArrayToListConverter.convertToCollectionFileList(collectionFileJSONArray);
-        collectionService.deleteFileList(collectionId, collectionFileList);
+        List<Integer> idList = (List<Integer>)(Object) jsonObject.getJSONArray("idList").toList();
+        collectionService.deleteFileList(collectionId, idList);
         return ResultVOUtil.success(CollectionEnum.SUCCESS.getStateCode(), CollectionEnum.SUCCESS.getStateMsg());
     }
 }

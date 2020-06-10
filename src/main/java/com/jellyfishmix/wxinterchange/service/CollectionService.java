@@ -50,7 +50,7 @@ public interface CollectionService {
      * 删除文件列表（批量）
      *
      * @param collectionId 收藏集collectionId
-     * @param collectionFileList 收藏集文件列表
+     * @param idList 收藏集文件id列表
      */
-    void deleteFileList(String collectionId, List<CollectionFile> collectionFileList);
+    void deleteFileList(String collectionId, List<Integer> idList);
 }

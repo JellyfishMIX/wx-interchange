@@ -132,20 +132,10 @@ public class CollectionServiceImpl implements CollectionService {
      * 删除文件列表（批量）
      *
      * @param collectionId 收藏集collectionId
-     * @param collectionFileList 收藏集文件列表
+     * @param idList 收藏集文件id列表
      */
     @Override
-    public void deleteFileList(String collectionId, List<CollectionFile> collectionFileList) {
-        // List循环组装
-        for (int i = 0; i < collectionFileList.size(); i ++) {
-            String fileId = collectionFileList.get(i).getFileId();
-
-            CollectionFile collectionFile = new CollectionFile();
-            collectionFile.setCollectionId(collectionId);
-            collectionFile.setFileId(fileId);
-            collectionFileList.set(i, collectionFile);
-        }
-
+    public void deleteFileList(String collectionId, List<Integer> idList) {
         // 加分布式锁，避免出现S锁和X锁循环等待死锁
         // 分布式锁过期时间
         int timeout = 20 * 1000;
@@ -160,9 +150,9 @@ public class CollectionServiceImpl implements CollectionService {
             }
         }
 
-        collectionFileDao.deleteList(collectionFileList);
+        collectionFileDao.deleteList(idList);
         // 修改项目组文件计数
-        updateCollectionCountProperty(collectionId, CollectionEnum.UPDATE_FILE_COUNT, -collectionFileList.size());
+        updateCollectionCountProperty(collectionId, CollectionEnum.UPDATE_FILE_COUNT, -idList.size());
 
         // 解锁
         redisService.unlock(collectionIdForLock, String.valueOf(time));

@@ -56,12 +56,4 @@ public class JSONArrayToListConverter {
         }
         return collectionFileList;
     }
-
-    public static List<String> convertToStringList(JSONArray jsonArray) {
-        List<String> stringList = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            stringList.add(jsonArray.getString(i));
-        }
-        return stringList;
-    }
 }
