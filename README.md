@@ -27,4 +27,6 @@ This is a spring boot project that provides services for wechat group sharing.
     
     package com.jellyfishmix.wxinterchange.service.impl/SearchStatisticsServiceImpl
     
-    public void recordSearchKeyword(String keyword);
+    public void zincrby(String sortedSetName, String value);
+    
+    public Set<ZSetOperations.TypedTuple<String>> queryTopSearchHotKey(String sortedSetName, Integer start, Integer end);
