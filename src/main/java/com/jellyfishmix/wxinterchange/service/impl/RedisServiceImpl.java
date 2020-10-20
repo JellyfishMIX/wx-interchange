@@ -1,6 +1,5 @@
 package com.jellyfishmix.wxinterchange.service.impl;
 
-import com.jellyfishmix.wxinterchange.enums.RedisEnum;
 import com.jellyfishmix.wxinterchange.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

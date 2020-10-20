@@ -10,7 +10,7 @@ import com.jellyfishmix.wxinterchange.enums.StateCodeEnum;
 public class StateCodeEnumUtil {
     public static <T extends StateCodeEnum> T getByStateCode(Integer stateCode, Class<T> enumClass) {
         for (T each : enumClass.getEnumConstants()) {
-            if (stateCode.equals(each.getStateCode())) {
+            if (each.getStateCode().equals(stateCode)) {
                 return each;
             }
         }
